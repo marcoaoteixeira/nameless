@@ -1,0 +1,21 @@
+{
+    "[AssemblyName] TypeFullName": {
+        "Message": [
+            "Option 1",
+            "Option 2",
+            "Option 3",
+            "Option ...",
+            "Option N"
+        ]
+    },
+
+    "[Nameless.Localization.Json] Nameless.Localization.Json.Localizer": {
+        "This is a test": [
+            "This is a test 1",
+            "This is a test 2",
+            "This is a test 3",
+            "This is a test ...",
+            "This is a test N"
+        ]
+    }
+}

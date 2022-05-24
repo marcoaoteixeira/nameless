@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+		<RootNamespace>Nameless.Data.MySQL</RootNamespace>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<Authors>Marco Antonio Orestes Teixeira</Authors>
+		<Company>Nameless</Company>
+		<Description>Multiple classes and functionalities for .NET Core applications.</Description>
+		<Copyright>MIT</Copyright>
+		<PackageProjectUrl>https://github.com/marcoaoteixeira/nameless/tree/master/src/Data/Nameless.Data.MySQL.Autofac.Extension</PackageProjectUrl>
+		<PackageReadmeFile>readme.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/marcoaoteixeira/nameless/</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+		<AnalysisLevel>latest</AnalysisLevel>
+		<Version>1.0.0.0</Version>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Include="readme.md">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="readme.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\DependencyInjection\Nameless.DependencyInjection.Autofac\Nameless.DependencyInjection.Autofac.csproj" />
+		<ProjectReference Include="..\Nameless.Data.Common\Nameless.Data.Common.csproj" />
+		<ProjectReference Include="..\Nameless.Data.MySQL\Nameless.Data.MySQL.csproj" />
+	</ItemGroup>
+
+</Project>

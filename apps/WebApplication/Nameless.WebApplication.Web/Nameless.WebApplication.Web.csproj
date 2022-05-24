@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>bde4e96c-e486-4b3a-bae3-5dcb1f93aef9</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..\..</DockerfileContext>
+		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.2.0" />
+		<PackageReference Include="ElmahCore" Version="2.1.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\src\AspNetCore\Nameless.AspNetCore\Nameless.AspNetCore.csproj" />
+	  <ProjectReference Include="..\..\..\src\Caching\Nameless.Caching.Abstractions\Nameless.Caching.Abstractions.csproj" />
+	  <ProjectReference Include="..\..\..\src\Caching\Nameless.Caching.InMemory.Autofac.Extension\Nameless.Caching.InMemory.Autofac.Extension.csproj" />
+	  <ProjectReference Include="..\..\..\src\Core\Nameless.Core\Nameless.Core.csproj" />
+	  <ProjectReference Include="..\..\..\src\Environment\Nameless.Environment.System.Autofac.Extension\Nameless.Environment.System.Autofac.Extension.csproj" />
+	  <ProjectReference Include="..\..\..\src\FileStorage\Nameless.FileStorage.FileSystem.Autofac.Extension\Nameless.FileStorage.FileSystem.Autofac.Extension.csproj" />
+	  <ProjectReference Include="..\..\..\src\Logging\Nameless.Logging.Log4net.Autofac.Extension\Nameless.Logging.Log4net.Autofac.Extension.csproj" />
+	  <ProjectReference Include="..\..\..\src\NHibernate\Nameless.NHibernate.Autofac.Extension\Nameless.NHibernate.Autofac.Extension.csproj" />
+	  <ProjectReference Include="..\..\..\src\NHibernate\Nameless.NHibernate\Nameless.NHibernate.csproj" />
+	  <ProjectReference Include="..\..\..\src\Serialization\Nameless.Serialization.Json.Autofac.Extension\Nameless.Serialization.Json.Autofac.Extension.csproj" />
+	</ItemGroup>
+
+</Project>
