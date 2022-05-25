@@ -59,8 +59,8 @@ namespace Nameless.Services {
 
         /// <inheritdoc />
         public bool Validate(Stream schema, Stream xml) {
-            Ensure.NotNull(schema, nameof(schema));
-            Ensure.NotNull(xml, nameof(xml));
+            Prevent.Null(schema, nameof(schema));
+            Prevent.Null(xml, nameof(xml));
 
             InvalidState = false;
 

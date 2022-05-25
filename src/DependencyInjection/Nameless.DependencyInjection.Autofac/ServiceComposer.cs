@@ -76,7 +76,7 @@ namespace Nameless.DependencyInjection.Autofac {
         }
 
         public IServiceComposer AddModule(IModule module) {
-            Ensure.NotNull(module, nameof(module));
+            Prevent.Null(module, nameof(module));
 
             if (module is not ModuleBase moduleBase) {
                 throw new InvalidOperationException($"Parameter {nameof(module)} must implement {typeof(ModuleBase)}");

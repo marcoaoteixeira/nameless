@@ -36,7 +36,7 @@ namespace Nameless {
         /// <param name="stackTrace">The exception stack trace.</param>
         /// <param name="inner">The inner exception, if exists.</param>
         public ExceptionInfo(string type, string message, string? stackTrace = null, ExceptionInfo? inner = null) {
-            Ensure.NotNullEmptyOrWhiteSpace(type, nameof(type));
+            Prevent.NullEmptyOrWhiteSpace(type, nameof(type));
 
             Type = type;
             Message = message;

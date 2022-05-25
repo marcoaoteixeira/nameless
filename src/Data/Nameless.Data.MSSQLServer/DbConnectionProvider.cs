@@ -21,7 +21,7 @@ namespace Nameless.Data.MSSQLServer {
         #region Public Constructors
 
         public DbConnectionProvider(DatabaseOptions options) {
-            Ensure.NotNull(options, nameof(options));
+            Prevent.Null(options, nameof(options));
 
             _options = options;
         }

@@ -15,9 +15,9 @@ namespace Nameless.WebApplication.Web.Services {
         #region Public Constructors
 
         public AuthService(IUserService userService, IRefreshTokenService refreshTokenService, IJwtService jwtService) {
-            Ensure.NotNull(userService, nameof(userService));
-            Ensure.NotNull(refreshTokenService, nameof(refreshTokenService));
-            Ensure.NotNull(jwtService, nameof(jwtService));
+            Prevent.Null(userService, nameof(userService));
+            Prevent.Null(refreshTokenService, nameof(refreshTokenService));
+            Prevent.Null(jwtService, nameof(jwtService));
 
             _userService = userService;
             _refreshTokenService = refreshTokenService;
@@ -29,7 +29,7 @@ namespace Nameless.WebApplication.Web.Services {
         #region IAuthService Members
 
         public async Task<AuthenticationResult> AuthenticateAsync(string identification, string? password, string ipAddress, CancellationToken cancellationToken = default) {
-            Ensure.NotNullEmptyOrWhiteSpace(identification, nameof(identification));
+            Prevent.NullEmptyOrWhiteSpace(identification, nameof(identification));
             
             var user = await _userService.GetByEmailAsync(identification, cancellationToken);
             if (user == null || PasswordUtils.HashPassword(password) != user.PasswordHash) {

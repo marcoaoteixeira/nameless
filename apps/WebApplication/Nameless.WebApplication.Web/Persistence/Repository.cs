@@ -16,7 +16,7 @@ namespace Nameless.WebApplication.Web.Persistence {
         #region Public Constructors
 
         public Repository(global::NHibernate.ISession session) {
-            Ensure.NotNull(session, nameof(session));
+            Prevent.Null(session, nameof(session));
 
             _session = session;
         }
@@ -56,7 +56,7 @@ namespace Nameless.WebApplication.Web.Persistence {
         public Task<TEntity?> SaveAsync<TEntity>(TEntity entity, CancellationToken cancellationToken = default) where TEntity : EntityBase {
             BlockAccessAfterDispose();
 
-            Ensure.NotNull(entity, nameof(entity));
+            Prevent.Null(entity, nameof(entity));
 
             using var transaction = _session!.BeginTransaction();
             try {
@@ -78,7 +78,7 @@ namespace Nameless.WebApplication.Web.Persistence {
         public Task<bool> DeleteAsync<TEntity>(TEntity entity, CancellationToken cancellationToken = default) where TEntity : EntityBase {
             BlockAccessAfterDispose();
 
-            Ensure.NotNull(entity, nameof(entity));
+            Prevent.Null(entity, nameof(entity));
 
             return _session!
                 .DeleteAsync(entity, cancellationToken)
@@ -91,7 +91,7 @@ namespace Nameless.WebApplication.Web.Persistence {
         public Task DeleteAllAsync<TEntity>(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken = default) where TEntity : EntityBase {
             BlockAccessAfterDispose();
 
-            Ensure.NotNull(filter, nameof(filter));
+            Prevent.Null(filter, nameof(filter));
 
             return _session!.Query<TEntity>().Where(filter).DeleteAsync(cancellationToken);
         }
@@ -99,7 +99,7 @@ namespace Nameless.WebApplication.Web.Persistence {
         public Task<bool> ExistsAsync<TEntity>(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken = default) where TEntity : EntityBase {
             BlockAccessAfterDispose();
 
-            Ensure.NotNull(filter, nameof(filter));
+            Prevent.Null(filter, nameof(filter));
 
             var result = _session!.Query<TEntity>().Count(filter) > 0;
 

@@ -20,12 +20,12 @@ namespace Nameless.Localization.Json {
         #region Public Constructors
 
         public StringLocalizer(CultureInfo culture, string sourceName, string sourcePath, PluralizationRuleDelegate pluralizationRule, TranslationCollection translationCollection, Func<CultureInfo, string, string, IStringLocalizer> localizerFactory) {
-            Ensure.NotNull(culture, nameof(culture));
-            Ensure.NotNullEmptyOrWhiteSpace(sourceName, nameof(sourceName));
-            Ensure.NotNullEmptyOrWhiteSpace(sourcePath, nameof(sourcePath));
-            Ensure.NotNull(pluralizationRule, nameof(pluralizationRule));
-            Ensure.NotNull(translationCollection, nameof(translationCollection));
-            Ensure.NotNull(localizerFactory, nameof(localizerFactory));
+            Prevent.Null(culture, nameof(culture));
+            Prevent.NullEmptyOrWhiteSpace(sourceName, nameof(sourceName));
+            Prevent.NullEmptyOrWhiteSpace(sourcePath, nameof(sourcePath));
+            Prevent.Null(pluralizationRule, nameof(pluralizationRule));
+            Prevent.Null(translationCollection, nameof(translationCollection));
+            Prevent.Null(localizerFactory, nameof(localizerFactory));
 
 
             _culture = culture;

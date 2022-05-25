@@ -21,7 +21,7 @@ namespace Nameless.NHibernate {
         #region Public Constructors
 
         public SessionProvider(IConfigurationBuilder configurationBuilder, NHibernateOptions? options = null) {
-            Ensure.NotNull(configurationBuilder, nameof(configurationBuilder));
+            Prevent.Null(configurationBuilder, nameof(configurationBuilder));
 
             _configurationBuilder = configurationBuilder;
             _options = options ?? new();

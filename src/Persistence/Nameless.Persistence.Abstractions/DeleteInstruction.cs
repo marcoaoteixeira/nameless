@@ -14,7 +14,7 @@ namespace Nameless.Persistence {
         #region Public Constructors
 
         public DeleteInstruction(Expression<Func<TEntity, bool>> filter) {
-            Ensure.NotNull(filter, nameof(filter));
+            Prevent.Null(filter, nameof(filter));
 
             Filter = filter;
         }

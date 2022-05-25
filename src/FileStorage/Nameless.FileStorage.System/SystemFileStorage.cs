@@ -96,8 +96,8 @@ namespace Nameless.FileStorage.System {
 
         /// <inheritdoc />
         public Task CreateFileAsync(string relativePath, SysStream input, bool overwrite = false, CancellationToken token = default) {
-            Ensure.NotNullEmptyOrWhiteSpace(relativePath, nameof(relativePath));
-            Ensure.NotNull(input, nameof(input));
+            Prevent.NullEmptyOrWhiteSpace(relativePath, nameof(relativePath));
+            Prevent.Null(input, nameof(input));
 
             var filePath = PathHelper.GetPhysicalPath(Root, relativePath);
 
@@ -115,7 +115,7 @@ namespace Nameless.FileStorage.System {
 
         /// <inheritdoc />
         public Task<IFile> GetFileAsync(string relativePath) {
-            Ensure.NotNullEmptyOrWhiteSpace(relativePath, nameof(relativePath));
+            Prevent.NullEmptyOrWhiteSpace(relativePath, nameof(relativePath));
 
             var currentRelativePath = PathHelper.Normalize(relativePath);
 

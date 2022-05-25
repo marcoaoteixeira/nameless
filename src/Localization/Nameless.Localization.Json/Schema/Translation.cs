@@ -12,7 +12,7 @@
         #region Public Constructors
 
         public Translation(string key, string[]? values = null) {
-            Ensure.NotNullEmptyOrWhiteSpace(key, nameof(key));
+            Prevent.NullEmptyOrWhiteSpace(key, nameof(key));
 
             Key = key;
             Values = values ?? Array.Empty<string>();

@@ -64,7 +64,7 @@ namespace Nameless.DependencyInjection.Autofac {
         /// <param name="serviceType">The service type</param>
         /// <returns>An array of types</returns>
         protected Type[] SearchForImplementations(Type serviceType) {
-            Ensure.NotNull(serviceType, nameof(serviceType));
+            Prevent.Null(serviceType, nameof(serviceType));
 
             if (!SupportAssemblies.Any()) { return Enumerable.Empty<Type>().ToArray(); }
 

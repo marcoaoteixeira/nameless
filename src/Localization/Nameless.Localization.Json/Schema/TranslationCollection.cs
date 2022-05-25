@@ -18,7 +18,7 @@
         #region Public Constructors
 
         public TranslationCollection(string key, IEnumerable<Translation>? values = null) {
-            Ensure.NotNullEmptyOrWhiteSpace(key, nameof(key));
+            Prevent.NullEmptyOrWhiteSpace(key, nameof(key));
 
             Key = key;
             _dictionary = (values ?? Enumerable.Empty<Translation>()).ToDictionary(_ => _.Key, _ => _);

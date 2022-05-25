@@ -18,7 +18,7 @@ namespace Nameless.Data {
         /// <param name="defaultValue">The default value value.</param>
         /// <returns>A string value.</returns>
         public static string? GetStringOrDefault(this IDataRecord self, string fieldName, string? defaultValue = default) {
-            Ensure.NotNullEmptyOrWhiteSpace(fieldName, nameof(fieldName));
+            Prevent.NullEmptyOrWhiteSpace(fieldName, nameof(fieldName));
 
             var value = SafeGetValue(self, fieldName);
 
@@ -188,7 +188,7 @@ namespace Nameless.Data {
         /// <param name="defaultValue">The default value value.</param>
         /// <returns>An Enum value.</returns>
         public static TEnum? GetEnumOrDefault<TEnum>(this IDataRecord self, string fieldName, TEnum? defaultValue = null) where TEnum : struct {
-            Ensure.NotNullEmptyOrWhiteSpace(fieldName, nameof(fieldName));
+            Prevent.NullEmptyOrWhiteSpace(fieldName, nameof(fieldName));
             if (!typeof(TEnum).IsEnum) { throw new InvalidOperationException($"{nameof(TEnum)} must be an Enum."); }
 
             var value = SafeGetValue(self, fieldName);
@@ -206,7 +206,7 @@ namespace Nameless.Data {
         /// <param name="defaultValue">The default value value.</param>
         /// <returns>An Enum value.</returns>
         public static object? GetEnumOrDefault(this IDataRecord self, Type enumType, string fieldName, object? defaultValue = null) {
-            Ensure.NotNull(enumType, nameof(enumType));
+            Prevent.Null(enumType, nameof(enumType));
             if (!enumType.IsEnum) { throw new InvalidOperationException($"{nameof(enumType)} must be an Enum."); }
             if (defaultValue != null && !defaultValue.GetType().IsEnum) { throw new InvalidOperationException($"{nameof(defaultValue)} must be an Enum."); }
 
@@ -227,7 +227,7 @@ namespace Nameless.Data {
         /// <param name="defaultValue">The default value value.</param>
         /// <returns>A byte array value.</returns>
         public static byte[]? GetBlobOrDefault(this IDataRecord self, string fieldName, byte[]? defaultValue = null) {
-            Ensure.NotNullEmptyOrWhiteSpace(fieldName, nameof(fieldName));
+            Prevent.NullEmptyOrWhiteSpace(fieldName, nameof(fieldName));
 
             var value = SafeGetValue(self, fieldName);
 
@@ -240,7 +240,7 @@ namespace Nameless.Data {
 
         private static TStruct? GetStructOrDefault<TStruct>(this IDataRecord self, string fieldName, TStruct? defaultValue = null)
         where TStruct : struct {
-            Ensure.NotNullEmptyOrWhiteSpace(fieldName, nameof(fieldName));
+            Prevent.NullEmptyOrWhiteSpace(fieldName, nameof(fieldName));
 
             var value = SafeGetValue(self, fieldName);
             if (value == null) { return defaultValue.HasValue ? new TStruct?(defaultValue.Value) : null; }

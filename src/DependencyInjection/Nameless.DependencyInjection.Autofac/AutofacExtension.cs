@@ -23,7 +23,7 @@ namespace Nameless.DependencyInjection.Autofac {
         /// <param name="openGenericServiceType">The open generic interface or base class type for which implementations will be found.</param>
         /// <returns>Registration builder allowing the registration to be configured.</returns>
         public static IRegistrationBuilder<TLimit, TScanningActivatorData, TRegistrationStyle> AsClosedInterfacesOf<TLimit, TScanningActivatorData, TRegistrationStyle> (this IRegistrationBuilder<TLimit, TScanningActivatorData, TRegistrationStyle> registration, Type openGenericServiceType) where TScanningActivatorData : ScanningActivatorData {
-            Ensure.NotNull (openGenericServiceType, nameof (openGenericServiceType));
+            Prevent.Null (openGenericServiceType, nameof (openGenericServiceType));
 
             if (!openGenericServiceType.IsInterface) {
                 throw new ArgumentException ("Generic type must be an interface.", nameof (openGenericServiceType));

@@ -35,7 +35,7 @@ namespace Nameless.EventSourcing {
         #region Public Override Methods
 
         public override bool TryInvokeMember(InvokeMemberBinder binder, object?[]? args, out object? result) {
-            Ensure.NotNull(args, nameof(args));
+            Prevent.Null(args, nameof(args));
 
             var methodName = binder.Name;
             var type = RealObject.GetType();

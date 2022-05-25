@@ -23,9 +23,9 @@ namespace Nameless.PubSub.RabbitMQ {
         #region Internal Constructors
 
         internal InnerPublisher(IConnectionFactory factory, Exchange exchange, ISerializer serializer) {
-            Ensure.NotNull(factory, nameof(factory));
-            Ensure.NotNull(exchange, nameof(exchange));
-            Ensure.NotNull(serializer, nameof(serializer));
+            Prevent.Null(factory, nameof(factory));
+            Prevent.Null(exchange, nameof(exchange));
+            Prevent.Null(serializer, nameof(serializer));
 
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();

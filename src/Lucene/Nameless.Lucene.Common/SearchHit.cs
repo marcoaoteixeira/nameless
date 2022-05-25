@@ -1,12 +1,11 @@
-﻿using System;
-using Lucene.Net.Documents;
+﻿using Lucene.Net.Documents;
 
 namespace Nameless.Lucene {
 
-	/// <summary>
-	/// Default implementation of <see cref="ISearchHit"/>.
-	/// </summary>
-	public sealed class SearchHit : ISearchHit {
+    /// <summary>
+    /// Default implementation of <see cref="ISearchHit"/>.
+    /// </summary>
+    public sealed class SearchHit : ISearchHit {
 
 		#region Private Read-Only Fields
 
@@ -23,7 +22,7 @@ namespace Nameless.Lucene {
 		/// <param name="document">The document.</param>
 		/// <param name="score">The score.</param>
 		public SearchHit(global::Lucene.Net.Documents.Document document, float score) {
-			Prevent.ParameterNull(document, nameof(document));
+			Prevent.Null(document, nameof(document));
 
 			_document = document;
 			_score = score;
@@ -60,7 +59,7 @@ namespace Nameless.Lucene {
 		public string GetString(string name) {
 			var field = _document.GetField(name);
 
-			return field?.GetStringValue();
+			return field != null ? field.GetStringValue() : string.Empty;
 		}
 
 		/// <inheritdoc />

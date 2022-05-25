@@ -28,7 +28,7 @@ namespace Nameless.Persistence {
         /// <param name="name">The name of the parameter.</param>
         /// <param name="value">The value of the parameter.</param>
         public Parameter(string name, object value) {
-            Ensure.NotNullEmptyOrWhiteSpace(name, nameof(name));
+            Prevent.NullEmptyOrWhiteSpace(name, nameof(name));
 
             Name = name;
             Value = value;
@@ -137,7 +137,7 @@ namespace Nameless.Persistence {
         /// <param name="parameter">The parameter.</param>
         /// <returns><c>true</c> if added; otherwise <c>false</c></returns>
         public bool Add(Parameter parameter) {
-            Ensure.NotNull(parameter, nameof(parameter));
+            Prevent.Null(parameter, nameof(parameter));
 
             if (!_items.ContainsKey(parameter.Name)) {
                 _items[parameter.Name] = parameter;
@@ -151,7 +151,7 @@ namespace Nameless.Persistence {
         /// <param name="name">Name of the parameter.</param>
         /// <returns><c>true</c> if removed; otherwise <c>false</c></returns>
         public bool Remove(string name) {
-            Ensure.NotNullEmptyOrWhiteSpace(name, nameof(name));
+            Prevent.NullEmptyOrWhiteSpace(name, nameof(name));
 
             return _items.Remove(name);
         }
@@ -161,7 +161,7 @@ namespace Nameless.Persistence {
         /// <param name="parameter">The parameter.</param>
         /// <returns><c>true</c> if removed; otherwise <c>false</c></returns>
         public bool Remove(Parameter parameter) {
-            Ensure.NotNull(parameter, nameof(parameter));
+            Prevent.Null(parameter, nameof(parameter));
 
             return _items.Remove(parameter.Name);
         }
@@ -171,14 +171,14 @@ namespace Nameless.Persistence {
         #region Private Methods
 
         private Parameter? GetParameter(string name) {
-            Ensure.NotNullEmptyOrWhiteSpace(name, nameof(name));
+            Prevent.NullEmptyOrWhiteSpace(name, nameof(name));
 
             return _items.ContainsKey(name) ? _items[name] : null;
         }
 
         private void SetParameter(string name, Parameter? parameter) {
-            Ensure.NotNullEmptyOrWhiteSpace(name, nameof(name));
-            Ensure.NotNull(parameter, nameof(parameter));
+            Prevent.NullEmptyOrWhiteSpace(name, nameof(name));
+            Prevent.Null(parameter, nameof(parameter));
 
             _items[name] = parameter!;
         }

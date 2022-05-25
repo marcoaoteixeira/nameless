@@ -34,11 +34,11 @@
         #region Public Static Methods
 
         public static AuthenticationResult Success(string username, string email, string jwtToken, string refreshToken, DateTime refreshTokenExpiration) {
-            Ensure.NotNullEmptyOrWhiteSpace(username, nameof(username));
-            Ensure.NotNullEmptyOrWhiteSpace(email, nameof(email));
-            Ensure.NotNullEmptyOrWhiteSpace(jwtToken, nameof(jwtToken));
-            Ensure.NotNullEmptyOrWhiteSpace(refreshToken, nameof(refreshToken));
-            Ensure.NotNull(refreshTokenExpiration, nameof(refreshTokenExpiration));
+            Prevent.NullEmptyOrWhiteSpace(username, nameof(username));
+            Prevent.NullEmptyOrWhiteSpace(email, nameof(email));
+            Prevent.NullEmptyOrWhiteSpace(jwtToken, nameof(jwtToken));
+            Prevent.NullEmptyOrWhiteSpace(refreshToken, nameof(refreshToken));
+            Prevent.Null(refreshTokenExpiration, nameof(refreshTokenExpiration));
 
             return new AuthenticationResult {
                 Username = username,

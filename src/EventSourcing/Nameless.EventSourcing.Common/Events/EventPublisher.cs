@@ -14,8 +14,8 @@ namespace Nameless.EventSourcing.Events {
         #region Public Constructors
 
         public EventPublisher(IPublisher publisher, IEventSerializer serializer) {
-            Ensure.NotNull(publisher, nameof(publisher));
-            Ensure.NotNull(serializer, nameof(serializer));
+            Prevent.Null(publisher, nameof(publisher));
+            Prevent.Null(serializer, nameof(serializer));
 
             _publisher = publisher;
             _serializer = serializer;
@@ -27,7 +27,7 @@ namespace Nameless.EventSourcing.Events {
 
         /// <inheritdoc />
         public Task PublishAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default) where TEvent : IEvent {
-            Ensure.NotNull(evt, nameof(evt));
+            Prevent.Null(evt, nameof(evt));
 
             var message = new Message {
                 Type = evt.GetType().FullName,

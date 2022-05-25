@@ -11,7 +11,7 @@
         #region Public Constructors
 
         public AsyncEnumerable(IEnumerable<T> enumerable) {
-            Ensure.NotNull(enumerable, nameof(enumerable));
+            Prevent.Null(enumerable, nameof(enumerable));
 
             _enumerable = enumerable;
         }
@@ -45,7 +45,7 @@
         #region Public Constructors
 
         public AsyncEnumerator(IEnumerator<T> enumerator, CancellationToken cancellationToken = default) {
-            Ensure.NotNull(enumerator, nameof(enumerator));
+            Prevent.Null(enumerator, nameof(enumerator));
 
             _enumerator = enumerator;
             _cancellationToken = cancellationToken;

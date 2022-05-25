@@ -15,7 +15,7 @@ namespace Nameless.EventSourcing.Repository {
         #region Public Constructors
 
         public AggregateSession(IAggregateRepository repository) {
-            Ensure.NotNull(repository, nameof(repository));
+            Prevent.Null(repository, nameof(repository));
 
             _aggregateRepository = repository;
         }
@@ -47,7 +47,7 @@ namespace Nameless.EventSourcing.Repository {
         #region ISession Members
 
         public void Attach<TAggregate>(TAggregate aggregate) where TAggregate : AggregateRoot {
-            Ensure.NotNull(aggregate, nameof(aggregate));
+            Prevent.Null(aggregate, nameof(aggregate));
 
             _semaphore.Wait();
             try {
@@ -59,7 +59,7 @@ namespace Nameless.EventSourcing.Repository {
         }
 
         public void Detach<TAggregate>(TAggregate aggregate) where TAggregate : AggregateRoot {
-            Ensure.NotNull(aggregate, nameof(aggregate));
+            Prevent.Null(aggregate, nameof(aggregate));
 
             _semaphore.Wait();
             try {

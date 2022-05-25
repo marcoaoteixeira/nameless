@@ -16,8 +16,8 @@ namespace Nameless.Localization {
         #region Public Constructors
 
         public LocaleString(CultureInfo culture, string text, string? translation = null, params object[] args) {
-            Ensure.NotNull(culture, nameof(culture));
-            Ensure.NotNullEmptyOrWhiteSpace(text, nameof(text));
+            Prevent.Null(culture, nameof(culture));
+            Prevent.NullEmptyOrWhiteSpace(text, nameof(text));
 
             Culture = culture ?? throw new ArgumentNullException(nameof(culture));
             Text = text ?? throw new ArgumentNullException(nameof(text));

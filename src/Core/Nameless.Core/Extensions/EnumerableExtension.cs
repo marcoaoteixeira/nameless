@@ -22,7 +22,7 @@ namespace Nameless {
         /// if <paramref name="self"/> or <paramref name="action"/> were <c>null</c>.
         /// </exception>
         public static void Each<T>(this IEnumerable<T> self, Action<T> action) {
-            Ensure.NotNull(action, nameof(action));
+            Prevent.Null(action, nameof(action));
 
             self.Each((current, _) => action(current));
         }
@@ -38,7 +38,7 @@ namespace Nameless {
         /// if <paramref name="self"/> or <paramref name="action"/> were <c>null</c>.
         /// </exception>
         public static void Each<T>(this IEnumerable<T> self, Action<T, int> action) {
-            Ensure.NotNull(action, nameof(action));
+            Prevent.Null(action, nameof(action));
 
             if (self == null) { return; }
 
@@ -59,7 +59,7 @@ namespace Nameless {
         /// if <paramref name="self"/> or <paramref name="action"/> were <c>null</c>.
         /// </exception>
         public static void Each(this IEnumerable self, Action<object> action) {
-            Ensure.NotNull(action, nameof(action));
+            Prevent.Null(action, nameof(action));
 
             self.Each((current, _) => action(current));
         }
@@ -74,7 +74,7 @@ namespace Nameless {
         /// if <paramref name="self"/> or <paramref name="action"/> were <c>null</c>.
         /// </exception>
         public static void Each(this IEnumerable self, Action<object, int> action) {
-            Ensure.NotNull(action, nameof(action));
+            Prevent.Null(action, nameof(action));
 
             if (self == null) { return; }
 
@@ -161,7 +161,7 @@ namespace Nameless {
         #region Private Static Methods
 
         private static IEnumerable<TSource> ExecuteOrderBy<TSource>(IEnumerable<TSource> self, string fieldName, bool ascending = true) {
-            Ensure.NotNullEmptyOrWhiteSpace(fieldName, nameof(fieldName));
+            Prevent.NullEmptyOrWhiteSpace(fieldName, nameof(fieldName));
 
             var type = typeof(TSource);
             var property = type.GetTypeInfo().GetProperty(fieldName);

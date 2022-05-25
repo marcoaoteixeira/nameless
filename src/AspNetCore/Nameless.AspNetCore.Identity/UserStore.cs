@@ -128,7 +128,7 @@ namespace Nameless.AspNetCore.Identity {
         #region Public Constructors
 
         public UserStore(IRepository repository, IdentityErrorDescriber? describer) : base(describer) {
-            Ensure.NotNull(repository, nameof(repository));
+            Prevent.Null(repository, nameof(repository));
 
             Repository = repository;
         }
@@ -138,7 +138,7 @@ namespace Nameless.AspNetCore.Identity {
         #region Public Override Methods
 
         public override Task<IList<TUser>> GetUsersInRoleAsync(string normalizedRoleName, CancellationToken cancellationToken = default) {
-            Ensure.NotNullEmptyOrWhiteSpace(normalizedRoleName, nameof(normalizedRoleName));
+            Prevent.NullEmptyOrWhiteSpace(normalizedRoleName, nameof(normalizedRoleName));
 
             var users = Repository.Query<TUser>();
             var usersRoles = Repository.Query<TUserRole>();
@@ -154,8 +154,8 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         public override Task AddToRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default) {
-            Ensure.NotNull(user, nameof(user));
-            Ensure.NotNullEmptyOrWhiteSpace(normalizedRoleName, nameof(normalizedRoleName));
+            Prevent.Null(user, nameof(user));
+            Prevent.NullEmptyOrWhiteSpace(normalizedRoleName, nameof(normalizedRoleName));
 
             return FindRoleAsync(normalizedRoleName, cancellationToken)
                 .ContinueWith(antecedent => {
@@ -176,8 +176,8 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         public override Task RemoveFromRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default) {
-            Ensure.NotNull(user, nameof(user));
-            Ensure.NotNullEmptyOrWhiteSpace(normalizedRoleName, nameof(normalizedRoleName));
+            Prevent.Null(user, nameof(user));
+            Prevent.NullEmptyOrWhiteSpace(normalizedRoleName, nameof(normalizedRoleName));
 
             return FindRoleAsync(normalizedRoleName, cancellationToken)
                 .ContinueWith(antecedent => {
@@ -194,7 +194,7 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         public override Task<IList<string>> GetRolesAsync(TUser user, CancellationToken cancellationToken = default) {
-            Ensure.NotNull(user, nameof(user));
+            Prevent.Null(user, nameof(user));
 
             var userRoleCollection = Repository.Query<TUserRole>();
             var roleCollection = Repository.Query<TRole>();
@@ -208,7 +208,7 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         public override Task<bool> IsInRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken = default) {
-            Ensure.NotNull(user, nameof(user));
+            Prevent.Null(user, nameof(user));
 
             var userRoleCollection = Repository.Query<TUserRole>();
             var roleCollection = Repository.Query<TRole>();
@@ -231,7 +231,7 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         public override Task<IdentityResult> DeleteAsync(TUser user, CancellationToken cancellationToken = default) {
-            Ensure.NotNull(user, nameof(user));
+            Prevent.Null(user, nameof(user));
 
             var instruction = new DeleteInstruction<TUser>(
                 filter: _ => _.Id.Equals(user.Id)
@@ -243,7 +243,7 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         public override Task<TUser> FindByIdAsync(string userId, CancellationToken cancellationToken = default) {
-            Ensure.NotNullEmptyOrWhiteSpace(userId, nameof(userId));
+            Prevent.NullEmptyOrWhiteSpace(userId, nameof(userId));
 
             var curretId = Utils.Parse<TKey>(userId);
 
@@ -253,7 +253,7 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         public override Task<TUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken = default) {
-            Ensure.NotNullEmptyOrWhiteSpace(normalizedUserName, nameof(normalizedUserName));
+            Prevent.NullEmptyOrWhiteSpace(normalizedUserName, nameof(normalizedUserName));
 
             return Repository
                 .FindAsync<TUser>(_ => _.NormalizedUserName == normalizedUserName, cancellationToken)
@@ -261,7 +261,7 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         public override Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken cancellationToken = default) {
-            Ensure.NotNull(user, nameof(user));
+            Prevent.Null(user, nameof(user));
 
             return Repository
                 .FindAsync<TUserClaim>(_ => _.UserId.Equals(user.Id), cancellationToken)
@@ -270,7 +270,7 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         public override Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default) {
-            Ensure.NotNull(user, nameof(user));
+            Prevent.Null(user, nameof(user));
 
             if (!claims.Any()) { return Task.CompletedTask; }
 
@@ -294,9 +294,9 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         public override Task ReplaceClaimAsync(TUser user, Claim claim, Claim newClaim, CancellationToken cancellationToken = default) {
-            Ensure.NotNull(user, nameof(user));
-            Ensure.NotNull(claim, nameof(claim));
-            Ensure.NotNull(newClaim, nameof(newClaim));
+            Prevent.Null(user, nameof(user));
+            Prevent.Null(claim, nameof(claim));
+            Prevent.Null(newClaim, nameof(newClaim));
 
             var instruction = new SaveInstruction<TUserClaim>(
                 entity: new TUserClaim {
@@ -313,8 +313,8 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         public override Task RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default) {
-            Ensure.NotNull(user, nameof(user));
-            Ensure.NotNull(claims, nameof(claims));
+            Prevent.Null(user, nameof(user));
+            Prevent.Null(claims, nameof(claims));
 
             if (!claims.Any()) { return Task.CompletedTask; }
 
@@ -333,8 +333,8 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         public override Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken cancellationToken = default) {
-            Ensure.NotNull(user, nameof(user));
-            Ensure.NotNull(login, nameof(login));
+            Prevent.Null(user, nameof(user));
+            Prevent.Null(login, nameof(login));
 
             var instruction = new SaveInstruction<TUserLogin>(
                 entity: new TUserLogin {
@@ -352,9 +352,9 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         public override Task RemoveLoginAsync(TUser user, string loginProvider, string providerKey, CancellationToken cancellationToken = default) {
-            Ensure.NotNull(user, nameof(user));
-            Ensure.NotNullEmptyOrWhiteSpace(loginProvider, nameof(loginProvider));
-            Ensure.NotNullEmptyOrWhiteSpace(providerKey, nameof(providerKey));
+            Prevent.Null(user, nameof(user));
+            Prevent.NullEmptyOrWhiteSpace(loginProvider, nameof(loginProvider));
+            Prevent.NullEmptyOrWhiteSpace(providerKey, nameof(providerKey));
 
             var instruction = new DeleteInstruction<TUserLogin>(
                 filter: _ => _.UserId.Equals(user.Id) &&
@@ -366,7 +366,7 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         public override Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user, CancellationToken cancellationToken = default) {
-            Ensure.NotNull(user, nameof(user));
+            Prevent.Null(user, nameof(user));
 
             return Repository
                 .FindAsync<TUserLogin>(_ => _.UserId.Equals(user.Id), cancellationToken)
@@ -379,7 +379,7 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         public override Task<TUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken = default) {
-            Ensure.NotNullEmptyOrWhiteSpace(normalizedEmail, nameof(normalizedEmail));
+            Prevent.NullEmptyOrWhiteSpace(normalizedEmail, nameof(normalizedEmail));
 
             return Repository
                 .FindAsync<TUser>(_ => _.NormalizedEmail == normalizedEmail, cancellationToken)
@@ -387,7 +387,7 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         public override Task<IList<TUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken = default) {
-            Ensure.NotNull(claim, nameof(claim));
+            Prevent.Null(claim, nameof(claim));
 
             var users = Repository.Query<TUser>();
             var usersClaims = Repository.Query<TUserClaim>();
@@ -405,7 +405,7 @@ namespace Nameless.AspNetCore.Identity {
         #region Protected Override Methods
 
         protected override Task<TRole> FindRoleAsync(string normalizedRoleName, CancellationToken cancellationToken) {
-            Ensure.NotNullEmptyOrWhiteSpace(normalizedRoleName, nameof(normalizedRoleName));
+            Prevent.NullEmptyOrWhiteSpace(normalizedRoleName, nameof(normalizedRoleName));
 
             return Repository
                 .FindAsync<TRole>(
@@ -430,8 +430,8 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         protected override Task<TUserLogin> FindUserLoginAsync(TKey userId, string loginProvider, string providerKey, CancellationToken cancellationToken) {
-            Ensure.NotNullEmptyOrWhiteSpace(loginProvider, nameof(loginProvider));
-            Ensure.NotNullEmptyOrWhiteSpace(providerKey, nameof(providerKey));
+            Prevent.NullEmptyOrWhiteSpace(loginProvider, nameof(loginProvider));
+            Prevent.NullEmptyOrWhiteSpace(providerKey, nameof(providerKey));
 
             Expression<Func<TUserLogin, bool>> filter;
 
@@ -457,9 +457,9 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         protected override Task<TUserToken> FindTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken) {
-            Ensure.NotNull(user, nameof(user));
-            Ensure.NotNullEmptyOrWhiteSpace(loginProvider, nameof(loginProvider));
-            Ensure.NotNullEmptyOrWhiteSpace(name, nameof(name));
+            Prevent.Null(user, nameof(user));
+            Prevent.NullEmptyOrWhiteSpace(loginProvider, nameof(loginProvider));
+            Prevent.NullEmptyOrWhiteSpace(name, nameof(name));
 
             return Repository
                 .FindAsync<TUserToken>(_ => _.UserId.Equals(user.Id) &&
@@ -469,7 +469,7 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         protected override Task AddUserTokenAsync(TUserToken token) {
-            Ensure.NotNull(token, nameof(token));
+            Prevent.Null(token, nameof(token));
 
             var instruction = new SaveInstruction<TUserToken>(
                 entity: token,
@@ -482,7 +482,7 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         protected override Task RemoveUserTokenAsync(TUserToken token) {
-            Ensure.NotNull(token, nameof(token));
+            Prevent.Null(token, nameof(token));
 
             var instruction = new DeleteInstruction<TUserToken>(
                 filter: _ => _.UserId.Equals(token.UserId) &&

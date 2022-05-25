@@ -16,8 +16,8 @@ namespace Nameless.DependencyInjection.Autofac {
         #region Public Constructors
 
         public FactoryResolveMiddleware(Type injectType, Func<MemberInfo, IComponentContext, object> factory) {
-            Ensure.NotNull(injectType, nameof(injectType));
-            Ensure.NotNull(factory, nameof(factory));
+            Prevent.Null(injectType, nameof(injectType));
+            Prevent.Null(factory, nameof(factory));
 
             _injectType = injectType;
             _factory = factory;

@@ -16,7 +16,7 @@ namespace Nameless.Persistence {
         #region Public Constructors
 
         public SaveInstruction(TEntity entity, Expression<Func<TEntity, bool>>? filter = null, WriteType type = WriteType.Upsert) {
-            Ensure.NotNull(entity, nameof(entity));
+            Prevent.Null(entity, nameof(entity));
 
             Entity = entity;
             Filter = filter;

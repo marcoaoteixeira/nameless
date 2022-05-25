@@ -38,9 +38,9 @@ namespace Nameless.PubSub.RabbitMQ {
         #region Internal Constructors
 
         internal InnerSubscriber(IConnectionFactory factory, Exchange exchange, ISerializer serializer) {
-            Ensure.NotNull(factory, nameof(factory));
-            Ensure.NotNull(exchange, nameof(exchange));
-            Ensure.NotNull(serializer, nameof(serializer));
+            Prevent.Null(factory, nameof(factory));
+            Prevent.Null(exchange, nameof(exchange));
+            Prevent.Null(serializer, nameof(serializer));
 
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
@@ -148,8 +148,8 @@ namespace Nameless.PubSub.RabbitMQ {
         Subscription ISubscriber.Subscribe(string topic, Action<Message> handler) {
             BlockAccessAfterDispose();
 
-            Ensure.NotNullEmptyOrWhiteSpace(topic, nameof(topic));
-            Ensure.NotNull(handler, nameof(handler));
+            Prevent.NullEmptyOrWhiteSpace(topic, nameof(topic));
+            Prevent.Null(handler, nameof(handler));
 
             lock (_syncLock) {
                 var subscription = new Subscription(topic, handler);
@@ -161,7 +161,7 @@ namespace Nameless.PubSub.RabbitMQ {
         bool ISubscriber.Unsubscribe(Subscription subscription) {
             BlockAccessAfterDispose();
 
-            Ensure.NotNull(subscription, nameof(subscription));
+            Prevent.Null(subscription, nameof(subscription));
 
             lock (_syncLock) {
                 var result = _cache.Remove(subscription);

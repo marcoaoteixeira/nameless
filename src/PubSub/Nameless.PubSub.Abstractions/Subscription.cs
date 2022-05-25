@@ -40,8 +40,8 @@ namespace Nameless.PubSub {
         /// <param name="topic">The subscription topic.</param>
         /// <param name="handler">The message handler.</param>
         public Subscription(string topic, Action<Message> handler) {
-            Ensure.NotNullEmptyOrWhiteSpace(topic, nameof(topic));
-            Ensure.NotNull(handler, nameof(handler));
+            Prevent.NullEmptyOrWhiteSpace(topic, nameof(topic));
+            Prevent.Null(handler, nameof(handler));
 
             Topic = topic;
 

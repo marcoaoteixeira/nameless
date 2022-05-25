@@ -43,7 +43,7 @@ namespace Nameless.Messenger.Email {
         /// <param name="fileStorage">The file storage.</param>
         /// <param name="opts">The SMTP client settings.</param>
         public Messenger(IFileStorage fileStorage, IClock? clock = null, MessengerOptions? opts = null) {
-            Ensure.NotNull(fileStorage, nameof(fileStorage));
+            Prevent.Null(fileStorage, nameof(fileStorage));
 
             _fileStorage = fileStorage;
             _clock = clock ?? SystemClock.Instance;

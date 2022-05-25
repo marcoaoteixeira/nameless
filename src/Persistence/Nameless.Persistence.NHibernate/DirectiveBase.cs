@@ -13,7 +13,7 @@ namespace Nameless.Persistence.NHibernate {
         #region Protected Constructors
 
         protected DirectiveBase(ISession session) {
-            Ensure.NotNull(session, nameof(session));
+            Prevent.Null(session, nameof(session));
 
             Session = session;
         }

@@ -15,7 +15,7 @@ namespace Nameless.Persistence.NHibernate {
         #region Public Override Methods
 
         public override Task<IList<dynamic>?> ExecuteAsync(ParameterSet parameters, CancellationToken cancellationToken = default) {
-            Ensure.NotNull(parameters, nameof(parameters));
+            Prevent.Null(parameters, nameof(parameters));
 
             var paramSql = parameters["sql"];
             if (paramSql == null || !paramSql.TryGetValue(out string? sql)) {

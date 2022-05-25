@@ -19,7 +19,7 @@ namespace Nameless.WebApplication.Web.Services {
         #region Public Constructors
 
         public RefreshTokenService(IRepository repository, IClock clock, JwtOptions opts) {
-            Ensure.NotNull(repository, nameof(repository));
+            Prevent.Null(repository, nameof(repository));
 
             _repository = repository;
             _clock = clock ?? SystemClock.Instance;
@@ -31,8 +31,8 @@ namespace Nameless.WebApplication.Web.Services {
         #region IRefreshTokenService Members
 
         public Task<RefreshToken?> CreateAsync(User user, string ipAddress, CancellationToken cancellationToken = default) {
-            Ensure.NotNull(user, nameof(user));
-            Ensure.NotNullEmptyOrWhiteSpace(ipAddress, nameof(ipAddress));
+            Prevent.Null(user, nameof(user));
+            Prevent.NullEmptyOrWhiteSpace(ipAddress, nameof(ipAddress));
 
             var refreshToken = new RefreshToken(_clock.UtcNow) {
                 UserId = user.Id,

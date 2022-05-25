@@ -26,7 +26,7 @@ namespace Nameless.Collections.Generic {
         #region Public Constructors
 
         public Page(T[] items, int index = 0, int size = 10, int total = 0) {
-            Ensure.NotNull(items, nameof(items));
+            Prevent.Null(items, nameof(items));
 
             Items = items;
             Index = index >= 0 ? index : 0;

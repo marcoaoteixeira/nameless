@@ -7,7 +7,7 @@ namespace Nameless.AspNetCore.Extensions {
         #region Public Static Methods
 
         public static string GetIpAddress(this HttpContext self) {
-            Ensure.NotNull(self, nameof(self));
+            Prevent.Null(self, nameof(self));
 
             if (self.Request.Headers.ContainsKey("X-Forwarded-For")) {
                 return self.Request.Headers["X-Forwarded-For"];

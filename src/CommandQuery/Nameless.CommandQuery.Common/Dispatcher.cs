@@ -13,7 +13,7 @@ namespace Nameless.CommandQuery {
         #region Public Constructors
 
         public Dispatcher(IServiceResolver resolver) {
-            Ensure.NotNull(resolver, nameof(resolver));
+            Prevent.Null(resolver, nameof(resolver));
 
             _resolver = resolver;
         }
@@ -23,7 +23,7 @@ namespace Nameless.CommandQuery {
         #region IDispatcher Members
 
         public Task ExecuteAsync(ICommand command, CancellationToken cancellationToken = default) {
-            Ensure.NotNull(command, nameof(command));
+            Prevent.Null(command, nameof(command));
 
             var handlerType = typeof(ICommandHandler<>).MakeGenericType(command.GetType());
             dynamic handler = _resolver.Get(handlerType);
@@ -32,7 +32,7 @@ namespace Nameless.CommandQuery {
         }
 
         public Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default) {
-            Ensure.NotNull(query, nameof(query));
+            Prevent.Null(query, nameof(query));
 
             var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResult));
             dynamic handler = _resolver.Get(handlerType);

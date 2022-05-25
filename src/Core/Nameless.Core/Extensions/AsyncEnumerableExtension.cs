@@ -37,7 +37,7 @@ namespace Nameless {
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>An instance of <see cref="IAsyncEnumerable{TOutput}"/></returns>
         public async static IAsyncEnumerable<TOutput> Project<TInput, TOutput>(this IAsyncEnumerable<TInput> self, Func<TInput, TOutput> project, [EnumeratorCancellation] CancellationToken cancellationToken = default) {
-            Ensure.NotNull(project, nameof(project));
+            Prevent.Null(project, nameof(project));
 
             if (self == null) { yield break; }
 

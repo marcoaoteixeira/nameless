@@ -14,7 +14,7 @@ namespace Nameless.Persistence.NHibernate {
         #region Public Constructors
 
         public Writer(ISession session) {
-            Ensure.NotNull(session, nameof(session));
+            Prevent.Null(session, nameof(session));
 
             _session = session;
         }

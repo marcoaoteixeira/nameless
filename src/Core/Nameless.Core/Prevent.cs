@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Nameless {
 
-    public static class Ensure {
+    public static class Prevent {
 
         #region Public Static Methods
 
@@ -17,7 +17,7 @@ namespace Nameless {
         /// If <paramref name="value"/> is <c>null</c>.
         /// </exception>
         [DebuggerStepThrough]
-        public static void NotNull([NotNull] object? value, string? paramName) {
+        public static void Null([NotNull] object? value, string? paramName) {
             if (value == null) {
                 throw new ArgumentNullException(paramName);
             }
@@ -36,8 +36,8 @@ namespace Nameless {
         /// If <paramref name="value"/> is empty or white spaces.
         /// </exception>
         [DebuggerStepThrough]
-        public static void NotNullEmptyOrWhiteSpace([NotNull] string? value, string? paramName) {
-            NotNull(value, paramName);
+        public static void NullEmptyOrWhiteSpace([NotNull] string? value, string? paramName) {
+            Null(value, paramName);
 
             if (value.Trim().Length == 0) {
                 throw new ArgumentException("Value cannot be empty or white spaces.", paramName);
@@ -57,8 +57,8 @@ namespace Nameless {
         /// If <paramref name="value"/> is empty.
         /// </exception>
 		[DebuggerStepThrough]
-        public static void NotNullOrEmpty([NotNull] IEnumerable? value, string? paramName) {
-            NotNull(value, paramName);
+        public static void NullOrEmpty([NotNull] IEnumerable? value, string? paramName) {
+            Null(value, paramName);
 
             // Costs O(1)
             if (value is ICollection collection && collection.Count == 0) {
@@ -93,9 +93,9 @@ namespace Nameless {
         /// from <paramref name="specificType"/>.
 		/// </exception>
 		[DebuggerStepThrough]
-        public static void TypeAssignableFrom(Type baseType, Type specificType) {
-            NotNull(baseType, nameof(baseType));
-            NotNull(specificType, nameof(specificType));
+        public static void TypeNotAssignableFrom(Type baseType, Type specificType) {
+            Null(baseType, nameof(baseType));
+            Null(specificType, nameof(specificType));
 
             if (!baseType.IsAssignableFrom(specificType)) {
                 throw new ArgumentException($"The specified type ({specificType}) must be assignable to {baseType}");

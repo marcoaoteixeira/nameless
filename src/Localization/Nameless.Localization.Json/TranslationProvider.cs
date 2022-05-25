@@ -26,7 +26,7 @@ namespace Nameless.Localization.Json {
         #region Public Constructors
 
         public TranslationProvider(IFileStorage fileStorage, LocalizationOptions? options = null) {
-            Ensure.NotNull(fileStorage, nameof(fileStorage));
+            Prevent.Null(fileStorage, nameof(fileStorage));
 
             _fileStorage = fileStorage;
             _options = options ?? new();
@@ -94,7 +94,8 @@ namespace Nameless.Localization.Json {
             if (file == null || !file.Exists) { return new TranslationGroup(culture); }
 
             var entry = _cache!.GetOrAdd(culture.Name, key => {
-                var json = file.GetText(Encoding.UTF8); /* always read files as UTF-8 */
+                using var stream = file.Open();
+                var json = stream.ToText(Encoding.UTF8); /* always read files as UTF-8 */
                 var translationCollections = JsonConvert.DeserializeObject<TranslationCollection[]>(json!, new TranslationCollectionJsonConverter());
                 var translationGroup = new TranslationGroup(culture, translationCollections);
 

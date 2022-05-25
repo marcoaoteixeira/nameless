@@ -15,7 +15,7 @@ namespace Nameless {
         /// <param name="self">The current assembly.</param>
         /// <returns>The path to the assembly folder.</returns>
         public static string GetDirectoryPath(this Assembly self) {
-            Ensure.NotNull(self, nameof(self));
+            Prevent.Null(self, nameof(self));
 
             var location = OperatingSystem.IsWindows() ? self.Location : $"file://{self.Location}";
             var uri = new UriBuilder(location);

@@ -114,7 +114,7 @@ namespace Nameless.Logging.Log4net {
         #region ILoggerFactory Members
 
         public ILogger CreateLogger(Type type) {
-            Ensure.NotNull(type, nameof(type));
+            Prevent.Null(type, nameof(type));
 
             BlockAccessAfterDispose();
 

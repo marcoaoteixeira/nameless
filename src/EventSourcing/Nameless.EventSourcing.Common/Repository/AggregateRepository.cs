@@ -21,12 +21,12 @@ namespace Nameless.EventSourcing.Repository {
         #region Public Constructors
 
         public AggregateRepository(IAggregateFactory aggregateFactory, IClock clock, IEventPublisher eventPublisher, IEventStore eventStore, ISnapshotStore snapshotStore, ISnapshotStrategy snapshotStrategy) {
-            Ensure.NotNull(aggregateFactory, nameof(aggregateFactory));
-            Ensure.NotNull(clock, nameof(clock));
-            Ensure.NotNull(eventPublisher, nameof(eventPublisher));
-            Ensure.NotNull(eventStore, nameof(eventStore));
-            Ensure.NotNull(snapshotStore, nameof(snapshotStore));
-            Ensure.NotNull(snapshotStrategy, nameof(snapshotStrategy));
+            Prevent.Null(aggregateFactory, nameof(aggregateFactory));
+            Prevent.Null(clock, nameof(clock));
+            Prevent.Null(eventPublisher, nameof(eventPublisher));
+            Prevent.Null(eventStore, nameof(eventStore));
+            Prevent.Null(snapshotStore, nameof(snapshotStore));
+            Prevent.Null(snapshotStrategy, nameof(snapshotStrategy));
 
             _aggregateFactory = aggregateFactory;
             _clock = clock;

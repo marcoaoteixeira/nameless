@@ -43,7 +43,7 @@ namespace Nameless.DependencyInjection {
 		/// <param name="value">The parameter value.</param>
 		/// <returns>An instance of <see cref="Parameter"/>.</returns>
 		public static Parameter Create(string name, object value) {
-			Ensure.NotNullEmptyOrWhiteSpace(name, nameof(name));
+			Prevent.NullEmptyOrWhiteSpace(name, nameof(name));
 
 			return new Parameter(name: name, value: value, type: null);
 		}
@@ -54,7 +54,7 @@ namespace Nameless.DependencyInjection {
 		/// <param name="value">The parameter value.</param>
 		/// <returns>An instance of <see cref="Parameter"/>.</returns>
 		public static Parameter Create(Type type, object value) {
-			Ensure.NotNull(type, nameof(type));
+			Prevent.Null(type, nameof(type));
 
 			return new Parameter(name: null, value: value, type: type);
 		}

@@ -80,7 +80,7 @@ namespace Nameless.Localization {
 
         /// <inheritdocs />
         public bool TryGet(CultureInfo culture, out PluralizationRuleDelegate? rule) {
-            Ensure.NotNull(culture, nameof(culture));
+            Prevent.Null(culture, nameof(culture));
 
             rule = null;
 

@@ -44,8 +44,8 @@ namespace Nameless.NHibernate {
         public IList TransformList(IList collection) => collection;
 
         public object TransformTuple(object[] tuple, string[] aliases) {
-            Ensure.NotNull(tuple, nameof(tuple));
-            Ensure.NotNull(aliases, nameof(aliases));
+            Prevent.Null(tuple, nameof(tuple));
+            Prevent.Null(aliases, nameof(aliases));
 
             var result = new ExpandoObject() as IDictionary<string, object>;
             tuple.Each((current, idx) => {

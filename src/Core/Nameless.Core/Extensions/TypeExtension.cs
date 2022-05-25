@@ -65,10 +65,10 @@ namespace Nameless {
         public static MethodInfo? GetGenericMethod(this Type self, string name, Type[] genericArgumentTypes, Type[] argumentTypes, Type returnType) {
             if (self == null) { return null; }
 
-            Ensure.NotNullEmptyOrWhiteSpace(name, nameof(name));
-            Ensure.NotNull(genericArgumentTypes, nameof(genericArgumentTypes));
-            Ensure.NotNull(argumentTypes, nameof(argumentTypes));
-            Ensure.NotNull(returnType, nameof(returnType));
+            Prevent.NullEmptyOrWhiteSpace(name, nameof(name));
+            Prevent.Null(genericArgumentTypes, nameof(genericArgumentTypes));
+            Prevent.Null(argumentTypes, nameof(argumentTypes));
+            Prevent.Null(returnType, nameof(returnType));
 
             return self.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance)
                 .Where(method =>
@@ -93,7 +93,7 @@ namespace Nameless {
         public static bool IsAssignableTo(this Type self, Type type) {
             if (self == null) { return false; }
 
-            Ensure.NotNull(type, nameof(type));
+            Prevent.Null(type, nameof(type));
 
             return type.IsAssignableFrom(self);
         }
@@ -126,7 +126,7 @@ namespace Nameless {
         /// <param name="genericArgumentType">The generic argument type.</param>
         /// <returns>The generic argument type, if found.</returns>
         public static Type? GetFirstOccurenceOfGenericArgument(this Type? self, Type genericArgumentType) {
-            Ensure.NotNull(genericArgumentType, nameof(genericArgumentType));
+            Prevent.Null(genericArgumentType, nameof(genericArgumentType));
 
             if (self == null) { return null; }
 

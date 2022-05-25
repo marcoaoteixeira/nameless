@@ -17,7 +17,7 @@ namespace Nameless {
         /// <param name="elementName">The element name.</param>
         /// <returns><c>true</c> if exists, otherwise, <c>false</c>.</returns>
         public static bool HasElement(this XContainer self, string elementName) {
-            Ensure.NotNullEmptyOrWhiteSpace(elementName, nameof(elementName));
+            Prevent.NullEmptyOrWhiteSpace(elementName, nameof(elementName));
 
             if (self == null) { return false; }
 
@@ -33,9 +33,9 @@ namespace Nameless {
         /// <param name="attributeValue"></param>
         /// <returns></returns>
         public static bool HasElement(this XContainer self, string elementName, string attributeName, string attributeValue) {
-            Ensure.NotNullEmptyOrWhiteSpace(elementName, nameof(elementName));
-            Ensure.NotNullEmptyOrWhiteSpace(attributeName, nameof(attributeName));
-            Ensure.NotNullEmptyOrWhiteSpace(attributeValue, nameof(attributeValue));
+            Prevent.NullEmptyOrWhiteSpace(elementName, nameof(elementName));
+            Prevent.NullEmptyOrWhiteSpace(attributeName, nameof(attributeName));
+            Prevent.NullEmptyOrWhiteSpace(attributeValue, nameof(attributeValue));
 
             if (self == null) { return false; }
 

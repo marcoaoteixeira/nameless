@@ -2,9 +2,9 @@
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
-using Lucene_Directory = Lucene.Net.Store.Directory;
-using Lucene_Document = Lucene.Net.Documents.Document;
-using Lucene_FSDirectory = Lucene.Net.Store.FSDirectory;
+using LuceneDirectory = Lucene.Net.Store.Directory;
+using LuceneDocument = Lucene.Net.Documents.Document;
+using LuceneFSDirectory = Lucene.Net.Store.FSDirectory;
 
 namespace Nameless.Lucene {
 
@@ -25,13 +25,13 @@ namespace Nameless.Lucene {
         private readonly string _basePath;
         private readonly string _name;
 
-        private readonly object _syncLock = new object();
+        private readonly object _syncLock = new();
 
         #endregion
 
         #region Private Fields
 
-        private Lucene_Directory? _directory;
+        private LuceneDirectory? _directory;
         private IndexReader? _indexReader;
         private IndexSearcher? _indexSearcher;
         private bool _disposed;
@@ -83,13 +83,17 @@ namespace Nameless.Lucene {
 
         #region Private Static Methods
 
-        private static Lucene_Document CreateDocument(IDocument document) {
+        private static LuceneDocument CreateDocument(IDocument document) {
             var documentImpl = document as Document;
-            var luceneDocument = new Lucene_Document();
+            Prevent.Null(documentImpl, nameof(documentImpl));
+
+            var luceneDocument = new LuceneDocument();
             foreach (var entry in documentImpl.Entries) {
                 if (entry.Value.Value == null) { continue; }
                 var fieldName = entry.Key;
                 var fieldValue = entry.Value.Value;
+
+                if (fieldValue == null) { continue; }
 
                 var store = entry.Value.Options.HasFlag(DocumentOptions.Store) ? Field.Store.YES : Field.Store.NO;
                 var analyze = entry.Value.Options.HasFlag(DocumentOptions.Analyze);
@@ -101,7 +105,7 @@ namespace Nameless.Lucene {
                         break;
 
                     case Document.IndexableType.Text:
-                        var textValue = Convert.ToString(fieldValue);
+                        var textValue = fieldValue.ToString();
                         if (sanitize) { textValue = textValue.RemoveHtmlTags(); }
                         if (analyze) { luceneDocument.Add(new TextField(fieldName, textValue, store)); } else { luceneDocument.Add(new StringField(fieldName, textValue, store)); }
                         break;
@@ -118,7 +122,7 @@ namespace Nameless.Lucene {
                         break;
 
                     case Document.IndexableType.Boolean:
-                        luceneDocument.Add(new StringField(fieldName, Convert.ToString(fieldValue).ToLower(), store));
+                        luceneDocument.Add(new StringField(fieldName, fieldValue.ToString()!.ToLower(), store));
                         break;
 
                     case Document.IndexableType.Number:
@@ -137,7 +141,7 @@ namespace Nameless.Lucene {
         #region Private Methods
 
         private void Initialize() {
-            _directory = Lucene_FSDirectory.Open(new DirectoryInfo(Path.Combine(_basePath, Name)));
+            _directory = LuceneFSDirectory.Open(new DirectoryInfo(Path.Combine(_basePath, Name)));
 
             // Creates the index directory
             using (CreateIndexWriter()) { }
@@ -215,7 +219,13 @@ namespace Nameless.Lucene {
             if (documents == null) { return; }
             if (documents.Length == 0) { return; }
 
-            DeleteDocuments(documents.OfType<Document>().Select(_ => _.DocumentID).ToArray());
+            var ids = documents
+                .OfType<Document>()
+                .Where(_ => _.DocumentID != null)
+                .Select(_ => _.DocumentID!)
+                .ToArray();
+
+            DeleteDocuments(ids);
 
             using var writer = CreateIndexWriter();
             foreach (var document in documents) {

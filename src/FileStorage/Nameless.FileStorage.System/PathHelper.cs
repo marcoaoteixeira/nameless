@@ -19,7 +19,7 @@ namespace Nameless.FileStorage.System {
         /// </para>
         /// </remarks>
         public static string Normalize(string? path) {
-            Ensure.NotNullEmptyOrWhiteSpace(path, nameof(path));
+            Prevent.NullEmptyOrWhiteSpace(path, nameof(path));
 
             var result = path
                 .Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar)
@@ -42,8 +42,8 @@ namespace Nameless.FileStorage.System {
         /// </param>
         /// <returns>The physical path to the content.</returns>
         public static string GetPhysicalPath(string root, string relativePath) {
-            Ensure.NotNullEmptyOrWhiteSpace(root, nameof(root));
-            Ensure.NotNullEmptyOrWhiteSpace(relativePath, nameof(relativePath));
+            Prevent.NullEmptyOrWhiteSpace(root, nameof(root));
+            Prevent.NullEmptyOrWhiteSpace(relativePath, nameof(relativePath));
 
             var currentRoot = Normalize(root);
 

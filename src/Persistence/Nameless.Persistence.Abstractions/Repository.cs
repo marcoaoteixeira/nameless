@@ -21,9 +21,9 @@ namespace Nameless.Persistence {
         /// <param name="reader">The querier.</param>
         /// <param name="writer">The persister.</param>
         public Repository(IDirectiveExecutor directiveExecutor, IReader reader, IWriter writer) {
-            Ensure.NotNull(directiveExecutor, nameof(directiveExecutor));
-            Ensure.NotNull(reader, nameof(reader));
-            Ensure.NotNull(writer, nameof(writer));
+            Prevent.Null(directiveExecutor, nameof(directiveExecutor));
+            Prevent.Null(reader, nameof(reader));
+            Prevent.Null(writer, nameof(writer));
 
             _directiveExecutor = directiveExecutor;
             _reader = reader;

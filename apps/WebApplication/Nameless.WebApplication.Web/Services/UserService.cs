@@ -14,7 +14,7 @@ namespace Nameless.WebApplication.Web.Services {
         #region Public Constructors
 
         public UserService(IRepository repository) {
-            Ensure.NotNull(repository, nameof(repository));
+            Prevent.Null(repository, nameof(repository));
 
             _repository = repository;
         }

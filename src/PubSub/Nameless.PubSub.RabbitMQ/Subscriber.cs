@@ -25,8 +25,8 @@ namespace Nameless.PubSub.RabbitMQ {
         #region Public Constructors
 
         public Subscriber(IConnectionFactory factory, ISerializer serializer, PubSubOptions? options = null) {
-            Ensure.NotNull(factory, nameof(factory));
-            Ensure.NotNull(serializer, nameof(serializer));
+            Prevent.Null(factory, nameof(factory));
+            Prevent.Null(serializer, nameof(serializer));
 
             _factory = factory;
             _serializer = serializer;
@@ -87,7 +87,7 @@ namespace Nameless.PubSub.RabbitMQ {
         public bool Unsubscribe(Subscription subscription) {
             BlockAccessAfterDispose();
 
-            Ensure.NotNull(subscription, nameof(subscription));
+            Prevent.Null(subscription, nameof(subscription));
             lock (_syncLock) {
                 var topic = subscription.Topic;
                 return _cache.ContainsKey(topic) &&

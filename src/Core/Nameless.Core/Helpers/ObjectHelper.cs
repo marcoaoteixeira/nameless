@@ -18,7 +18,7 @@ namespace Nameless.Helpers {
         /// <param name="obj">The source <see cref="object" />.</param>
         /// <returns>A XML <see cref="string"/>.</returns>
         public static string? ToXml(object obj) {
-            Ensure.NotNull(obj, nameof(obj));
+            Prevent.Null(obj, nameof(obj));
 
             return !obj.IsAnonymous()
                 ? ConvertComplexObjectToXml(obj)

@@ -41,7 +41,7 @@ namespace Nameless.Data {
         /// </summary>
         /// <param name="connection">The database connection.</param>
         public Database(IDbConnection connection) {
-            Ensure.NotNull(connection, nameof(connection));
+            Prevent.Null(connection, nameof(connection));
 
             _connection = connection;
         }

@@ -44,7 +44,7 @@ namespace Nameless {
         /// if <paramref name="fallback"/> is <c>null</c>, empty or white spaces.
         /// </exception>
         public static string OnBlank(this string? self, string fallback) {
-            Ensure.NotNullEmptyOrWhiteSpace(fallback, nameof(fallback));
+            Prevent.NullEmptyOrWhiteSpace(fallback, nameof(fallback));
 
             return string.IsNullOrWhiteSpace(self) ? fallback : self;
         }
@@ -185,7 +185,7 @@ namespace Nameless {
         /// <param name="replacements">The replacements.</param>
         /// <returns>A replacemented <see cref="string"/>.</returns>
         public static string? ReplaceAll(this string self, IDictionary<string, string> replacements) {
-            Ensure.NotNull(replacements, nameof(replacements));
+            Prevent.Null(replacements, nameof(replacements));
 
             if (self == null) { return null; }
 
@@ -308,8 +308,8 @@ namespace Nameless {
         /// <param name="to">"to" <see cref="char"/> array</param>
         /// <returns>The translated representation of <paramref name="self"/>.</returns>
         public static string Translate(this string self, char[] from, char[] to) {
-            Ensure.NotNull(from, nameof(from));
-            Ensure.NotNull(to, nameof(to));
+            Prevent.Null(from, nameof(from));
+            Prevent.Null(to, nameof(to));
 
             if (string.IsNullOrEmpty(self)) { return self; }
 
@@ -367,8 +367,8 @@ namespace Nameless {
         /// <param name="self">The current <see cref="string"/>.</param>
         /// <param name="htmlDecode"><c>true</c> if should HTML decode.</param>
         /// <returns></returns>
-        public static string? RemoveHtmlTags(this string self, bool htmlDecode = false) {
-            if (string.IsNullOrEmpty(self)) { return self; }
+        public static string RemoveHtmlTags(this string? self, bool htmlDecode = false) {
+            if (string.IsNullOrEmpty(self)) { return string.Empty; }
 
             var content = new char[self.Length];
 
@@ -411,7 +411,7 @@ namespace Nameless {
         /// <param name="stringComparison">Comparison style.</param>
         /// <returns><c>true</c> if contains, otherwise, <c>false</c>.</returns>
         public static bool Contains(this string self, string contains, StringComparison stringComparison) {
-            Ensure.NotNull(contains, nameof(contains));
+            Prevent.Null(contains, nameof(contains));
 
             if (self == null) { return false; }
 
@@ -426,7 +426,7 @@ namespace Nameless {
         /// <param name="regexOptions">The regexp options.</param>
         /// <returns><c>true</c> if matchs, otherwise, <c>false</c>.</returns>
         public static bool IsMatch(this string self, string regExp, RegexOptions regexOptions = RegexOptions.None) {
-            Ensure.NotNull(regExp, nameof(regExp));
+            Prevent.Null(regExp, nameof(regExp));
 
             if (self == null) { return false; }
 
@@ -442,8 +442,8 @@ namespace Nameless {
         /// <param name="regexOptions">The regexp options</param>
         /// <returns>A <see cref="string"/> representing the new value.</returns>
         public static string? Replace(this string self, string regExp, string replacement, RegexOptions regexOptions = RegexOptions.None) {
-            Ensure.NotNull(regExp, nameof(regExp));
-            Ensure.NotNull(replacement, nameof(replacement));
+            Prevent.Null(regExp, nameof(regExp));
+            Prevent.Null(replacement, nameof(replacement));
 
             if (string.IsNullOrEmpty(self)) { return self; }
 
@@ -458,7 +458,7 @@ namespace Nameless {
         /// <param name="regexOptions">The regexp options.</param>
         /// <returns>A array of <see cref="string"/>.</returns>
         public static string[] Split(this string self, string regExp, RegexOptions regexOptions = RegexOptions.None) {
-            Ensure.NotNull(regExp, nameof(regExp));
+            Prevent.Null(regExp, nameof(regExp));
 
             if (self == null) { return Array.Empty<string>(); }
 

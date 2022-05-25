@@ -13,7 +13,7 @@ namespace Nameless.WebApplication.Web.Security {
         #region Public Constructors
 
         public JwtMiddleware(RequestDelegate? next) {
-            Ensure.NotNull(next, nameof(next));
+            Prevent.Null(next, nameof(next));
 
             _next = next;
         }

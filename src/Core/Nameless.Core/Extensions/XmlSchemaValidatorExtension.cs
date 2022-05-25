@@ -19,8 +19,8 @@ namespace Nameless {
         public static bool Validate(this IXmlSchemaValidator self, string schemaFilePath, string xmlFilePath) {
             if (self == null) { return false; }
 
-            Ensure.NotNullEmptyOrWhiteSpace(schemaFilePath, nameof(schemaFilePath));
-            Ensure.NotNullEmptyOrWhiteSpace(xmlFilePath, nameof(xmlFilePath));
+            Prevent.NullEmptyOrWhiteSpace(schemaFilePath, nameof(schemaFilePath));
+            Prevent.NullEmptyOrWhiteSpace(xmlFilePath, nameof(xmlFilePath));
 
             using var schema = new FileStream(schemaFilePath, FileMode.Open, FileAccess.Read);
             using var xml = new FileStream(xmlFilePath, FileMode.Open, FileAccess.Read);

@@ -22,7 +22,7 @@ namespace Nameless.Localization.Json.Schema {
         #region Public Constructors
 
         public TranslationGroup(CultureInfo culture, IEnumerable<TranslationCollection>? values = null) {
-            Ensure.NotNull(culture, nameof(culture));
+            Prevent.Null(culture, nameof(culture));
 
             Culture = culture;
             _dictionary = (values ?? Enumerable.Empty<TranslationCollection>()).ToDictionary(_ => _.Key, _ => _);

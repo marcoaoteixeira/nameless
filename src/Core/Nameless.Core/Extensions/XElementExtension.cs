@@ -16,7 +16,7 @@ namespace Nameless {
         /// <param name="attributeName">The attribute name.</param>
         /// <returns><c>true</c> if is present, otherwise, <c>false</c>.</returns>
         public static bool HasAttribute(this XElement self, string attributeName) {
-            Ensure.NotNullEmptyOrWhiteSpace(attributeName, nameof(attributeName));
+            Prevent.NullEmptyOrWhiteSpace(attributeName, nameof(attributeName));
 
             return self != null && self.Attribute(attributeName) != null;
         }

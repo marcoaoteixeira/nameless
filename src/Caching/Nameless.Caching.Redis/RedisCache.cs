@@ -16,8 +16,8 @@ namespace Nameless.Caching.Redis {
         #region Public Constructors
 
         public RedisCache(IConnectionMultiplexer connection, ISerializer serializer) {
-            Ensure.NotNull(connection, nameof(connection));
-            Ensure.NotNull(serializer, nameof(serializer));
+            Prevent.Null(connection, nameof(connection));
+            Prevent.Null(serializer, nameof(serializer));
 
             _database = connection.GetDatabase();
             _serializer = serializer;

@@ -18,8 +18,8 @@ namespace Nameless.WebApplication.Web.Controllers {
         #region Public Constructors
 
         public AuthController(IAuthService authService, ICacheService cacheService) {
-            Ensure.NotNull(authService, nameof(authService));
-            Ensure.NotNull(cacheService, nameof(cacheService));
+            Prevent.Null(authService, nameof(authService));
+            Prevent.Null(cacheService, nameof(cacheService));
 
             _authService = authService;
             _cacheService = cacheService;

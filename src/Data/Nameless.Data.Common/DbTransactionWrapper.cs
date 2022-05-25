@@ -22,7 +22,7 @@ namespace Nameless.Data {
         #region Public Constructors
 
         public DbTransactionWrapper(IDbTransaction transaction) {
-            Ensure.NotNull(transaction, nameof(transaction));
+            Prevent.Null(transaction, nameof(transaction));
 
             _inner = transaction;
         }

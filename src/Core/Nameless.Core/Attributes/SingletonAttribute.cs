@@ -37,7 +37,7 @@ namespace Nameless {
         /// <param name="type">The type</param>
         /// <returns><c>true</c> if is a singleton; otherwise <c>false</c>.</returns>
         public static bool IsSingleton(Type type) {
-            Ensure.NotNull(type, nameof(type));
+            Prevent.Null(type, nameof(type));
 
             return GetAccessorProperty(type) != null;
         }
@@ -55,7 +55,7 @@ namespace Nameless {
         /// <param name="type">The type</param>
         /// <returns>A singleton instance of the type.</returns>
         public static object? GetInstance(Type type) {
-            Ensure.NotNull(type, nameof(type));
+            Prevent.Null(type, nameof(type));
 
             var accessorProperty = GetAccessorProperty(type!);
             if (accessorProperty == null) { return default; }

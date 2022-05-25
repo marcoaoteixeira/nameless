@@ -15,7 +15,7 @@ namespace Nameless.NoSQL.MongoDb {
         #region Public Constructors
 
         public Context(IMongoDatabase database, ICollectionNamingStrategy? collectionNamingStrategy = null, MongoCollectionSettings? collectionSettings = null) {
-            Ensure.NotNull(database, nameof(database));
+            Prevent.Null(database, nameof(database));
 
             _database = database;
             _collectionNamingStrategy = collectionNamingStrategy ?? CollectionNamingStrategy.Instance;

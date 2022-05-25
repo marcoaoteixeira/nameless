@@ -16,8 +16,8 @@ namespace Nameless.Helpers {
         /// <param name="name">The name of the field.</param>
         /// <returns>The value of the field.</returns>
         public static object? GetPrivateFieldValue(object instance, string name) {
-            Ensure.NotNull(instance, nameof(instance));
-            Ensure.NotNullEmptyOrWhiteSpace(name, nameof(name));
+            Prevent.Null(instance, nameof(instance));
+            Prevent.NullEmptyOrWhiteSpace(name, nameof(name));
 
             var field = GetPrivateField(instance.GetType(), name);
 
@@ -35,8 +35,8 @@ namespace Nameless.Helpers {
         /// <param name="name">The name of the field.</param>
         /// <param name="value">The new value.</param>
         public static void SetPrivateFieldValue(object instance, string name, object value) {
-            Ensure.NotNull(instance, nameof(instance));
-            Ensure.NotNullEmptyOrWhiteSpace(name, nameof(name));
+            Prevent.Null(instance, nameof(instance));
+            Prevent.NullEmptyOrWhiteSpace(name, nameof(name));
 
             var field = GetPrivateField(instance.GetType(), name);
 
@@ -57,7 +57,7 @@ namespace Nameless.Helpers {
         /// <param name="parameterTypes">The method parameters type.</param>
         /// <returns>An <see cref="IEnumerable{MethodInfo}"/> with all found methods.</returns>
         public static IEnumerable<MethodInfo> GetMethodsBySignature(Type type, Type? returnType = null, Type? methodAttributeType = null, bool matchParameterInheritance = true, params Type[] parameterTypes) {
-            Ensure.NotNull(type, nameof(type));
+            Prevent.Null(type, nameof(type));
 
             return type.GetRuntimeMethods().Where(method => {
                 var currentReturnType = returnType ?? typeof(void);

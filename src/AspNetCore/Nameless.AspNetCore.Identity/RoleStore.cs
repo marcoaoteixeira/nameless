@@ -74,7 +74,7 @@ namespace Nameless.AspNetCore.Identity {
         #region Public Constructors
 
         public RoleStore(IRepository repository, IdentityErrorDescriber? describer) : base(describer) {
-            Ensure.NotNull(repository, nameof(repository));
+            Prevent.Null(repository, nameof(repository));
 
             Repository = repository;
         }
@@ -92,7 +92,7 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         public override Task<IdentityResult> DeleteAsync(TRole role, CancellationToken cancellationToken = default) {
-            Ensure.NotNull(role, nameof(role));
+            Prevent.Null(role, nameof(role));
 
             var instruction = new DeleteInstruction<TRole>(_ => _.Id.Equals(role.Id));
             return Repository
@@ -101,7 +101,7 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         public override Task<TRole> FindByIdAsync(string id, CancellationToken cancellationToken = default) {
-            Ensure.NotNullEmptyOrWhiteSpace(id, nameof(id));
+            Prevent.NullEmptyOrWhiteSpace(id, nameof(id));
 
             var currentId = Utils.Parse<TKey>(id);
 
@@ -110,7 +110,7 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         public override Task<TRole> FindByNameAsync(string normalizedName, CancellationToken cancellationToken = default) {
-            Ensure.NotNullEmptyOrWhiteSpace(normalizedName, nameof(normalizedName));
+            Prevent.NullEmptyOrWhiteSpace(normalizedName, nameof(normalizedName));
 
             return Repository
                 .FindAsync<TRole>(_ => _.NormalizedName == normalizedName, cancellationToken)
@@ -118,7 +118,7 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         public override Task<IList<Claim>> GetClaimsAsync(TRole role, CancellationToken cancellationToken = default) {
-            Ensure.NotNull(role, nameof(role));
+            Prevent.Null(role, nameof(role));
 
             return Repository
                 .FindAsync<TRoleClaim>(_ => EqualityComparer<TKey>.Default.Equals(_.RoleId, role.Id), cancellationToken)
@@ -127,8 +127,8 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         public override Task AddClaimAsync(TRole role, Claim claim, CancellationToken cancellationToken = default) {
-            Ensure.NotNull(role, nameof(role));
-            Ensure.NotNull(claim, nameof(claim));
+            Prevent.Null(role, nameof(role));
+            Prevent.Null(claim, nameof(claim));
 
             var instruction = new SaveInstruction<TRoleClaim>(
                 entity: new TRoleClaim {
@@ -145,8 +145,8 @@ namespace Nameless.AspNetCore.Identity {
         }
 
         public override Task RemoveClaimAsync(TRole role, Claim claim, CancellationToken cancellationToken = default) {
-            Ensure.NotNull(role, nameof(role));
-            Ensure.NotNull(claim, nameof(claim));
+            Prevent.Null(role, nameof(role));
+            Prevent.Null(claim, nameof(claim));
 
             var instruction = new DeleteInstruction<TRoleClaim>(
                 filter: _ => _.RoleId.Equals(role.Id) &&

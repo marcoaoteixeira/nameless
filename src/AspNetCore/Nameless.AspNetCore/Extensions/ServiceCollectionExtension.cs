@@ -10,8 +10,8 @@ namespace Nameless.AspNetCore.Extensions {
         public static TOptions? ConfigureOptions<TOptions>(this IServiceCollection self, IConfiguration configuration, Func<TOptions> optionsProvider) where TOptions : class {
             if (self == null) { return default; }
 
-            Ensure.NotNull(configuration, nameof(configuration));
-            Ensure.NotNull(optionsProvider, nameof(optionsProvider));
+            Prevent.Null(configuration, nameof(configuration));
+            Prevent.Null(optionsProvider, nameof(optionsProvider));
 
             var options = optionsProvider();
             configuration.Bind(options);
@@ -22,7 +22,7 @@ namespace Nameless.AspNetCore.Extensions {
         public static TOptions? ConfigureOptions<TOptions>(this IServiceCollection self, IConfiguration configuration) where TOptions : class, new() {
             if (self == null) { return default; }
 
-            Ensure.NotNull(configuration, nameof(configuration));
+            Prevent.Null(configuration, nameof(configuration));
 
             var options = new TOptions();
             configuration.Bind(options);

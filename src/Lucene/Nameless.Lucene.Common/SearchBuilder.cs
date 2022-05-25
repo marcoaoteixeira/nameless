@@ -44,7 +44,7 @@ namespace Nameless.Lucene {
         private bool _exactMatch;
         private bool _notAnalyzed;
         private float _boost;
-        private Query _query;
+        private Query? _query;
 
         #endregion
 
@@ -56,8 +56,8 @@ namespace Nameless.Lucene {
         /// <param name="indexSearcherFactory">The indexes directory factory.</param>
         /// <param name="analyzer">The analyzer provider.</param>
         public SearchBuilder(Analyzer analyzer, Func<IndexSearcher> indexSearcherFactory) {
-            Prevent.ParameterNull(analyzer, nameof(analyzer));
-            Prevent.ParameterNull(indexSearcherFactory, nameof(indexSearcherFactory));
+            Prevent.Null(analyzer, nameof(analyzer));
+            Prevent.Null(indexSearcherFactory, nameof(indexSearcherFactory));
 
             _analyzer = analyzer;
             _indexSearcherFactory = indexSearcherFactory;
@@ -189,8 +189,8 @@ namespace Nameless.Lucene {
 
         /// <inheritdoc />
         public ISearchBuilder Parse(string query, bool escape = true, params string[] defaultFields) {
-            Prevent.ParameterNullOrWhiteSpace(query, nameof(query));
-            Prevent.ParameterNull(defaultFields, nameof(defaultFields));
+            Prevent.NullEmptyOrWhiteSpace(query, nameof(query));
+            Prevent.Null(defaultFields, nameof(defaultFields));
 
             if (defaultFields.Length == 0) { throw new ArgumentException("Default fields can't be empty."); }
             if (escape) { query = QueryParserBase.Escape(query); }
@@ -210,7 +210,7 @@ namespace Nameless.Lucene {
         public ISearchBuilder WithField(string field, DateTime value) {
             CreatePendingClause();
 
-            _query = new TermQuery(new Term(field, DateTools.DateToString(value, DateTools.Resolution.MILLISECOND)));
+            _query = new TermQuery(new Term(field, DateTools.DateToString(value, DateResolution.MILLISECOND)));
 
             return this;
         }
@@ -270,8 +270,8 @@ namespace Nameless.Lucene {
         public ISearchBuilder WithinRange(string field, DateTime? minimun, DateTime? maximun, bool includeMinimun = true, bool includeMaximun = true) {
             CreatePendingClause();
 
-            var minimunBytesRef = minimun.HasValue ? new BytesRef(DateTools.DateToString(minimun.Value, DateTools.Resolution.MILLISECOND)) : null;
-            var maximunBytesRef = maximun.HasValue ? new BytesRef(DateTools.DateToString(maximun.Value, DateTools.Resolution.MILLISECOND)) : null;
+            var minimunBytesRef = minimun.HasValue ? new BytesRef(DateTools.DateToString(minimun.Value, DateResolution.MILLISECOND)) : null;
+            var maximunBytesRef = maximun.HasValue ? new BytesRef(DateTools.DateToString(maximun.Value, DateResolution.MILLISECOND)) : null;
 
             _query = new TermRangeQuery(field, minimunBytesRef, maximunBytesRef, includeMinimun, includeMaximun);
 
@@ -424,7 +424,7 @@ namespace Nameless.Lucene {
 
             return hits.ScoreDocs.Length > 0
                 ? new SearchHit(indexSearcher.Doc(hits.ScoreDocs[0].Doc), hits.ScoreDocs[0].Score)
-                : null;
+                : EmptySearchHit.Instance;
         }
 
         /// <inheritdoc />

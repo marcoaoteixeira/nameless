@@ -23,7 +23,7 @@ namespace Nameless.DependencyInjection.Autofac {
         public static ContainerBuilder Register(this ContainerBuilder self, Type service, Type implementation, string? name = null, LifetimeScopeType lifetimeScope = LifetimeScopeType.Transient, params Autofac_Parameter[] parameters) {
             if (self == null) { throw new ArgumentNullException(nameof(self)); }
 
-            Ensure.TypeAssignableFrom(service, implementation);
+            Prevent.TypeNotAssignableFrom(service, implementation);
 
             if (RegisterAsSingleton(self, service, implementation, name)) { return self; }
 

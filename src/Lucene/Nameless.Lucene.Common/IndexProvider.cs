@@ -41,8 +41,8 @@ namespace Nameless.Lucene {
 		/// <param name="opts">The settings.</param>
 		/// <param name="analyzerProvider">The analyzer provider.</param>
 		public IndexProvider(IAnalyzerProvider analyzerProvider, SearchOptions opts) {
-			Prevent.ParameterNull(analyzerProvider, nameof(analyzerProvider));
-			Prevent.ParameterNull(opts, nameof(opts));
+			Prevent.Null(analyzerProvider, nameof(analyzerProvider));
+			Prevent.Null(opts, nameof(opts));
 
 			_analyzerProvider = analyzerProvider;
 			_opts = opts;
