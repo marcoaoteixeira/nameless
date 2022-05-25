@@ -31,6 +31,7 @@
 	  <ProjectReference Include="..\..\..\src\Logging\Nameless.Logging.Log4net.Autofac.Extension\Nameless.Logging.Log4net.Autofac.Extension.csproj" />
 	  <ProjectReference Include="..\..\..\src\NHibernate\Nameless.NHibernate.Autofac.Extension\Nameless.NHibernate.Autofac.Extension.csproj" />
 	  <ProjectReference Include="..\..\..\src\NHibernate\Nameless.NHibernate\Nameless.NHibernate.csproj" />
+	  <ProjectReference Include="..\..\..\src\Persistence\Nameless.Persistence.Abstractions\Nameless.Persistence.Abstractions.csproj" />
 	  <ProjectReference Include="..\..\..\src\Serialization\Nameless.Serialization.Json.Autofac.Extension\Nameless.Serialization.Json.Autofac.Extension.csproj" />
 	</ItemGroup>
 

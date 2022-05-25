@@ -6,7 +6,6 @@ namespace Nameless.Persistence {
 
         #region Private Read-Only Fields
 
-        private readonly IDirectiveExecutor _directiveExecutor;
         private readonly IWriter _writer;
         private readonly IReader _reader;
 
@@ -17,17 +16,14 @@ namespace Nameless.Persistence {
         /// <summary>
         /// Initializes a new instance of <see cref="Repository" />
         /// </summary>
-        /// <param name="directiveExecutor">The directive executor.</param>
-        /// <param name="reader">The querier.</param>
         /// <param name="writer">The persister.</param>
-        public Repository(IDirectiveExecutor directiveExecutor, IReader reader, IWriter writer) {
-            Prevent.Null(directiveExecutor, nameof(directiveExecutor));
-            Prevent.Null(reader, nameof(reader));
+        /// <param name="reader">The querier.</param>
+        public Repository(IWriter writer, IReader reader) {
             Prevent.Null(writer, nameof(writer));
+            Prevent.Null(reader, nameof(reader));
 
-            _directiveExecutor = directiveExecutor;
-            _reader = reader;
             _writer = writer;
+            _reader = reader;
         }
 
         #endregion Public Constructors
@@ -35,28 +31,23 @@ namespace Nameless.Persistence {
         #region IRepository Members
 
         /// <inheritdoc />
-        public Task<TResult?> ExecuteDirectiveAsync<TResult, TDirective>(ParameterSet parameters, CancellationToken cancellationToken = default) where TDirective : IDirective<TResult?> {
-            return _directiveExecutor.ExecuteDirectiveAsync<TResult?, TDirective>(parameters, cancellationToken);
+        public Task<TEntity> SaveAsync<TEntity>(TEntity entity, Expression<Func<TEntity, bool>>? filter = null, CancellationToken cancellationToken = default) where TEntity : class {
+            return _writer.SaveAsync(entity, filter, cancellationToken);
         }
 
         /// <inheritdoc />
-        public IAsyncEnumerable<TEntity> FindAsync<TEntity>(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken = default) where TEntity : class {
-            return _reader.FindAsync(filter, cancellationToken);
+        public Task<bool> DeleteAsync<TEntity>(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken = default) where TEntity : class {
+            return _writer.DeleteAsync(filter, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public Task<IList<TEntity>> FindAsync<TEntity>(Expression<Func<TEntity, bool>> filter, Expression<Func<TEntity, object>>? orderBy = null, bool orderDescending = false, CancellationToken cancellationToken = default) where TEntity : class {
+            return _reader.FindAsync(filter, orderBy, orderDescending, cancellationToken);
         }
 
         /// <inheritdoc />
         public IQueryable<TEntity> Query<TEntity>() where TEntity : class {
             return _reader.Query<TEntity>();
-        }
-
-        /// <inheritdoc />
-        public Task SaveAsync<TEntity>(SaveInstructionCollection<TEntity> instructions, CancellationToken cancellationToken = default) where TEntity : class {
-            return _writer.SaveAsync(instructions, cancellationToken);
-        }
-
-        /// <inheritdoc />
-        public Task DeleteAsync<TEntity>(DeleteInstructionCollection<TEntity> instructions, CancellationToken cancellationToken = default) where TEntity : class {
-            return _writer.DeleteAsync(instructions, cancellationToken);
         }
 
         #endregion IRepository Members

@@ -55,7 +55,7 @@ namespace Nameless.NHibernate {
                     }
                 }
             });
-            return (dynamic)result;
+            return result;
         }
 
         #endregion

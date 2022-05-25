@@ -1,4 +1,5 @@
-﻿using NHibernate;
+﻿using System.Linq.Expressions;
+using NHibernate;
 using NHibernate.Linq;
 
 namespace Nameless.Persistence.NHibernate {
@@ -23,48 +24,42 @@ namespace Nameless.Persistence.NHibernate {
 
         #region IWriter Members
 
-        public Task SaveAsync<TEntity>(SaveInstructionCollection<TEntity> instructions, CancellationToken cancellationToken = default) where TEntity : class {
-            if (instructions.IsNullOrEmpty()) { return Task.CompletedTask; }
+        public Task<TEntity> SaveAsync<TEntity>(TEntity entity, Expression<Func<TEntity, bool>>? filter = null, CancellationToken cancellationToken = default) where TEntity : class {
+            Prevent.Null(entity, nameof(entity));
 
             using var transaction = _session.BeginTransaction();
             try {
-                foreach (var instruction in instructions) {
-                    var query = instruction.Filter != null
-                        ? _session.Query<TEntity>().Where(instruction.Filter)
-                        : null;
+                var counter = filter != null ? _session.Query<TEntity>().Count(filter) : -1;
 
-                    switch (instruction.Type) {
-                        case WriteType.Insert:
-                            _session.Save(instruction.Entity);
-                            break;
-                        case WriteType.Update:
-                            if (query != null) { query.Update(_ => instruction.Entity); }
-                            else { _session.Update(instruction.Entity); }
-                            break;
-                        case WriteType.Upsert:
-                            if (query != null && query.Any()) { query.Update(_ => instruction.Entity); }
-                            else { _session.SaveOrUpdate(instruction.Entity); }
-                            break;
-                    }
+                /*
+                 counter = -1 => SaveOrUpdate
+                 counter = 0 => Save
+                 counter > 0 => Update
+                 */
+
+                switch (counter) {
+                    case 0: _session.Save(entity); break;
+                    case -1: _session.SaveOrUpdate(entity); break;
+                    default: _session.Query<TEntity>().Where(filter!).Update(_ => entity); break;
                 }
+
                 transaction.Commit();
             } catch { transaction.Rollback(); throw; }
 
-            return Task.CompletedTask;
+            return Task.FromResult(entity);
         }
 
-        public Task DeleteAsync<TEntity>(DeleteInstructionCollection<TEntity> instructions, CancellationToken cancellationToken = default) where TEntity : class {
-            if (instructions.IsNullOrEmpty()) { return Task.CompletedTask; }
+        public Task<bool> DeleteAsync<TEntity>(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken = default) where TEntity : class {
+            Prevent.Null(filter, nameof(filter));
 
+            int counter;
             using var transaction = _session.BeginTransaction();
             try {
-                foreach (var instruction in instructions) {
-                    _session.Query<TEntity>().Where(instruction.Filter).Delete();
-                }
+                counter = _session.Query<TEntity>().Where(filter).Delete();
                 transaction.Commit();
             } catch { transaction.Rollback(); throw; }
 
-            return Task.CompletedTask;
+            return Task.FromResult(counter > 0);
         }
 
         #endregion

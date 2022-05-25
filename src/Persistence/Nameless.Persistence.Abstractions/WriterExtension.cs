@@ -1,27 +1,24 @@
+﻿using System.Linq.Expressions;
+using Nameless.Helpers;
+
 namespace Nameless.Persistence {
 
     public static class WriterExtension {
 
-		#region Public Static Methods
+        #region Public Static Methods
 
-		public static Task SaveAsync<TEntity>(this IWriter self, SaveInstruction<TEntity> instruction, CancellationToken cancellationToken = default) where TEntity : class {
-			if (self == null) { return Task.CompletedTask; }
+        public static TEntity Save<TEntity>(this IWriter self, TEntity entity, Expression<Func<TEntity, bool>>? filter = null) where TEntity : class {
+            Prevent.Null(self, nameof(self));
 
-			return self.SaveAsync(
-				instructions: SaveInstructionCollection<TEntity>.Create(instruction),
-				cancellationToken: cancellationToken
-			);
-		}
+            return AsyncHelper.RunSync(() => self.SaveAsync(entity, filter));
+        }
 
-		public static Task DeleteAsync<TEntity>(this IWriter self, DeleteInstruction<TEntity> instruction, CancellationToken cancellationToken = default) where TEntity : class {
-			if (self == null) { return Task.CompletedTask; }
+        public static bool Delete<TEntity>(this IWriter self, Expression<Func<TEntity, bool>> filter) where TEntity : class {
+            Prevent.Null(self, nameof(self));
 
-			return self.DeleteAsync(
-				instructions: DeleteInstructionCollection<TEntity>.Create(instruction),
-				cancellationToken: cancellationToken
-			);
-		}
+            return AsyncHelper.RunSync(() => self.DeleteAsync(filter));
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

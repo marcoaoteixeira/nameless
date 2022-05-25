@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
+using Nameless.Persistence;
 using Nameless.Services;
 using Nameless.WebApplication.Web.Entities;
-using Nameless.WebApplication.Web.Persistence;
 using Nameless.WebApplication.Web.Security;
 
 namespace Nameless.WebApplication.Web.Services {
@@ -30,7 +30,7 @@ namespace Nameless.WebApplication.Web.Services {
 
         #region IRefreshTokenService Members
 
-        public Task<RefreshToken?> CreateAsync(User user, string ipAddress, CancellationToken cancellationToken = default) {
+        public Task<RefreshToken> CreateAsync(User user, string ipAddress, CancellationToken cancellationToken = default) {
             Prevent.Null(user, nameof(user));
             Prevent.NullEmptyOrWhiteSpace(ipAddress, nameof(ipAddress));
 
@@ -41,7 +41,7 @@ namespace Nameless.WebApplication.Web.Services {
                 CreatedByIp = ipAddress
             };
 
-            return _repository.SaveAsync(refreshToken, cancellationToken);
+            return _repository.SaveAsync(refreshToken, cancellationToken: cancellationToken);
 
             string getUniqueToken() {
                 // token is a cryptographically strong random sequence of values
@@ -57,7 +57,7 @@ namespace Nameless.WebApplication.Web.Services {
             var utcNow = _clock.UtcNow;
             var ttl = _opts.RefreshTokenTTL;
 
-            return _repository.DeleteAllAsync<RefreshToken>(
+            return _repository.DeleteAsync<RefreshToken>(
                 filter: _ => _.RevokedDate != null
                           && _.ExpiresDate > utcNow
                           && _.CreationDate.AddSeconds(ttl) <= utcNow,

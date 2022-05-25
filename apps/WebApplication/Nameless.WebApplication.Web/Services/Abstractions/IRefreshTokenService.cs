@@ -6,7 +6,7 @@ namespace Nameless.WebApplication.Web.Services {
 
         #region Methods
 
-        Task<RefreshToken?> CreateAsync(User user, string ipAddress, CancellationToken cancellationToken = default);
+        Task<RefreshToken> CreateAsync(User user, string ipAddress, CancellationToken cancellationToken = default);
         Task RemoveExpiredTokensAsync(CancellationToken cancellationToken = default);
 
         #endregion

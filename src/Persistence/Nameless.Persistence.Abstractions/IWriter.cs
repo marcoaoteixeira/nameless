@@ -1,4 +1,6 @@
-﻿namespace Nameless.Persistence {
+﻿using System.Linq.Expressions;
+
+namespace Nameless.Persistence {
 
     /// <summary>
     /// Exposes methods to define a data writer.
@@ -7,9 +9,9 @@
 
         #region Methods
 
-        Task SaveAsync<TEntity>(SaveInstructionCollection<TEntity> instructions, CancellationToken cancellationToken = default) where TEntity : class;
+        Task<TEntity> SaveAsync<TEntity>(TEntity entity, Expression<Func<TEntity, bool>>? filter = null, CancellationToken cancellationToken = default) where TEntity : class;
 
-        Task DeleteAsync<TEntity>(DeleteInstructionCollection<TEntity> instructions, CancellationToken cancellationToken = default) where TEntity : class;
+        Task<bool> DeleteAsync<TEntity>(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken = default) where TEntity : class;
 
         #endregion
     }

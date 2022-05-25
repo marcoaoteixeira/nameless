@@ -7,13 +7,13 @@ namespace Nameless.NHibernate {
         #region Private Read-Only Fields
 
         private readonly IConfigurationBuilder _configurationBuilder;
+        private readonly NHibernateOptions _options;
 
         #endregion
 
         #region Private Fields
 
         private ISessionFactory? _sessionFactory;
-        private NHibernateOptions _options;
         private bool _disposed;
 
         #endregion
@@ -39,15 +39,19 @@ namespace Nameless.NHibernate {
 
         #region Private Methods
 
+        private void BlockAccessAfterDispose() {
+            if (_disposed) {
+                throw new ObjectDisposedException(nameof(SessionProvider));
+            }
+        }
+
         private void Dispose(bool disposing) {
             if (_disposed) { return; }
             if (disposing) {
-                if (_sessionFactory != null) {
-                    _sessionFactory.Dispose();
-                    _sessionFactory = null;
-                }
+                _sessionFactory?.Dispose();
             }
 
+            _sessionFactory = null;
             _disposed = true;
         }
 
@@ -56,9 +60,12 @@ namespace Nameless.NHibernate {
         #region ISessionProvider Members
 
         public ISession GetSession() {
+            BlockAccessAfterDispose();
+
             if (_sessionFactory == null) {
-                var config = _configurationBuilder.Build(_options);
-                _sessionFactory = config.BuildSessionFactory();
+                _sessionFactory = _configurationBuilder
+                    .Build(_options)
+                    .BuildSessionFactory();
             }
 
             return _sessionFactory.OpenSession();

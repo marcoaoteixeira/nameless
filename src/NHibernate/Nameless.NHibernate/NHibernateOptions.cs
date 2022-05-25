@@ -84,7 +84,7 @@ namespace Nameless.NHibernate {
         public string? DriverClass { get; set; } = "NHibernate.Driver.SQLite20Driver";
 
         [Description("connection.connection_string")]
-        public string? ConnectionString { get; set; } = "Data Source=app.s3db;Version=3;Page Size=1024;BinaryGUID=False;";
+        public string? ConnectionString { get; set; } = "Data Source=:memory:;Version=3;Page Size=4096;";
 
         [Description("connection.connection_string_name")]
         public string? ConnectionStringName { get; set; }

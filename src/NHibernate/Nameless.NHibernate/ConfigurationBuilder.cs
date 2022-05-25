@@ -23,17 +23,17 @@ namespace Nameless.NHibernate {
 
         #region IConfigurationBuilder Members
 
-        public Configuration Build(NHibernateOptions options) {
-            options ??= new();
+        public Configuration Build(NHibernateOptions? options = null) {
+            var opts = options ?? new();
 
             var configuration = new Configuration();
-            configuration.SetProperties(options.ToDictionary());
+            configuration.SetProperties(opts.ToDictionary());
 
-            var entityBaseTypes = options.EntityBaseTypes.Select(Type.GetType).ToArray();
+            var entityBaseTypes = opts.EntityBaseTypes.Select(Type.GetType).ToArray();
             var modelInspector = new ModelInspector(entityBaseTypes!);
             var modelMapper = new ModelMapper(modelInspector);
 
-            var mappingTypes = options.MappingTypes
+            var mappingTypes = opts.MappingTypes
                 .Select(Type.GetType)
                 .Where(IsMappingType)
                 .ToArray();

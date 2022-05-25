@@ -3,5 +3,5 @@
     /// <summary>
     /// Repository interface.
     /// </summary>
-    public interface IRepository : IWriter, IReader, IDirectiveExecutor { }
+    public interface IRepository : IWriter, IReader { }
 }

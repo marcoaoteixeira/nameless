@@ -23,8 +23,30 @@ namespace Nameless.Persistence.NHibernate {
 
         #region IQuerier Members
 
-        public IAsyncEnumerable<TEntity> FindAsync<TEntity>(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken = default) where TEntity : class {
-            return _session.Query<TEntity>().Where(filter).AsAsyncEnumerable();
+        public Task<IList<TEntity>> FindAsync<TEntity>(Expression<Func<TEntity, bool>> filter, Expression<Func<TEntity, object>>? orderBy = null, bool orderDescending = false, CancellationToken cancellationToken = default) where TEntity : class {
+            Prevent.Null(filter, nameof(filter));
+
+            var query = _session.Query<TEntity>();
+
+            if (orderBy != null) {
+                query = orderDescending
+                    ? query.OrderBy(orderBy)
+                    : query.OrderByDescending(orderBy);
+            }
+
+            var result = query
+                .Where(filter)
+                .ToList() as IList<TEntity>;
+
+            return Task.FromResult(result);
+        }
+
+        public Task<bool> ExistsAsync<TEntity>(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken = default) where TEntity : class {
+            Prevent.Null(filter, nameof(filter));
+
+            var counter = _session.Query<TEntity>().Count(filter);
+
+            return Task.FromResult(counter > 0);
         }
 
         public IQueryable<TEntity> Query<TEntity>() where TEntity : class {
@@ -32,6 +54,5 @@ namespace Nameless.Persistence.NHibernate {
         }
 
         #endregion
-
     }
 }

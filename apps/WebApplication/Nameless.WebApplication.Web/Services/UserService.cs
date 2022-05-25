@@ -1,5 +1,5 @@
-﻿using Nameless.WebApplication.Web.Entities;
-using Nameless.WebApplication.Web.Persistence;
+﻿using Nameless.Persistence;
+using Nameless.WebApplication.Web.Entities;
 
 namespace Nameless.WebApplication.Web.Services {
 
@@ -23,10 +23,7 @@ namespace Nameless.WebApplication.Web.Services {
 
         #region IUserService Members
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) {
-            var user = _repository
-                .Query<User>()
-                .SingleOrDefault(_ => string.Equals(_.Email, email, StringComparison.OrdinalIgnoreCase));
-
+            var user = _repository.Query<User>().SingleOrDefault(_ => _.Email == email);
             return Task.FromResult(user);
         } 
         #endregion

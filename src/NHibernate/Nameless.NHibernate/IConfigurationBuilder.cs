@@ -6,7 +6,7 @@ namespace Nameless.NHibernate {
 
         #region Methods
 
-        Configuration Build(NHibernateOptions options);
+        Configuration Build(NHibernateOptions? options = null);
 
         #endregion
     }
