@@ -27,6 +27,12 @@ namespace Nameless.NHibernate {
 
     public sealed class NHibernateOptions {
 
+        #region Public Static Read-Only Fields
+
+        public static readonly NHibernateOptions Default = new();
+
+        #endregion
+
         #region Public Properties
 
         public NHibernateCommonOptions Common { get; set; } = new();
@@ -42,7 +48,6 @@ namespace Nameless.NHibernate {
         public NHibernateSpecificOptions Specific { get; set; } = new();
         public string[] MappingTypes { get; set; } = Array.Empty<string>();
         public string[] EntityBaseTypes { get; set; } = Array.Empty<string>();
-        public bool ExecuteSchemaExport { get; set; }
         public string? SchemaOutputPath { get; set; }
 
         #endregion
@@ -76,10 +81,10 @@ namespace Nameless.NHibernate {
         public string? Provider { get; set; }
 
         [Description("connection.driver_class")]
-        public string? DriverClass { get; set; }
+        public string? DriverClass { get; set; } = "NHibernate.Driver.SQLite20Driver";
 
         [Description("connection.connection_string")]
-        public string? ConnectionString { get; set; }
+        public string? ConnectionString { get; set; } = "Data Source=app.s3db;Version=3;Page Size=1024;BinaryGUID=False;";
 
         [Description("connection.connection_string_name")]
         public string? ConnectionStringName { get; set; }
@@ -117,7 +122,7 @@ namespace Nameless.NHibernate {
         #region Public Properties
 
         [Description("dialect")]
-        public string? Dialect { get; set; }
+        public string? Dialect { get; set; } = "NHibernate.Dialect.SQLiteDialect";
 
         [Description("default_catalog")]
         public string? DefaultCatalog { get; set; }
@@ -132,7 +137,7 @@ namespace Nameless.NHibernate {
         public string? SqlExceptionConverter { get; set; }
 
         [Description("show_sql")]
-        public bool? ShowSql { get; set; }
+        public bool? ShowSql { get; set; } = true;
 
         [Description("format_sql")]
         public bool? FormatSql { get; set; }
@@ -212,7 +217,7 @@ namespace Nameless.NHibernate {
         #region Public Properties
 
         [Description("query.substitutions")]
-        public string? Substitutions { get; set; }
+        public string? Substitutions { get; set; } = "true=1;false=0";
 
         [Description("query.default_cast_length")]
         public int? DefaultCastLength { get; set; }

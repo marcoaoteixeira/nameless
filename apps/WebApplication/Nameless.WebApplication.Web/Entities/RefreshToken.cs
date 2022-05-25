@@ -19,15 +19,16 @@ namespace Nameless.WebApplication.Web.Entities {
 
         #region Public Constructors
 
+        public RefreshToken() : base(Guid.NewGuid()) { }
         public RefreshToken(DateTime? creationDate = null) : base(Guid.NewGuid(), creationDate) { }
 
         #endregion
 
         #region Public Methods
 
-        public bool IsExpired(IClock? clock = null) => (clock ?? SystemClock.Instance).UtcNow >= ExpiresDate;
-        public bool IsRevoked() => RevokedDate != null;
-        public bool IsActive(IClock? clock = null) => !IsRevoked() && !IsExpired(clock);
+        public virtual bool IsExpired(IClock? clock = null) => (clock ?? SystemClock.Instance).UtcNow >= ExpiresDate;
+        public virtual bool IsRevoked() => RevokedDate != null;
+        public virtual bool IsActive(IClock? clock = null) => !IsRevoked() && !IsExpired(clock);
 
         #endregion
     }

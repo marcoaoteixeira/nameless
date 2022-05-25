@@ -79,7 +79,7 @@ namespace Nameless.Logging.Log4net {
 
             // Configure logger
             var configurationFileName = string.IsNullOrWhiteSpace(_options.ConfigurationFileName)
-                ? LoggingOptions.DEFAULT_CONFIGURATION_FILE_NAME
+                ? LoggingOptions.Default.ConfigurationFileName
                 : _options.ConfigurationFileName;
             var configurationFilePath = GetConfigurationFilePath(configurationFileName);
             if (_options.ReloadOnChange) { XmlConfigurator.ConfigureAndWatch(_repository, configurationFilePath); }

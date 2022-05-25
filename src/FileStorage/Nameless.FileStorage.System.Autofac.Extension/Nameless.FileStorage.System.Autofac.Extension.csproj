@@ -5,14 +5,14 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
-		<RootNamespace>Nameless.FileStorage.FileSystem</RootNamespace>
+		<RootNamespace>Nameless.FileStorage.System</RootNamespace>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
 		<Authors>Marco Antonio Orestes Teixeira</Authors>
 		<Company>Nameless</Company>
 		<Description>Multiple classes and functionalities for .NET Core applications.</Description>
 		<Copyright>MIT</Copyright>
-		<PackageProjectUrl>https://github.com/marcoaoteixeira/nameless/tree/master/src/FileStorage/Nameless.FileStorage.FileSystem.Autofac.Extension</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/marcoaoteixeira/nameless/tree/master/src/FileStorage/Nameless.FileStorage.System.Autofac.Extension</PackageProjectUrl>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/marcoaoteixeira/nameless/</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
@@ -38,7 +38,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\DependencyInjection\Nameless.DependencyInjection.Autofac\Nameless.DependencyInjection.Autofac.csproj" />
 		<ProjectReference Include="..\..\Environment\Nameless.Environment.Abstractions\Nameless.Environment.Abstractions.csproj" />
-		<ProjectReference Include="..\Nameless.FileStorage.FileSystem\Nameless.FileStorage.FileSystem.csproj" />
+		<ProjectReference Include="..\Nameless.FileStorage.System\Nameless.FileStorage.System.csproj" />
 	</ItemGroup>
 
 </Project>

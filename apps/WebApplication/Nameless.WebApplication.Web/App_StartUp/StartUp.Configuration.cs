@@ -1,7 +1,8 @@
 ﻿using Nameless.AspNetCore.Extensions;
-using Nameless.FileStorage.FileSystem;
+using Nameless.FileStorage.System;
 using Nameless.Logging.Log4net;
 using Nameless.NHibernate;
+using Nameless.WebApplication.Web.Security;
 
 namespace Nameless.WebApplication.Web {
 
@@ -10,22 +11,22 @@ namespace Nameless.WebApplication.Web {
         #region Public Methods
 
         public void ConfigureConfiguration(IServiceCollection services) {
-            var fileSystemStorageOptions = Configuration
-                .GetSection(nameof(FileSystemStorageOptions).Replace("Options", string.Empty))
-                .Get<FileSystemStorageOptions>() ?? new FileSystemStorageOptions {
-                    Root = typeof(StartUp).Assembly.GetDirectoryPath()!
-                };
-            services.ConfigureOptions(Configuration, () => fileSystemStorageOptions);
+            services.ConfigureOptions(Configuration, () => GetConfigurationFor<FileStorageOptions>(Configuration));
+            services.ConfigureOptions(Configuration, () => GetConfigurationFor<LoggingOptions>(Configuration));
+            services.ConfigureOptions(Configuration, () => GetConfigurationFor<NHibernateOptions>(Configuration));
+            services.ConfigureOptions(Configuration, () => GetConfigurationFor<JwtOptions>(Configuration));
+        }
 
-            var loggingOptions = Configuration
-                .GetSection(nameof(LoggingOptions).Replace("Options", string.Empty))
-                .Get<LoggingOptions>() ?? new();
-            services.ConfigureOptions(Configuration, () => loggingOptions);
+        #endregion
 
-            var nhibernateOptions = Configuration
-                .GetSection(nameof(NHibernateOptions).Replace("Options", string.Empty))
-                .Get<NHibernateOptions>() ?? new();
-            services.ConfigureOptions(Configuration, () => nhibernateOptions);
+        #region Private Methods
+
+        private static TConfiguration GetConfigurationFor<TConfiguration>(IConfiguration configuration) where TConfiguration : class, new() {
+            var sectionName = typeof(TConfiguration).Name.Replace("Options", string.Empty);
+
+            return configuration
+                .GetSection(sectionName)
+                .Get<TConfiguration>() ?? new();
         }
 
         #endregion

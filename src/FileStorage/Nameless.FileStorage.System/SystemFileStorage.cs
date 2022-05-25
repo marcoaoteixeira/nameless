@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using SysDirectory = System.IO.Directory;
 using SysFile = System.IO.File;
 using SysFileSystemEventArgs = System.IO.FileSystemEventArgs;
@@ -12,20 +9,22 @@ using SysRenamedEventArgs = System.IO.RenamedEventArgs;
 using SysStream = System.IO.Stream;
 using SysWatcherChangeTypes = System.IO.WatcherChangeTypes;
 
-namespace Nameless.FileStorage.FileSystem {
+namespace Nameless.FileStorage.System {
 
-    public sealed class FileSystemStorage : IFileStorage {
+    public sealed class SystemFileStorage : IFileStorage {
 
         #region Private Read-Only Fields
 
-        private readonly FileSystemStorageOptions _opts;
+        private readonly FileStorageOptions _opts;
 
         #endregion
 
         #region Public Constructors
 
-        public FileSystemStorage(FileSystemStorageOptions? opts = null) {
-            _opts = opts ?? new();
+        public SystemFileStorage(FileStorageOptions? opts = null) {
+            _opts = opts ?? new FileStorageOptions {
+                Root = typeof(SystemFileStorage).Assembly.GetDirectoryPath()
+            };
 
             Root = PathHelper.Normalize(_opts.Root);
         }
@@ -59,9 +58,9 @@ namespace Nameless.FileStorage.FileSystem {
                 Filter = filter ?? "*.*",
                 Path = path,
                 NotifyFilter = SysNotifyFilters.LastAccess |
-                                SysNotifyFilters.LastWrite |
-                                SysNotifyFilters.FileName |
-                                SysNotifyFilters.DirectoryName
+                               SysNotifyFilters.LastWrite |
+                               SysNotifyFilters.FileName |
+                               SysNotifyFilters.DirectoryName
             };
 
             watcher.Changed += (sender, evt) => FileSystemWatcherCallback(sender, evt, callback);
@@ -74,9 +73,7 @@ namespace Nameless.FileStorage.FileSystem {
         }
 
         private void FileSystemWatcherCallback(object sender, SysFileSystemEventArgs args, Action<ChangeEventArgs> callback) {
-            var obj = sender as SysFileSystemInfo;
-
-            if (obj == null) { return; }
+            if (sender is not SysFileSystemInfo obj) { return; }
 
             var originalPath = obj.FullName;
             var currentPath = args is SysRenamedEventArgs renamedArgs ? renamedArgs.OldFullPath : args.FullPath;
@@ -98,42 +95,12 @@ namespace Nameless.FileStorage.FileSystem {
         public string Root { get; }
 
         /// <inheritdoc />
-        public Task<bool> CreateDirectoryAsync(string relativePath, CancellationToken token = default) {
-            relativePath = PathHelper.Normalize(relativePath);
-
-            var directoryPath = PathHelper.GetPhysicalPath(Root, relativePath);
-            if (SysDirectory.Exists(directoryPath)) {
-                return Task.FromResult(false);
-            }
-
-            SysDirectory.CreateDirectory(directoryPath);
-
-            return Task.FromResult(true);
-        }
-
-        /// <inheritdoc />
-        /// <exception cref="FileStorageException">
-        /// Thrown if the specified path does not points to a directory.
-        /// </exception>
-        public Task<IDirectory> GetDirectoryAsync(string relativePath) {
-            relativePath = PathHelper.Normalize(relativePath);
-
-            var directoryPath = PathHelper.GetPhysicalPath(Root, relativePath);
-            if (!SysDirectory.Exists(directoryPath)) {
-                throw new FileStorageException("The specified path does not points to a directory.");
-            }
-
-            IDirectory directory = new Directory(Root, relativePath, ChangeWatcherFactory);
-            return Task.FromResult(directory);
-        }
-
-        /// <inheritdoc />
         public Task CreateFileAsync(string relativePath, SysStream input, bool overwrite = false, CancellationToken token = default) {
+            Ensure.NotNullEmptyOrWhiteSpace(relativePath, nameof(relativePath));
             Ensure.NotNull(input, nameof(input));
 
-            relativePath = PathHelper.Normalize(relativePath);
-
             var filePath = PathHelper.GetPhysicalPath(Root, relativePath);
+
             if (SysFile.Exists(filePath) && !overwrite) {
                 throw new FileStorageException("Cannot create file because the destination path already exists.");
             }
@@ -148,11 +115,23 @@ namespace Nameless.FileStorage.FileSystem {
 
         /// <inheritdoc />
         public Task<IFile> GetFileAsync(string relativePath) {
-            relativePath = PathHelper.Normalize(relativePath);
+            Ensure.NotNullEmptyOrWhiteSpace(relativePath, nameof(relativePath));
 
-            var file = new File(Root, relativePath, ChangeWatcherFactory);
+            var currentRelativePath = PathHelper.Normalize(relativePath);
+
+            var file = new File(Root, currentRelativePath, ChangeWatcherFactory);
 
             return Task.FromResult<IFile>(file);
+        }
+
+        public IAsyncEnumerable<IFile> GetFilesAsync(string? filter = null) {
+            var files = filter != null
+                ? SysDirectory.GetFiles(Root, filter)
+                : SysDirectory.GetFiles(Root);
+
+            var result = files.Select(_ => new File(Root, _, ChangeWatcherFactory));
+
+            return result.AsAsyncEnumerable();
         }
 
         #endregion

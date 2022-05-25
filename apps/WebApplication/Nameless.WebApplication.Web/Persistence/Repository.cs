@@ -1,8 +1,6 @@
 ﻿using System.Linq.Expressions;
-using Nameless.NHibernate;
 using Nameless.WebApplication.Web.Entities;
 using NHibernate.Linq;
-using NH_ISession = NHibernate.ISession;
 
 namespace Nameless.WebApplication.Web.Persistence {
 
@@ -10,17 +8,17 @@ namespace Nameless.WebApplication.Web.Persistence {
 
         #region Private Fields
 
-        private NH_ISession? _session;
+        private global::NHibernate.ISession? _session;
         private bool _disposed;
 
         #endregion
 
         #region Public Constructors
 
-        public Repository(ISessionProvider sessionProvider) {
-            Ensure.NotNull(sessionProvider, nameof(sessionProvider));
+        public Repository(global::NHibernate.ISession session) {
+            Ensure.NotNull(session, nameof(session));
 
-            _session = sessionProvider.GetSession();
+            _session = session;
         }
 
         #endregion
@@ -62,6 +60,8 @@ namespace Nameless.WebApplication.Web.Persistence {
 
             using var transaction = _session!.BeginTransaction();
             try {
+                entity.ModificationDate = DateTime.Now;
+
                 _session.SaveOrUpdate(entity);
                 transaction.Commit();
             }

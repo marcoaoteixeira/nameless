@@ -15,7 +15,7 @@ namespace Nameless.WebApplication.Web {
         }
 
         public void ConfigureAuth(IServiceCollection services) {
-            var options = Configuration.Get<JwtOptions>() ?? JwtOptions.Default;
+            var options = GetConfigurationFor<JwtOptions>(Configuration);
 
             services
                 .AddAuthentication(_ => {

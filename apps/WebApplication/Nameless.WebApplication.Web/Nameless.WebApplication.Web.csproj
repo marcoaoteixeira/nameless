@@ -18,6 +18,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.1" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
+		<PackageReference Include="System.Data.SQLite.Core" Version="1.0.115.5" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -26,11 +27,15 @@
 	  <ProjectReference Include="..\..\..\src\Caching\Nameless.Caching.InMemory.Autofac.Extension\Nameless.Caching.InMemory.Autofac.Extension.csproj" />
 	  <ProjectReference Include="..\..\..\src\Core\Nameless.Core\Nameless.Core.csproj" />
 	  <ProjectReference Include="..\..\..\src\Environment\Nameless.Environment.System.Autofac.Extension\Nameless.Environment.System.Autofac.Extension.csproj" />
-	  <ProjectReference Include="..\..\..\src\FileStorage\Nameless.FileStorage.FileSystem.Autofac.Extension\Nameless.FileStorage.FileSystem.Autofac.Extension.csproj" />
+	  <ProjectReference Include="..\..\..\src\FileStorage\Nameless.FileStorage.System.Autofac.Extension\Nameless.FileStorage.System.Autofac.Extension.csproj" />
 	  <ProjectReference Include="..\..\..\src\Logging\Nameless.Logging.Log4net.Autofac.Extension\Nameless.Logging.Log4net.Autofac.Extension.csproj" />
 	  <ProjectReference Include="..\..\..\src\NHibernate\Nameless.NHibernate.Autofac.Extension\Nameless.NHibernate.Autofac.Extension.csproj" />
 	  <ProjectReference Include="..\..\..\src\NHibernate\Nameless.NHibernate\Nameless.NHibernate.csproj" />
 	  <ProjectReference Include="..\..\..\src\Serialization\Nameless.Serialization.Json.Autofac.Extension\Nameless.Serialization.Json.Autofac.Extension.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="App_Data\" />
 	</ItemGroup>
 
 </Project>

@@ -27,30 +27,6 @@
         #region Methods
 
         /// <summary>
-        /// Creates a directory in the file storage if it doesn't already exist.
-        /// </summary>
-        /// <param name="relativePath">
-        /// The relative path of the directory to be created.
-        /// </param>
-        /// <returns>
-        /// <c>true</c> if the directory was created; <c>false</c> if the
-        /// directory already existed.
-        /// </returns>
-        Task<bool> CreateDirectoryAsync(string relativePath, CancellationToken token = default);
-
-        /// <summary>
-        /// Retrieves information about the given directory within the file
-        /// storage.
-        /// </summary>
-        /// <param name="relativePath">
-        /// The relative path to the directory.
-        /// </param>
-        /// <returns>
-        /// A <see cref="IDirectory"/> object representing the directory.
-        /// </returns>
-        Task<IDirectory> GetDirectoryAsync(string relativePath);
-
-        /// <summary>
         /// Creates a new file in the file storage from the contents of an
         /// input stream.
         /// </summary>
@@ -77,6 +53,17 @@
         /// A <see cref="IFile"/> object representing the file.
         /// </returns>
         Task<IFile> GetFileAsync(string relativePath);
+
+        /// <summary>
+        /// Retrieves all files that matchs the <paramref name="filter"/> or, if
+        /// <paramref name="filter"/> is null, then returns a list of all files.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
+        /// <returns>
+        /// An <see cref="IAsyncEnumerable{IFile}"/> representing all files found
+        /// by the <paramref name="filter"/>.
+        /// </returns>
+        IAsyncEnumerable<IFile> GetFilesAsync(string? filter = null);
 
         #endregion
     }

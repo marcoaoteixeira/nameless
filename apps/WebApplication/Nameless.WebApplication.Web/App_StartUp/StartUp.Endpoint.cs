@@ -14,7 +14,7 @@
 			app.UseEndpoints(endpoints => {
 				endpoints.MapControllerRoute(
 					name: "default",
-					pattern: "api/v{version:apiVersion}/{controller=Values}/{action=Get}/{id?}"
+					pattern: "api/v{version:apiVersion}/{controller=Home}/{action=Get}/{id?}"
 				);
 			});
 		}

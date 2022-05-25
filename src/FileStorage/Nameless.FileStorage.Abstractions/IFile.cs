@@ -42,12 +42,12 @@ namespace Nameless.FileStorage {
         #region Methods
 
         /// <summary>
-        /// Opens a stream to read the contents of a file.
+        /// Opens a stream to read (only) the contents of a file.
         /// </summary>
         /// <param name="token">The cancellation token.</param>
         /// <returns>
-        /// An instance of <see cref="Stream"/> that can be used to read the
-        /// contents of the file. The caller must close the stream when
+        /// An instance of <see cref="Stream"/> that can be used to read (only)
+        /// the contents of the file. The caller must close the stream when
         /// finished.
         /// </returns>
         Task<Stream> OpenAsync(CancellationToken token = default);

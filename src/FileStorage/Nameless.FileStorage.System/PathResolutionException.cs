@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Nameless.FileStorage.FileSystem {
+namespace Nameless.FileStorage.System {
 
     [Serializable]
     public class PathResolutionException : Exception {

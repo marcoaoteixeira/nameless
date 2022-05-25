@@ -2,18 +2,18 @@ namespace Nameless.Logging.Log4net {
 
 	public sealed class LoggingOptions {
 
-		#region Public Constants
+		#region Public Static Read-Only Fields
 
-		public const string DEFAULT_CONFIGURATION_FILE_NAME = "log4net.config";
+		public static readonly LoggingOptions Default = new();
 
-		#endregion
+        #endregion
 
 		#region Public Properties
 
 		/// <summary>
 		/// Gets or sets the configuration file name.
 		/// </summary>
-		public string ConfigurationFileName { get; set; } = DEFAULT_CONFIGURATION_FILE_NAME;
+		public string ConfigurationFileName { get; set; } = "log4net.config";
 		/// <summary>
 		/// Gets or sets the repository name.
 		/// </summary>

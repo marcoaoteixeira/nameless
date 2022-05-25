@@ -1,8 +1,8 @@
-using System_Path = System.IO.Path;
+using SysPath = System.IO.Path;
 
-namespace Nameless.FileStorage.FileSystem {
+namespace Nameless.FileStorage.System {
 
-    public sealed class File : IFile {
+	public sealed class File : IFile {
 
 		#region Private Properties
 
@@ -12,32 +12,28 @@ namespace Nameless.FileStorage.FileSystem {
 
 		#endregion
 
-		#region Public Constructors
+		#region Internal Constructors
 
-		public File(string root, string path, Func<string, string, Action<ChangeEventArgs>, IDisposable> changeWatcherFactory) {
-			Ensure.NotNullEmptyOrWhiteSpace(root, nameof(root));
-			Ensure.NotNullEmptyOrWhiteSpace(path, nameof(path));
-			Ensure.NotNull(changeWatcherFactory, nameof(changeWatcherFactory));
-
+		internal File(string root, string path, Func<string, string, Action<ChangeEventArgs>, IDisposable> changeWatcherFactory) {
 			Root = root;
 			ChangeWatcherFactory = changeWatcherFactory;
 
-			var physicalPath = PathHelper.GetPhysicalPath(Root, path);
-			CurrentFile = new FileInfo(physicalPath);
+			var currentPath = PathHelper.GetPhysicalPath(Root, path);
+			CurrentFile = new FileInfo(currentPath);
 		}
 
-		#endregion
+        #endregion
 
-		#region IFile Members
+        #region IFile Members
 
-		/// <inheritdoc />
-		public string Name => CurrentFile.Name;
-
-		/// <inheritdoc />
-		public string Path => CurrentFile.FullName[Root.Length..].TrimStart(System_Path.DirectorySeparatorChar);
+        /// <inheritdoc />
+        public string Name => CurrentFile.Name;
 
 		/// <inheritdoc />
-		public string DirectoryPath => CurrentFile.DirectoryName![Root.Length..].TrimStart(System_Path.DirectorySeparatorChar);
+		public string Path => CurrentFile.FullName[Root.Length..].TrimStart(SysPath.DirectorySeparatorChar);
+
+		/// <inheritdoc />
+		public string DirectoryPath => CurrentFile.DirectoryName![Root.Length..].TrimStart(SysPath.DirectorySeparatorChar);
 
 		/// <inheritdoc />
 		public bool Exists => CurrentFile.Exists;

@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FileStorage", "FileStorage"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nameless.FileStorage.Abstractions", "src\FileStorage\Nameless.FileStorage.Abstractions\Nameless.FileStorage.Abstractions.csproj", "{24A67743-E349-4073-A831-69FFB8A11441}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nameless.FileStorage.FileSystem", "src\FileStorage\Nameless.FileStorage.FileSystem\Nameless.FileStorage.FileSystem.csproj", "{3CA39132-5B32-476E-980C-83847E9478FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nameless.FileStorage.System", "src\FileStorage\Nameless.FileStorage.System\Nameless.FileStorage.System.csproj", "{3CA39132-5B32-476E-980C-83847E9478FE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Localization", "Localization", "{1F79C889-CAC8-4C19-B2F8-E7494632549E}"
 EndProject
@@ -167,7 +167,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nameless.Environment.System
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nameless.EventSourcing.Common.Autofac.Extension", "src\EventSourcing\Nameless.EventSourcing.Common.Autofac.Extension\Nameless.EventSourcing.Common.Autofac.Extension.csproj", "{4C970120-313E-4712-8784-645E4C0BB964}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nameless.FileStorage.FileSystem.Autofac.Extension", "src\FileStorage\Nameless.FileStorage.FileSystem.Autofac.Extension\Nameless.FileStorage.FileSystem.Autofac.Extension.csproj", "{3B2AC0D5-D678-4EB5-976D-566559149315}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nameless.FileStorage.System.Autofac.Extension", "src\FileStorage\Nameless.FileStorage.System.Autofac.Extension\Nameless.FileStorage.System.Autofac.Extension.csproj", "{3B2AC0D5-D678-4EB5-976D-566559149315}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nameless.Localization.Json.Autofac.Extension", "src\Localization\Nameless.Localization.Json.Autofac.Extension\Nameless.Localization.Json.Autofac.Extension.csproj", "{C8DD23E9-1FDA-46FA-A770-AAB3B0091622}"
 EndProject
@@ -213,7 +213,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApplication", "WebApplic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nameless.NHibernate.Autofac.Extension", "src\NHibernate\Nameless.NHibernate.Autofac.Extension\Nameless.NHibernate.Autofac.Extension.csproj", "{DCFAC57F-FAA9-4B67-8EEE-2AFB364B217A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nameless.FileStorage.FileSystem.UnitTesting", "src\FileStorage\Nameless.FileStorage.FileSystem.UnitTesting\Nameless.FileStorage.FileSystem.UnitTesting.csproj", "{9CF4D23F-4770-46FA-A828-DC67A142C1AC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nameless.FileStorage.System.UnitTesting", "src\FileStorage\Nameless.FileStorage.System.UnitTesting\Nameless.FileStorage.System.UnitTesting.csproj", "{9CF4D23F-4770-46FA-A828-DC67A142C1AC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

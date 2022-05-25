@@ -13,7 +13,6 @@ namespace Nameless.NHibernate {
 
         private const string CONFIGURATION_BUILDER_KEY = "e7c9cd70-03fe-492b-8729-754e69a09575";
         private const string SESSION_PROVIDER_KEY = "b7300b0b-91cd-4180-a9e6-ed16a2e311a0";
-        private const string SESSION_KEY = "6ce3ee5f-a0f1-44dd-9978-79fbb199a667";
 
         #endregion
 
@@ -21,7 +20,7 @@ namespace Nameless.NHibernate {
 
         private static void SessionProviderActivating(IActivatingEventArgs<SessionProvider> args) {
             var opts = args.Context.ResolveOptional<NHibernateOptions>() ?? new();
-            if (opts.ExecuteSchemaExport) {
+            if (!string.IsNullOrWhiteSpace(opts.SchemaOutputPath)) {
                 var configurationBuilder = args.Context.ResolveNamed<IConfigurationBuilder>(CONFIGURATION_BUILDER_KEY);
                 var configuration = configurationBuilder.Build(opts);
                 
@@ -39,7 +38,7 @@ namespace Nameless.NHibernate {
             writer.AutoFlush = true;
             new SchemaExport(configuration)
                 .Execute(
-                    useStdOut: true,
+                    useStdOut: false,
                     execute: false,
                     justDrop: false,
                     connection: session.Connection,
@@ -67,7 +66,7 @@ namespace Nameless.NHibernate {
 
             builder
                 .Register(ctx => ctx.ResolveNamed<ISessionProvider>(SESSION_PROVIDER_KEY).GetSession())
-                .Named<ISession>(SESSION_KEY)
+                .As<ISession>()
                 .SetLifetimeScope(LifetimeScopeType.PerScope);
 
             base.Load(builder);
