@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using Nameless.Helpers;
 using Nameless.Persistence;
 
 namespace Nameless.AspNetCore.Identity {
@@ -84,62 +85,85 @@ namespace Nameless.AspNetCore.Identity {
         #region Public Override Methods
 
         public override Task<IdentityResult> CreateAsync(TRole role, CancellationToken cancellationToken = default) {
-            return SaveAsync(role, cancellationToken);
+            Prevent.Null(role, nameof(role));
+
+            var instruction = SaveInstruction<TRole>
+                .Insert(role);
+
+            return Repository
+                .SaveAsync(instruction, cancellationToken)
+                .ContinueWith(Internals.IdentityResultContinuation);
         }
 
         public override Task<IdentityResult> UpdateAsync(TRole role, CancellationToken cancellationToken = default) {
-            return SaveAsync(role, cancellationToken);
+            Prevent.Null(role, nameof(role));
+
+            var instruction = SaveInstruction<TRole>
+                .Update(role, filter: _ => _.Id.Equals(role.Id));
+
+            return Repository
+                .SaveAsync(instruction, cancellationToken)
+                .ContinueWith(Internals.IdentityResultContinuation);
         }
 
         public override Task<IdentityResult> DeleteAsync(TRole role, CancellationToken cancellationToken = default) {
             Prevent.Null(role, nameof(role));
 
-            var instruction = new DeleteInstruction<TRole>(_ => _.Id.Equals(role.Id));
+            var instruction = DeleteInstruction<TRole>
+                .Create(_ => _.Id.Equals(role.Id));
+
             return Repository
                 .DeleteAsync(instruction, cancellationToken)
-                .ContinueWith(Utils.IdentityResultContinuation);
+                .ContinueWith(Internals.IdentityResultContinuation);
         }
 
         public override Task<TRole> FindByIdAsync(string id, CancellationToken cancellationToken = default) {
             Prevent.NullEmptyOrWhiteSpace(id, nameof(id));
 
-            var currentId = Utils.Parse<TKey>(id);
+            if (!IDHelper.TryGetAs<TKey>(id, out var currentId)) {
+                throw new InvalidIDCastException(nameof(id), id, typeof(TKey));
+            }
 
-            return Repository.FindAsync<TRole>(_ => _.Id.Equals(currentId), cancellationToken)
-                .FirstOrDefault(cancellationToken);
+            return Repository
+                .FindAsync<TRole>(
+                    filter: _ => _.Id.Equals(currentId),
+                    cancellationToken: cancellationToken
+                )
+                .ContinueWith(antecedent => antecedent.Result.Single());
         }
 
         public override Task<TRole> FindByNameAsync(string normalizedName, CancellationToken cancellationToken = default) {
             Prevent.NullEmptyOrWhiteSpace(normalizedName, nameof(normalizedName));
 
             return Repository
-                .FindAsync<TRole>(_ => _.NormalizedName == normalizedName, cancellationToken)
-                .FirstOrDefault(cancellationToken);
+                .FindAsync<TRole>(
+                     filter: _ => _.NormalizedName == normalizedName,
+                     cancellationToken: cancellationToken
+                )
+                .ContinueWith(antecedent => antecedent.Result.Single());
         }
 
         public override Task<IList<Claim>> GetClaimsAsync(TRole role, CancellationToken cancellationToken = default) {
             Prevent.Null(role, nameof(role));
 
             return Repository
-                .FindAsync<TRoleClaim>(_ => EqualityComparer<TKey>.Default.Equals(_.RoleId, role.Id), cancellationToken)
-                .Project(_ => _.ToClaim(), cancellationToken)
-                .ToListAsync(cancellationToken);
+                .FindAsync<TRoleClaim>(
+                    filter: _ => _.RoleId.Equals(role.Id),
+                    cancellationToken: cancellationToken
+                )
+                .ContinueWith(antecedent => antecedent.Result.FromRoleClaimList<TKey, TRoleClaim>());
         }
 
         public override Task AddClaimAsync(TRole role, Claim claim, CancellationToken cancellationToken = default) {
             Prevent.Null(role, nameof(role));
             Prevent.Null(claim, nameof(claim));
 
-            var instruction = new SaveInstruction<TRoleClaim>(
-                entity: new TRoleClaim {
+            var instruction = SaveInstruction<TRoleClaim>
+                .Insert(new TRoleClaim {
                     RoleId = role.Id,
                     ClaimType = claim.Type,
                     ClaimValue = claim.Value
-                },
-                filter: _ => _.RoleId.Equals(role.Id) &&
-                             _.ClaimType == claim.Type &&
-                             _.ClaimValue == claim.Value
-            );
+                });
 
             return Repository.SaveAsync(instruction, cancellationToken);
         }
@@ -148,28 +172,14 @@ namespace Nameless.AspNetCore.Identity {
             Prevent.Null(role, nameof(role));
             Prevent.Null(claim, nameof(claim));
 
-            var instruction = new DeleteInstruction<TRoleClaim>(
-                filter: _ => _.RoleId.Equals(role.Id) &&
-                             _.ClaimType == claim.Type &&
-                             _.ClaimValue == claim.Value
-            );
+            var instruction = DeleteInstruction<TRoleClaim>
+                .Create(filter: _ =>
+                    _.RoleId.Equals(role.Id) &&
+                    _.ClaimType == claim.Type &&
+                    _.ClaimValue == claim.Value
+                );
 
             return Repository.DeleteAsync(instruction, cancellationToken);
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        private Task<IdentityResult> SaveAsync(TRole role, CancellationToken cancellationToken) {
-            var instruction = new SaveInstruction<TRole>(
-                entity: role,
-                filter: _ => _.Id.Equals(role.Id)
-            );
-
-            return Repository
-                .SaveAsync(instruction, cancellationToken)
-                .ContinueWith(Utils.IdentityResultContinuation);
         }
 
         #endregion

@@ -67,21 +67,21 @@ namespace Nameless.Helpers {
             var type = input.GetType();
             var properties = type.GetProperties();
             var elements = from property in properties
-                           
+
                            let name = XmlConvert.EncodeName(property.Name)
 
                            let val = !property.PropertyType.IsArray
                                 ? property.GetValue(input, null)
                                 : "array"
-                           
+
                            let value = property.PropertyType.IsArray
                                 ? GetArrayElement(property, property.GetValue(input, null) as Array)
                                 : (property.PropertyType.IsSimple()
                                     ? new XElement(name, val)
                                     : ConvertAnonymousObjectToXml(val, name))
-                           
+
                            where value != null
-                           
+
                            select value;
 
             result.Add(elements);
@@ -103,7 +103,7 @@ namespace Nameless.Helpers {
                 var childElement = value.GetType().IsSimple()
                     ? new XElement(string.Concat(name, "Child"), value)
                     : ConvertAnonymousObjectToXml(value);
-                
+
                 rootElement.Add(childElement);
             }
 

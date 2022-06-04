@@ -5,5 +5,5 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE0090:Use 'new(...)'", Justification = "<Pending>", Scope = "member", Target = "~M:Nameless.Helpers.ObjectHelper.AsNullable``1(``0)~System.Nullable{``0}")]
+[assembly: SuppressMessage("Style", "IDE0090:Use 'new(...)'", Justification = "<Pending>", Scope = "member", Target = "~M:Nameless.Helpers.IDHelper.AsNullable``1(``0)~System.Nullable{``0}")]
 [assembly: SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>", Scope = "member", Target = "~M:Nameless.Collections.HashtableDynamicObject.#ctor(System.Collections.IDictionary)")]

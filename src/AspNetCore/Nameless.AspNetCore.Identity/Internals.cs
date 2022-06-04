@@ -2,7 +2,7 @@
 
 namespace Nameless.AspNetCore.Identity {
 
-    internal static class Utils {
+    internal static class Internals {
 
         #region Internal Static Methods
 
@@ -20,26 +20,6 @@ namespace Nameless.AspNetCore.Identity {
             }
 
             return IdentityResult.Success;
-        }
-
-        internal static T Parse<T>(object value) {
-            var result = Parse(value, typeof(T));
-            if (result == null) { return default!; }
-            return (T)result;
-        }
-
-        internal static object? Parse(object value, Type convertType) {
-            if (value == null) { return null; }
-
-            if (typeof(IConvertible).IsAssignableFrom(value.GetType())) {
-                return Convert.ChangeType(value, convertType);
-            }
-
-            if (Guid.TryParse(value.ToString(), out Guid result)) {
-                return result;
-            }
-
-            return null;
         }
 
         #endregion

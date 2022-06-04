@@ -31,13 +31,13 @@ namespace Nameless.Persistence {
         #region IRepository Members
 
         /// <inheritdoc />
-        public Task<TEntity> SaveAsync<TEntity>(TEntity entity, Expression<Func<TEntity, bool>>? filter = null, CancellationToken cancellationToken = default) where TEntity : class {
-            return _writer.SaveAsync(entity, filter, cancellationToken);
+        public Task<int> SaveAsync<TEntity>(SaveInstructionCollection<TEntity> instructions, CancellationToken cancellationToken = default) where TEntity : class {
+            return _writer.SaveAsync(instructions, cancellationToken);
         }
 
         /// <inheritdoc />
-        public Task<bool> DeleteAsync<TEntity>(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken = default) where TEntity : class {
-            return _writer.DeleteAsync(filter, cancellationToken);
+        public Task<int> DeleteAsync<TEntity>(DeleteInstructionCollection<TEntity> instructions, CancellationToken cancellationToken = default) where TEntity : class {
+            return _writer.DeleteAsync(instructions, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -46,10 +46,15 @@ namespace Nameless.Persistence {
         }
 
         /// <inheritdoc />
+        public Task<bool> ExistsAsync<TEntity>(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken = default) where TEntity : class {
+            return _reader.ExistsAsync(filter, cancellationToken);
+        }
+
+        /// <inheritdoc />
         public IQueryable<TEntity> Query<TEntity>() where TEntity : class {
             return _reader.Query<TEntity>();
         }
 
-        #endregion IRepository Members
+        #endregion
     }
 }

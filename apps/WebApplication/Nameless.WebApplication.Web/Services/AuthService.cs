@@ -30,9 +30,10 @@ namespace Nameless.WebApplication.Web.Services {
 
         public async Task<AuthenticationResult> AuthenticateAsync(string identification, string? password, string ipAddress, CancellationToken cancellationToken = default) {
             Prevent.NullEmptyOrWhiteSpace(identification, nameof(identification));
-            
+            Prevent.NullEmptyOrWhiteSpace(password, nameof(password));
+
             var user = await _userService.GetByEmailAsync(identification, cancellationToken);
-            if (user == null || PasswordUtils.HashPassword(password) != user.PasswordHash) {
+            if (user == null || Password.Validate(password, user.PasswordHash!)) {
                 return AuthenticationResult.Fail("Username or password is incorrect.");
             }
             var jwtToken = _jwtService.GenerateToken(user.Email!);

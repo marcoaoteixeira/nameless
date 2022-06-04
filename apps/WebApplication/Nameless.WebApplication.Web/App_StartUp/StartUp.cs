@@ -29,6 +29,7 @@ namespace Nameless.WebApplication.Web {
             ConfigureCors(services);
             ConfigureSwagger(services);
             ConfigureConfiguration(services);
+            ConfigureMigration(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,6 +41,7 @@ namespace Nameless.WebApplication.Web {
             UseEndpoints(app);
             UseCors(app);
             UseSwagger(app, env);
+            UseMigration(app);
 
             var container = app.ApplicationServices.GetAutofacRoot();
 

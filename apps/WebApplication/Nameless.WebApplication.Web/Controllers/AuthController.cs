@@ -31,10 +31,14 @@ namespace Nameless.WebApplication.Web.Controllers {
 
         [AllowAnonymous, HttpPost]
         public async Task<IActionResult> Authenticate(AuthenticationRequest request) {
-            var response = await _authService.AuthenticateAsync(request.Identification!, request.Password!, HttpContext.GetIpAddress());
+            var response = await _authService.AuthenticateAsync(
+                identification: request.Identification!,
+                password: request.Password!,
+                ipAddress: HttpContext.GetIpAddress()
+            );
 
             if(!response.Successfull) {
-                ModelState.AddModelError(string.Empty, response.Error!);
+                ModelState.AddModelError(nameof(response.Error), response.Error!);
                 return BadRequest(ModelState);
             }
 
@@ -44,7 +48,7 @@ namespace Nameless.WebApplication.Web.Controllers {
                 expiration: new DateTimeOffset(response.RefreshTokenExpiration)
             );
             
-            return Ok();
+            return Ok(response);
         }
 
         #endregion

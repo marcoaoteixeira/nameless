@@ -41,7 +41,9 @@ namespace Nameless.WebApplication.Web.Services {
                 CreatedByIp = ipAddress
             };
 
-            return _repository.SaveAsync(refreshToken, cancellationToken: cancellationToken);
+            return _repository
+                .SaveAsync(refreshToken, cancellationToken: cancellationToken)
+                .ContinueWith(antecedent => refreshToken);
 
             string getUniqueToken() {
                 // token is a cryptographically strong random sequence of values

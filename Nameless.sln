@@ -215,7 +215,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nameless.NHibernate.Autofac
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nameless.FileStorage.System.UnitTesting", "src\FileStorage\Nameless.FileStorage.System.UnitTesting\Nameless.FileStorage.System.UnitTesting.csproj", "{9CF4D23F-4770-46FA-A828-DC67A142C1AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nameless.NHibernate.UnitTesting", "src\NHibernate\Nameless.NHibernate.UnitTesting\Nameless.NHibernate.UnitTesting.csproj", "{D409C96A-D0DD-4293-9F25-5E7403EC1A74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nameless.NHibernate.UnitTesting", "src\NHibernate\Nameless.NHibernate.UnitTesting\Nameless.NHibernate.UnitTesting.csproj", "{D409C96A-D0DD-4293-9F25-5E7403EC1A74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nameless.WebApplication.Web.UnitTesting", "apps\WebApplication\Nameless.WebApplication.Web.UnitTesting\Nameless.WebApplication.Web.UnitTesting.csproj", "{C9A29C1A-917C-4BFB-8E67-980994082F01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nameless.Persistence.NHibernate.UnitTesting", "src\Persistence\Nameless.Persistence.NHibernate.UnitTesting\Nameless.Persistence.NHibernate.UnitTesting.csproj", "{477D54A8-5249-4C99-8345-0E3B1BACD41C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -543,6 +547,14 @@ Global
 		{D409C96A-D0DD-4293-9F25-5E7403EC1A74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D409C96A-D0DD-4293-9F25-5E7403EC1A74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D409C96A-D0DD-4293-9F25-5E7403EC1A74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9A29C1A-917C-4BFB-8E67-980994082F01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9A29C1A-917C-4BFB-8E67-980994082F01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9A29C1A-917C-4BFB-8E67-980994082F01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9A29C1A-917C-4BFB-8E67-980994082F01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{477D54A8-5249-4C99-8345-0E3B1BACD41C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{477D54A8-5249-4C99-8345-0E3B1BACD41C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{477D54A8-5249-4C99-8345-0E3B1BACD41C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{477D54A8-5249-4C99-8345-0E3B1BACD41C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -653,6 +665,8 @@ Global
 		{DCFAC57F-FAA9-4B67-8EEE-2AFB364B217A} = {C8C023D8-78B7-4F65-8AB7-0D02BB927B53}
 		{9CF4D23F-4770-46FA-A828-DC67A142C1AC} = {0C773E5A-932D-4497-84E0-7238B1A3C065}
 		{D409C96A-D0DD-4293-9F25-5E7403EC1A74} = {C8C023D8-78B7-4F65-8AB7-0D02BB927B53}
+		{C9A29C1A-917C-4BFB-8E67-980994082F01} = {566E4C4C-85D8-49C5-B4F7-0126779595FD}
+		{477D54A8-5249-4C99-8345-0E3B1BACD41C} = {23672E1F-F4DB-45D1-9F7B-02D821386C30}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {24169778-D862-4A34-A697-DA334A59E70E}

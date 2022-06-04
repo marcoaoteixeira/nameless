@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Nameless.DependencyInjection.Autofac;
-using Nameless.WebApplication.Web.Persistence;
+using Nameless.Services;
+using Nameless.WebApplication.Web.Services;
 
 namespace Nameless.WebApplication.Web.Infrastructure {
 
@@ -10,9 +11,34 @@ namespace Nameless.WebApplication.Web.Infrastructure {
 
         protected override void Load(ContainerBuilder builder) {
             builder
-                .RegisterType<Repository>()
-                .As<IRepository>()
-                .SetLifetimeScope(LifetimeScopeType.PerScope);
+                .RegisterType<AuthService>()
+                .As<IAuthService>()
+                .InstancePerLifetimeScope();
+
+            builder
+                .RegisterType<CacheService>()
+                .As<ICacheService>()
+                .InstancePerLifetimeScope();
+
+            builder
+                .RegisterType<JWTService>()
+                .As<IJwtService>()
+                .InstancePerLifetimeScope();
+
+            builder
+                .RegisterType<RefreshTokenService>()
+                .As<IRefreshTokenService>()
+                .InstancePerLifetimeScope();
+
+            builder
+                .RegisterType<UserService>()
+                .As<IUserService>()
+                .InstancePerLifetimeScope();
+
+            builder
+                .RegisterInstance(SystemClock.Instance)
+                .As<IClock>()
+                .SingleInstance();
 
             base.Load(builder);
         }

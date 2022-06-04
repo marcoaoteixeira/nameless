@@ -4,6 +4,7 @@ using Nameless.Environment.System;
 using Nameless.FileStorage.System;
 using Nameless.Logging.Log4net;
 using Nameless.NHibernate;
+using Nameless.Persistence.NHibernate;
 using Nameless.Serialization.Json;
 using Nameless.WebApplication.Web.Infrastructure;
 
@@ -24,6 +25,7 @@ namespace Nameless.WebApplication.Web {
                 .RegisterModule(new FileStorageModule())
                 .RegisterModule(new LoggingModule())
                 .RegisterModule(new NHibernateModule())
+                .RegisterModule(new PersistenceModule())
                 .RegisterModule(new SerializationModule())
                 .RegisterModule(new AppModule());
         }

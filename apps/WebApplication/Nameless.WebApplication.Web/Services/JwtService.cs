@@ -53,7 +53,7 @@ namespace Nameless.WebApplication.Web.Services {
         public string GenerateToken(string email) {
             if (string.IsNullOrWhiteSpace(email)) { return string.Empty; }
 
-            // generate token that is valid for 15 minutes
+            // generate token that is valid for N seconds
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_opts.Secret!);
             var claims = new[] { new Claim(ClaimTypes.Email, email) };

@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Autofac.Core;
 using Nameless.DependencyInjection.Autofac;
 using NHibernate;
 using NHibernate.Cfg;
@@ -12,34 +11,64 @@ namespace Nameless.NHibernate {
         #region Private Constants
 
         private const string CONFIGURATION_BUILDER_KEY = "e7c9cd70-03fe-492b-8729-754e69a09575";
-        private const string SESSION_PROVIDER_KEY = "b7300b0b-91cd-4180-a9e6-ed16a2e311a0";
+        private const string CONFIGURATION_KEY = "01adb905-5589-4c2f-acd9-b14b6368589d";
+        private const string SESSION_FACTORY_KEY = "f3434c42-a8e8-458c-bfff-5ee00aacecad";
+
+        #endregion
+
+        #region Public Properties
+
+        public ExecuteSchemaInfo SchemaInfo { get; set; } = ExecuteSchemaInfo.Default;
 
         #endregion
 
         #region Private Static Methods
 
-        private static void SessionProviderActivating(IActivatingEventArgs<SessionProvider> args) {
-            var opts = args.Context.ResolveOptional<NHibernateOptions>() ?? new();
-            if (!string.IsNullOrWhiteSpace(opts.SchemaOutputPath)) {
-                var configurationBuilder = args.Context.ResolveNamed<IConfigurationBuilder>(CONFIGURATION_BUILDER_KEY);
-                var configuration = configurationBuilder.Build(opts);
-                
-                using var session = args.Instance.GetSession();
-                ExecuteSchemaExport(session, configuration, opts.SchemaOutputPath);
-            }
+        private static Configuration ResolveConfiguration(IComponentContext ctx) {
+            var options = ctx.ResolveOptional<NHibernateOptions>() ?? new();
+            var configurationBuilder = ctx.ResolveNamed<IConfigurationBuilder>(CONFIGURATION_BUILDER_KEY);
+            var result = configurationBuilder.Build(options);
+
+            return result;
         }
 
-        private static void ExecuteSchemaExport(ISession session, Configuration configuration, string? schemaOutputPath) {
-            var currentSchemaOutputPath = string.IsNullOrWhiteSpace(schemaOutputPath)
-                ? Path.Combine(typeof(NHibernateModule).Assembly.GetDirectoryPath() ?? string.Empty, "schema.txt")
-                : schemaOutputPath;
+        private static ISessionFactory ResolveSessionFactory(IComponentContext ctx, ExecuteSchemaInfo schemaInfo) {
+            var configuration = ctx.ResolveNamed<Configuration>(CONFIGURATION_KEY);
+            var sessionFactory = configuration.BuildSessionFactory();
+            if (schemaInfo.ExecuteSchema == ExecuteSchemaOptions.OnSessionFactoryResolution) {
+                using var session = sessionFactory.OpenSession();
 
-            using var writer = File.CreateText(currentSchemaOutputPath);
-            writer.AutoFlush = true;
+                ExecuteSchemaExport(session, configuration, schemaInfo);
+            }
+
+            return sessionFactory;
+        }
+
+        private static ISession ResolveSession(IComponentContext ctx, ExecuteSchemaInfo schemaInfo) {
+            var sessionFactory = ctx.ResolveNamed<ISessionFactory>(SESSION_FACTORY_KEY);
+            var session = sessionFactory.OpenSession();
+
+            if (schemaInfo.ExecuteSchema == ExecuteSchemaOptions.OnSessionResolution) {
+                var configuration = ctx.ResolveNamed<Configuration>(CONFIGURATION_KEY);
+
+                ExecuteSchemaExport(session, configuration, schemaInfo);
+            }
+
+            return session;
+        }
+
+        private static void ExecuteSchemaExport(ISession session, Configuration configuration, ExecuteSchemaInfo schemaInfo) {
+            var outputConsole = !schemaInfo.SchemaOutput.HasFlag(SchemaOutputOptions.None) &&
+                                 schemaInfo.SchemaOutput.HasFlag(SchemaOutputOptions.Console);
+            var outputFile = !schemaInfo.SchemaOutput.HasFlag(SchemaOutputOptions.None) &&
+                              schemaInfo.SchemaOutput.HasFlag(SchemaOutputOptions.File) &&
+                             !string.IsNullOrWhiteSpace(schemaInfo.SchemaOutputPath);
+
+            using var writer = outputFile ? File.CreateText(schemaInfo.SchemaOutputPath!) : TextWriter.Null;
             new SchemaExport(configuration)
                 .Execute(
-                    useStdOut: false,
-                    execute: false,
+                    useStdOut: outputConsole,
+                    execute: true,
                     justDrop: false,
                     connection: session.Connection,
                     exportOutput: writer
@@ -58,14 +87,17 @@ namespace Nameless.NHibernate {
                 .SetLifetimeScope(LifetimeScopeType.Singleton);
 
             builder
-                .RegisterType<SessionProvider>()
-                .Named<ISessionProvider>(SESSION_PROVIDER_KEY)
-                .WithParameter(ResolvedParameter.ForNamed<IConfigurationBuilder>(CONFIGURATION_BUILDER_KEY))
-                .OnActivating(SessionProviderActivating)
+                .Register(ResolveConfiguration)
+                .Named<Configuration>(CONFIGURATION_KEY)
                 .SetLifetimeScope(LifetimeScopeType.Singleton);
 
             builder
-                .Register(ctx => ctx.ResolveNamed<ISessionProvider>(SESSION_PROVIDER_KEY).GetSession())
+                .Register(ctx => ResolveSessionFactory(ctx, SchemaInfo))
+                .Named<ISessionFactory>(SESSION_FACTORY_KEY)
+                .SetLifetimeScope(LifetimeScopeType.Singleton);
+
+            builder
+                .Register(ctx => ResolveSession(ctx, SchemaInfo))
                 .As<ISession>()
                 .SetLifetimeScope(LifetimeScopeType.PerScope);
 
@@ -74,4 +106,6 @@ namespace Nameless.NHibernate {
 
         #endregion
     }
+
+    
 }

@@ -46,9 +46,8 @@ namespace Nameless.NHibernate {
         public NHibernateCollectionTypeOptions CollectionType { get; set; } = new();
         public NHibernateTransactionOptions Transaction { get; set; } = new();
         public NHibernateSpecificOptions Specific { get; set; } = new();
+        public string[] EntityRootTypes { get; set; } = Array.Empty<string>();
         public string[] MappingTypes { get; set; } = Array.Empty<string>();
-        public string[] EntityBaseTypes { get; set; } = Array.Empty<string>();
-        public string? SchemaOutputPath { get; set; }
 
         #endregion
 
@@ -56,7 +55,7 @@ namespace Nameless.NHibernate {
 
         public IDictionary<string, string> ToDictionary() {
             var configs = new List<KeyValuePair<string, string>>();
-
+            
             var properties = GetType()
                 .GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .Where(_ => typeof(NHibernateOptionsBase).IsAssignableFrom(_.PropertyType));

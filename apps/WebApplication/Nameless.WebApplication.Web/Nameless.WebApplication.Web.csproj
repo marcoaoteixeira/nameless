@@ -12,8 +12,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.2.0" />
+		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
 		<PackageReference Include="ElmahCore" Version="2.1.2" />
+		<PackageReference Include="FluentMigrator" Version="3.3.2" />
+		<PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.5" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.1" />
@@ -32,6 +34,7 @@
 	  <ProjectReference Include="..\..\..\src\NHibernate\Nameless.NHibernate.Autofac.Extension\Nameless.NHibernate.Autofac.Extension.csproj" />
 	  <ProjectReference Include="..\..\..\src\NHibernate\Nameless.NHibernate\Nameless.NHibernate.csproj" />
 	  <ProjectReference Include="..\..\..\src\Persistence\Nameless.Persistence.Abstractions\Nameless.Persistence.Abstractions.csproj" />
+	  <ProjectReference Include="..\..\..\src\Persistence\Nameless.Persistence.NHibernate.Autofac.Extension\Nameless.Persistence.NHibernate.Autofac.Extension.csproj" />
 	  <ProjectReference Include="..\..\..\src\Serialization\Nameless.Serialization.Json.Autofac.Extension\Nameless.Serialization.Json.Autofac.Extension.csproj" />
 	</ItemGroup>
 

@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using NHibernate;
+using NHibernate.Criterion;
 using NHibernate.Linq;
 
 namespace Nameless.Persistence.NHibernate {
@@ -22,44 +23,117 @@ namespace Nameless.Persistence.NHibernate {
 
         #endregion
 
-        #region IWriter Members
+        #region Private Static Methods
 
-        public Task<TEntity> SaveAsync<TEntity>(TEntity entity, Expression<Func<TEntity, bool>>? filter = null, CancellationToken cancellationToken = default) where TEntity : class {
-            Prevent.Null(entity, nameof(entity));
-
-            using var transaction = _session.BeginTransaction();
-            try {
-                var counter = filter != null ? _session.Query<TEntity>().Count(filter) : -1;
-
-                /*
-                 counter = -1 => SaveOrUpdate
-                 counter = 0 => Save
-                 counter > 0 => Update
-                 */
-
-                switch (counter) {
-                    case 0: _session.Save(entity); break;
-                    case -1: _session.SaveOrUpdate(entity); break;
-                    default: _session.Query<TEntity>().Where(filter!).Update(_ => entity); break;
-                }
-
-                transaction.Commit();
-            } catch { transaction.Rollback(); throw; }
-
-            return Task.FromResult(entity);
+        private static int Insert<TEntity>(ISession session, TEntity entity)
+            where TEntity : class {
+            return session.Save(entity) != null ? 1 : 0;
         }
 
-        public Task<bool> DeleteAsync<TEntity>(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken = default) where TEntity : class {
-            Prevent.Null(filter, nameof(filter));
+        private static int Update<TEntity>(ISession session, TEntity entity, Expression<Func<TEntity, bool>>? filter = null, Expression<Func<TEntity, TEntity>>? patch = null)
+            where TEntity : class {
+            if (filter != null && patch != null) {
+                return session.Query<TEntity>().Where(filter).Update(patch);
+            }
 
-            int counter;
+            if (entity != null && filter != null) {
+                var count = session.Query<TEntity>().Count(filter);
+                if (count == 0) { return 0; }
+                if (count > 1) { throw new MultipleEntitiesFoundException(); }
+                return session.Merge(entity) != null ? 1 : 0;
+            }
+
+            var exists = entity != null && Exists(session, entity);
+            return exists && session.Merge(entity) != null ? 1 : 0;
+        }
+
+        private static int UpSert<TEntity>(ISession session, TEntity entity, Expression<Func<TEntity, bool>>? filter = null)
+            where TEntity : class {
+            Prevent.Null(entity, nameof(entity));
+
+            var exists = false;
+            if (entity != null && filter != null) {
+                var count = session.Query<TEntity>().Count(filter);
+                if (count > 1) { throw new MultipleEntitiesFoundException(); }
+                exists = count == 1;
+            }
+
+            if (entity != null && filter == null) {
+                exists = Exists(session, entity);
+            }
+
+            return exists
+                    ? session.Merge(entity) != null ? 1 : 0
+                    : session.Save(entity) != null ? 1 : 0;
+        }
+
+        private static bool Exists<TEntity>(ISession session, TEntity entity) where TEntity : class {
+            var currentID = IDAttribute.GetID(entity);
+            if (currentID == ID.Null) {
+                throw new IDNotFoundException(typeof(TEntity));
+            }
+
+            var value = session
+                .CreateCriteria<TEntity>()
+                .Add(Restrictions.Eq(currentID.Name, currentID.Value))
+                .SetProjection(Projections.RowCount())
+                .UniqueResult<int>();
+
+            return value > 0;
+        }
+
+        #endregion
+
+        #region IWriter Members
+
+        /// <inheritdocs />
+        public Task<int> SaveAsync<TEntity>(SaveInstructionCollection<TEntity> instructions, CancellationToken cancellationToken = default) where TEntity : class {
+            if (instructions.IsNullOrEmpty()) { return Task.FromResult(0); }
+
+            var counter = 0;
             using var transaction = _session.BeginTransaction();
             try {
-                counter = _session.Query<TEntity>().Where(filter).Delete();
+                foreach (var instruction in instructions) {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    switch (instruction.Mode) {
+                        case SaveMode.Insert:
+                            counter += Insert(_session, instruction.Entity);
+                            break;
+                        case SaveMode.Update:
+                            counter += Update(_session, instruction.Entity, instruction.Filter, instruction.Patch);
+                            break;
+                        case SaveMode.UpSert:
+                            counter += UpSert(_session, instruction.Entity, instruction.Filter);
+                            break;
+                    }
+                }
+                transaction.Commit();
+                _session.Flush();
+            } catch { transaction.Rollback(); throw; }
+
+            return Task.FromResult(counter);
+        }
+
+        /// <inheritdocs />
+        public Task<int> DeleteAsync<TEntity>(DeleteInstructionCollection<TEntity> instructions, CancellationToken cancellationToken = default) where TEntity : class {
+            if (instructions.IsNullOrEmpty()) { return Task.FromResult(0); }
+
+            var counter = 0;
+            using var transaction = _session.BeginTransaction();
+            try {
+                foreach (var instruction in instructions) {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    counter += _session
+                        .Query<TEntity>()
+                        .Where(instruction.Filter)
+                        .Delete();
+                }
                 transaction.Commit();
             } catch { transaction.Rollback(); throw; }
 
-            return Task.FromResult(counter > 0);
+            return Task.FromResult(counter);
         }
 
         #endregion

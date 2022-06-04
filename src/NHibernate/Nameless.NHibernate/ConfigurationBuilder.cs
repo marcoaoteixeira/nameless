@@ -29,7 +29,7 @@ namespace Nameless.NHibernate {
             var configuration = new Configuration();
             configuration.SetProperties(opts.ToDictionary());
 
-            var entityBaseTypes = opts.EntityBaseTypes.Select(Type.GetType).ToArray();
+            var entityBaseTypes = opts.EntityRootTypes.Select(Type.GetType).ToArray();
             var modelInspector = new ModelInspector(entityBaseTypes!);
             var modelMapper = new ModelMapper(modelInspector);
 
