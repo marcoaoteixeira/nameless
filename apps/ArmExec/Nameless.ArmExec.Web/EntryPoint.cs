@@ -1,6 +1,6 @@
 using Autofac.Extensions.DependencyInjection;
 
-namespace Nameless.WebApplication.Web {
+namespace Nameless.ArmExec.Web {
 
     public static class EntryPoint {
 

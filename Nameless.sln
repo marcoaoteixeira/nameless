@@ -217,9 +217,29 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nameless.FileStorage.System
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nameless.NHibernate.UnitTesting", "src\NHibernate\Nameless.NHibernate.UnitTesting\Nameless.NHibernate.UnitTesting.csproj", "{D409C96A-D0DD-4293-9F25-5E7403EC1A74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nameless.WebApplication.Web.UnitTesting", "apps\WebApplication\Nameless.WebApplication.Web.UnitTesting\Nameless.WebApplication.Web.UnitTesting.csproj", "{C9A29C1A-917C-4BFB-8E67-980994082F01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nameless.WebApplication.Web.UnitTesting", "apps\WebApplication\Nameless.WebApplication.Web.UnitTesting\Nameless.WebApplication.Web.UnitTesting.csproj", "{C9A29C1A-917C-4BFB-8E67-980994082F01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nameless.Persistence.NHibernate.UnitTesting", "src\Persistence\Nameless.Persistence.NHibernate.UnitTesting\Nameless.Persistence.NHibernate.UnitTesting.csproj", "{477D54A8-5249-4C99-8345-0E3B1BACD41C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nameless.Persistence.NHibernate.UnitTesting", "src\Persistence\Nameless.Persistence.NHibernate.UnitTesting\Nameless.Persistence.NHibernate.UnitTesting.csproj", "{477D54A8-5249-4C99-8345-0E3B1BACD41C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nameless.AspNetCore.Identity.Models", "src\AspNetCore\Nameless.AspNetCore.Identity.Models\Nameless.AspNetCore.Identity.Models.csproj", "{00CE3598-8F67-4CC0-A50D-296E15260D17}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ArmExec", "ArmExec", "{CD79F01D-9309-4E65-AE6C-017F18D364EA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nameless.ArmExec.Web", "apps\ArmExec\Nameless.ArmExec.Web\Nameless.ArmExec.Web.csproj", "{3BFC440A-CEA4-4F66-90A6-0F02952308AD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nameless.AspNetCore.Identity.NHibernate", "src\AspNetCore\Nameless.AspNetCore.Identity.NHibernate\Nameless.AspNetCore.Identity.NHibernate.csproj", "{E97E1BEE-4697-449F-A174-93037BF5E55C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nameless.AspNetCore.Identity.NHibernate.UnitTesting", "src\AspNetCore\Nameless.AspNetCore.Identity.NHibernate.UnitTesting\Nameless.AspNetCore.Identity.NHibernate.UnitTesting.csproj", "{60105E94-6BF4-4502-97C9-5264AEFE0EDD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Support", "Support", "{F3F3683F-A8E3-44D0-848B-74B39507A645}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nameless.SQLite.Utils", "utils\Nameless.SQLite.Utils\Nameless.SQLite.Utils.csproj", "{462D0336-DAEA-45AB-A213-B318EE049FE3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentityServer", "IdentityServer", "{BFB8BB46-BF68-4906-9FF3-8331ABBC0256}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nameless.IdentityServer", "apps\IdentityServer\Nameless.IdentityServer\Nameless.IdentityServer.csproj", "{EE4350BD-36AC-43D9-BFCD-FF95A9976619}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nameless.IdentityServer.UnitTesting", "apps\IdentityServer\Nameless.IdentityServer.UnitTesting\Nameless.IdentityServer.UnitTesting.csproj", "{DD822231-E958-4A33-AD76-87A5165E8A25}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -555,6 +575,34 @@ Global
 		{477D54A8-5249-4C99-8345-0E3B1BACD41C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{477D54A8-5249-4C99-8345-0E3B1BACD41C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{477D54A8-5249-4C99-8345-0E3B1BACD41C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00CE3598-8F67-4CC0-A50D-296E15260D17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00CE3598-8F67-4CC0-A50D-296E15260D17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00CE3598-8F67-4CC0-A50D-296E15260D17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00CE3598-8F67-4CC0-A50D-296E15260D17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BFC440A-CEA4-4F66-90A6-0F02952308AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BFC440A-CEA4-4F66-90A6-0F02952308AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BFC440A-CEA4-4F66-90A6-0F02952308AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BFC440A-CEA4-4F66-90A6-0F02952308AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E97E1BEE-4697-449F-A174-93037BF5E55C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E97E1BEE-4697-449F-A174-93037BF5E55C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E97E1BEE-4697-449F-A174-93037BF5E55C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E97E1BEE-4697-449F-A174-93037BF5E55C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60105E94-6BF4-4502-97C9-5264AEFE0EDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60105E94-6BF4-4502-97C9-5264AEFE0EDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60105E94-6BF4-4502-97C9-5264AEFE0EDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60105E94-6BF4-4502-97C9-5264AEFE0EDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{462D0336-DAEA-45AB-A213-B318EE049FE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{462D0336-DAEA-45AB-A213-B318EE049FE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{462D0336-DAEA-45AB-A213-B318EE049FE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{462D0336-DAEA-45AB-A213-B318EE049FE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE4350BD-36AC-43D9-BFCD-FF95A9976619}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE4350BD-36AC-43D9-BFCD-FF95A9976619}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE4350BD-36AC-43D9-BFCD-FF95A9976619}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE4350BD-36AC-43D9-BFCD-FF95A9976619}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD822231-E958-4A33-AD76-87A5165E8A25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD822231-E958-4A33-AD76-87A5165E8A25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD822231-E958-4A33-AD76-87A5165E8A25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD822231-E958-4A33-AD76-87A5165E8A25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -667,6 +715,15 @@ Global
 		{D409C96A-D0DD-4293-9F25-5E7403EC1A74} = {C8C023D8-78B7-4F65-8AB7-0D02BB927B53}
 		{C9A29C1A-917C-4BFB-8E67-980994082F01} = {566E4C4C-85D8-49C5-B4F7-0126779595FD}
 		{477D54A8-5249-4C99-8345-0E3B1BACD41C} = {23672E1F-F4DB-45D1-9F7B-02D821386C30}
+		{00CE3598-8F67-4CC0-A50D-296E15260D17} = {15930DBB-235F-4B14-B99C-3745DA8F8A0F}
+		{CD79F01D-9309-4E65-AE6C-017F18D364EA} = {C0650B0E-A788-4104-A05E-A7F652DBD5C4}
+		{3BFC440A-CEA4-4F66-90A6-0F02952308AD} = {CD79F01D-9309-4E65-AE6C-017F18D364EA}
+		{E97E1BEE-4697-449F-A174-93037BF5E55C} = {15930DBB-235F-4B14-B99C-3745DA8F8A0F}
+		{60105E94-6BF4-4502-97C9-5264AEFE0EDD} = {15930DBB-235F-4B14-B99C-3745DA8F8A0F}
+		{462D0336-DAEA-45AB-A213-B318EE049FE3} = {F3F3683F-A8E3-44D0-848B-74B39507A645}
+		{BFB8BB46-BF68-4906-9FF3-8331ABBC0256} = {C0650B0E-A788-4104-A05E-A7F652DBD5C4}
+		{EE4350BD-36AC-43D9-BFCD-FF95A9976619} = {BFB8BB46-BF68-4906-9FF3-8331ABBC0256}
+		{DD822231-E958-4A33-AD76-87A5165E8A25} = {BFB8BB46-BF68-4906-9FF3-8331ABBC0256}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {24169778-D862-4A34-A697-DA334A59E70E}

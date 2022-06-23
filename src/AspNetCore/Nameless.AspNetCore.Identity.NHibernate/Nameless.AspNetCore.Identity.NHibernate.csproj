@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
@@ -11,7 +11,7 @@
 		<Company>Nameless</Company>
 		<Description>Multiple classes and functionalities for .NET Core applications.</Description>
 		<Copyright>MIT</Copyright>
-		<PackageProjectUrl>https://github.com/marcoaoteixeira/nameless/tree/master/src/NHibernate/Nameless.NHibernate</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/marcoaoteixeira/nameless/tree/master/src/AspNetCore/Nameless.AspNetCore.Identity.Models</PackageProjectUrl>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/marcoaoteixeira/nameless/</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
@@ -22,18 +22,22 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="NHibernate" Version="5.3.12" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Core\Nameless.Core\Nameless.Core.csproj" />
+		<ProjectReference Include="..\Nameless.AspNetCore.Identity.Models\Nameless.AspNetCore.Identity.Models.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Content Include="readme.md">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <PackageReference Include="NHibernate" Version="5.3.12" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\..\Core\Nameless.Core\Nameless.Core.csproj" />
-	  <ProjectReference Include="..\..\Security\Nameless.Security.Common\Nameless.Security.Common.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

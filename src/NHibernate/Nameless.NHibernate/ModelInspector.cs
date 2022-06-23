@@ -28,7 +28,9 @@ namespace Nameless.NHibernate {
 
         /// <inheritdoc />
         public override bool IsEntity(Type type) {
-            return _entityTypes.Any(_ => _.IsAssignableFrom(type));
+            return _entityTypes.Any(_ =>
+                _.IsGenericType ? type.IsAssignableToGenericType(_) : _.IsAssignableFrom(type)
+            );
         }
 
         #endregion

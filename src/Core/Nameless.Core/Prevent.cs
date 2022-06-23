@@ -24,6 +24,21 @@ namespace Nameless {
         }
 
         /// <summary>
+        /// Makes sure that the <paramref name="value"/> is not <c>default</c>.
+        /// </summary>
+        /// <param name="value">The value</param>
+        /// <param name="paramName">The parameter name.</param>
+        /// <exception cref="ArgumentNullException">
+        /// If <paramref name="value"/> is <c>null</c>.
+        /// </exception>
+        [DebuggerStepThrough]
+        public static void Default<T>([NotNull] T value, string? paramName) where T : struct {
+            if (default(T).Equals(value)) {
+                throw new ArgumentException("Parameter cannot be default value.", paramName);
+            }
+        }
+
+        /// <summary>
         /// Makes sure that the <paramref name="value"/> is not <c>null</c>,
         /// empty or white spaces.
         /// </summary>

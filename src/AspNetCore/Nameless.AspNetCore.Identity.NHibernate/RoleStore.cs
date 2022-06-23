@@ -1,9 +1,9 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Nameless.Helpers;
-using Nameless.Persistence;
+using NHibernate;
 
-namespace Nameless.AspNetCore.Identity {
+namespace Nameless.AspNetCore.Identity.NHibernate {
 
     /// <summary>
     /// Creates a new instance of a persistence store for roles.
@@ -17,9 +17,9 @@ namespace Nameless.AspNetCore.Identity {
         /// <summary>
         /// Constructs a new instance of <see cref="RoleStore{TRole}"/>.
         /// </summary>
-        /// <param name="repository">The <see cref="IRepository"/>.</param>
+        /// <param name="session">The <see cref="ISession"/>.</param>
         /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
-        public RoleStore(IRepository repository, IdentityErrorDescriber? describer = null) : base(repository, describer) { }
+        public RoleStore(ISession session, IdentityErrorDescriber? describer = null) : base(session, describer) { }
 
         #endregion
     }
@@ -40,9 +40,9 @@ namespace Nameless.AspNetCore.Identity {
         /// <summary>
         /// Constructs a new instance of <see cref="RoleStore{TRole, TIdentityContext, TKey}"/>.
         /// </summary>
-        /// <param name="repository">The <see cref="IRepository"/>.</param>
+        /// <param name="session">The <see cref="ISession"/>.</param>
         /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
-        public RoleStore(IRepository repository, IdentityErrorDescriber? describer = null) : base(repository, describer) { }
+        public RoleStore(ISession session, IdentityErrorDescriber? describer = null) : base(session, describer) { }
 
         #endregion
     }
@@ -62,59 +62,84 @@ namespace Nameless.AspNetCore.Identity {
 
         #region Public Override Properties
 
-        public override IQueryable<TRole> Roles => Repository.Query<TRole>();
+        public override IQueryable<TRole> Roles => Session.Query<TRole>();
 
         #endregion
 
         #region Protected Properties
 
-        protected IRepository Repository { get; }
+        protected ISession Session { get; }
 
         #endregion
 
         #region Public Constructors
 
-        public RoleStore(IRepository repository, IdentityErrorDescriber? describer = null) : base(describer ?? new IdentityErrorDescriber()) {
-            Prevent.Null(repository, nameof(repository));
+        public RoleStore(ISession session, IdentityErrorDescriber? describer = null) : base(describer ?? new IdentityErrorDescriber()) {
+            Prevent.Null(session, nameof(session));
 
-            Repository = repository;
+            Session = session;
         }
 
         #endregion
 
         #region Public Override Methods
 
-        public override Task<IdentityResult> CreateAsync(TRole role, CancellationToken cancellationToken = default) {
+        public override async Task<IdentityResult> CreateAsync(TRole role, CancellationToken cancellationToken = default) {
             Prevent.Null(role, nameof(role));
 
-            var instruction = SaveInstruction<TRole>
-                .Insert(role);
+            cancellationToken.ThrowIfCancellationRequested();
 
-            return Repository
-                .SaveAsync(instruction, cancellationToken)
-                .ContinueWith(Internals.IdentityResultContinuation);
+            using var transaction = Session.BeginTransaction();
+            await Session.SaveAsync(role, cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+
+            return IdentityResult.Success;
         }
 
-        public override Task<IdentityResult> UpdateAsync(TRole role, CancellationToken cancellationToken = default) {
+        public override async Task<IdentityResult> UpdateAsync(TRole role, CancellationToken cancellationToken = default) {
             Prevent.Null(role, nameof(role));
 
-            var instruction = SaveInstruction<TRole>
-                .Update(role, filter: _ => _.Id.Equals(role.Id));
+            cancellationToken.ThrowIfCancellationRequested();
 
-            return Repository
-                .SaveAsync(instruction, cancellationToken)
-                .ContinueWith(Internals.IdentityResultContinuation);
+            using var transaction = Session.BeginTransaction();
+            
+            var currentRole = await Session.GetAsync<TRole>(role.Id, cancellationToken);
+
+            if (currentRole == null) {
+                throw new EntityNotFoundException(role.Id);
+            }
+
+            await Session.LockAsync(currentRole, LockMode.Upgrade, cancellationToken);
+            await Session.MergeAsync(role, cancellationToken);
+
+            currentRole.ConcurrencyStamp = int.TryParse(currentRole.ConcurrencyStamp, out var concurrencyStamp)
+                ? (concurrencyStamp + 1).ToString()
+                : "0";
+
+            await transaction.CommitAsync(cancellationToken);
+
+            return IdentityResult.Success;
         }
 
-        public override Task<IdentityResult> DeleteAsync(TRole role, CancellationToken cancellationToken = default) {
+        public override async Task<IdentityResult> DeleteAsync(TRole role, CancellationToken cancellationToken = default) {
             Prevent.Null(role, nameof(role));
 
-            var instruction = DeleteInstruction<TRole>
-                .Create(_ => _.Id.Equals(role.Id));
+            cancellationToken.ThrowIfCancellationRequested();
 
-            return Repository
-                .DeleteAsync(instruction, cancellationToken)
-                .ContinueWith(Internals.IdentityResultContinuation);
+            using var transaction = Session.BeginTransaction();
+
+            var currentRole = await Session.GetAsync<TRole>(role.Id, cancellationToken);
+
+            if (currentRole == null) {
+                throw new EntityNotFoundException(role.Id);
+            }
+
+            await Session.LockAsync(currentRole, LockMode.Upgrade, cancellationToken);
+            await Session.DeleteAsync(currentRole, cancellationToken);
+
+            await transaction.CommitAsync(cancellationToken);
+
+            return IdentityResult.Success;
         }
 
         public override Task<TRole> FindByIdAsync(string id, CancellationToken cancellationToken = default) {
@@ -124,29 +149,23 @@ namespace Nameless.AspNetCore.Identity {
                 throw new InvalidIDCastException(nameof(id), id, typeof(TKey));
             }
 
-            return Repository
-                .FindAsync<TRole>(
-                    filter: _ => _.Id.Equals(currentId),
-                    cancellationToken: cancellationToken
-                )
-                .ContinueWith(antecedent => antecedent.Result.Single());
+            return Session
+                .GetAsync<TRole>(Guid.Parse(id), cancellationToken);
         }
 
         public override Task<TRole> FindByNameAsync(string normalizedName, CancellationToken cancellationToken = default) {
             Prevent.NullEmptyOrWhiteSpace(normalizedName, nameof(normalizedName));
 
-            return Repository
-                .FindAsync<TRole>(
-                     filter: _ => _.NormalizedName == normalizedName,
-                     cancellationToken: cancellationToken
-                )
-                .ContinueWith(antecedent => antecedent.Result.Single());
+            var role = Session
+                .Query<TRole>().SingleOrDefault(_ => _.NormalizedName == normalizedName);
+
+            return Task.FromResult(role);
         }
 
         public override Task<IList<Claim>> GetClaimsAsync(TRole role, CancellationToken cancellationToken = default) {
             Prevent.Null(role, nameof(role));
 
-            return Repository
+            return Session
                 .FindAsync<TRoleClaim>(
                     filter: _ => _.RoleId.Equals(role.Id),
                     cancellationToken: cancellationToken
@@ -165,7 +184,7 @@ namespace Nameless.AspNetCore.Identity {
                     ClaimValue = claim.Value
                 });
 
-            return Repository.SaveAsync(instruction, cancellationToken);
+            return Session.SaveAsync(instruction, cancellationToken);
         }
 
         public override Task RemoveClaimAsync(TRole role, Claim claim, CancellationToken cancellationToken = default) {
@@ -179,7 +198,7 @@ namespace Nameless.AspNetCore.Identity {
                     _.ClaimValue == claim.Value
                 );
 
-            return Repository.DeleteAsync(instruction, cancellationToken);
+            return Session.DeleteAsync(instruction, cancellationToken);
         }
 
         #endregion
