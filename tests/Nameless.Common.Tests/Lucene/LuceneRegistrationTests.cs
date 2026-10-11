@@ -3,9 +3,6 @@ using Lucene.Net.Search;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using Nameless.Lucene.Repository;
-using Nameless.Lucene.Repository.Mappings;
-using Nameless.Lucene.Repository.Responses;
 using Nameless.ObjectModel;
 
 namespace Nameless.Lucene;

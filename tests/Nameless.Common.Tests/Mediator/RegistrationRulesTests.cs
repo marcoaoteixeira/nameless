@@ -237,7 +237,7 @@ public class RegistrationRulesTests {
 
         // act
         var exception = Assert.Throws<InvalidOperationException>(
-            () => ServiceCollectionExtensions.CreateDescriptors(typeof(IRequestHandler<,>), implementations));
+            () => MediatorServiceCollectionExtensions.CreateDescriptors(typeof(IRequestHandler<,>), implementations));
 
         // assert
         Assert.Multiple(

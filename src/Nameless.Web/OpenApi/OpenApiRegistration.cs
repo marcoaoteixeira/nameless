@@ -31,6 +31,8 @@ public class OpenApiRegistration {
     ///     so other actions can be chained.
     /// </returns>
     public OpenApiRegistration RegisterOpenApiDocument(string document, Action<OpenApiOptions> options) {
+        Throws.When.NullOrWhiteSpace(document);
+
         _documentOptions[document] = options;
 
         return this;

@@ -1,5 +1,4 @@
 using System.IO.Compression;
-using System.Text;
 using Nameless.Compression.Internals;
 
 namespace Nameless.Compression;
@@ -22,7 +21,7 @@ public sealed class Crc32Tests
     [Fact]
     public void Incremental_Updates_Equal_One_Shot()
     {
-        var data = Encoding.UTF8.GetBytes("The quick brown fox jumps over the lazy dog");
+        var data = "The quick brown fox jumps over the lazy dog"u8.ToArray();
 
         var crc = Crc32.Initial;
         crc = Crc32.Update(crc, data.AsSpan(0, 10));

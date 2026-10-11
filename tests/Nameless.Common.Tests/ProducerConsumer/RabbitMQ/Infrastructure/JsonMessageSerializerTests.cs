@@ -58,7 +58,7 @@ public class JsonMessageSerializerTests {
         var sut = new JsonMessageSerializer();
 
         // act & assert
-        Assert.Throws<InvalidOperationException>(() => sut.Deserialize<string>(Encoding.UTF8.GetBytes("null")));
+        Assert.Throws<InvalidOperationException>(() => sut.Deserialize<string>("null"u8.ToArray()));
     }
 
     [Fact]
@@ -67,6 +67,6 @@ public class JsonMessageSerializerTests {
         var sut = new JsonMessageSerializer();
 
         // act & assert
-        Assert.ThrowsAny<Exception>(() => sut.Deserialize<string>(Encoding.UTF8.GetBytes("not-json")));
+        Assert.ThrowsAny<Exception>(() => sut.Deserialize<string>("not-json"u8.ToArray()));
     }
 }

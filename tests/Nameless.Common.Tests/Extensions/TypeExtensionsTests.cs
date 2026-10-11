@@ -213,7 +213,7 @@ public class TypeExtensionsTests {
     [Fact]
     public void GetInterfacesThatCloses_WhenTypeImplementsClosedGeneric_ReturnsInterface() {
         // act
-        var result = typeof(MyList).GetInterfacesThatCloses(typeof(IEnumerable<>)).ToList();
+        var result = typeof(MyList).GetTypesThatCloses(typeof(IEnumerable<>)).ToList();
 
         // assert
         Assert.NotEmpty(result);
@@ -222,7 +222,7 @@ public class TypeExtensionsTests {
     [Fact]
     public void GetInterfacesThatCloses_WithNonGenericDefinition_ReturnsEmpty() {
         // act
-        var result = typeof(MyList).GetInterfacesThatCloses(typeof(IDisposable)).ToList();
+        var result = typeof(MyList).GetTypesThatCloses(typeof(IDisposable)).ToList();
 
         // assert
         Assert.Empty(result);
@@ -231,7 +231,7 @@ public class TypeExtensionsTests {
     [Fact]
     public void GetInterfacesThatCloses_WithInterface_ReturnsEmpty() {
         // act
-        var result = typeof(IDisposable).GetInterfacesThatCloses(typeof(IEnumerable<>)).ToList();
+        var result = typeof(IDisposable).GetTypesThatCloses(typeof(IEnumerable<>)).ToList();
 
         // assert
         Assert.Empty(result);
@@ -240,7 +240,7 @@ public class TypeExtensionsTests {
     [Fact]
     public void GetInterfacesThatCloses_WithAbstractClass_ReturnsEmpty() {
         // act
-        var result = typeof(AbstractBase).GetInterfacesThatCloses(typeof(IEnumerable<>)).ToList();
+        var result = typeof(AbstractBase).GetTypesThatCloses(typeof(IEnumerable<>)).ToList();
 
         // assert
         Assert.Empty(result);
@@ -249,7 +249,7 @@ public class TypeExtensionsTests {
     [Fact]
     public void GetInterfacesThatCloses_WithGenericClassDefinition_ReturnsClosedBaseType() {
         // MyList : List<int>; asking which part closes List<> (a class, not an interface)
-        var result = typeof(MyList).GetInterfacesThatCloses(typeof(List<>)).ToList();
+        var result = typeof(MyList).GetTypesThatCloses(typeof(List<>)).ToList();
 
         Assert.NotEmpty(result);
     }

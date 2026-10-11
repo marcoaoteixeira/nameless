@@ -6,7 +6,7 @@ using Nameless.Validation;
 namespace Nameless.Web.Filters.Validation;
 
 public abstract class ValidationFilterBase {
-    protected static async Task<Result<Nothing>> ValidateRequestObjectsAsync(IServiceProvider provider, IEnumerable<object?> arguments, CancellationToken cancellationToken) {
+    protected async Task<Result<Nothing>> ValidateRequestObjectsAsync(IServiceProvider provider, IEnumerable<object?> arguments, CancellationToken cancellationToken) {
         if (!TryResolveValidation(provider, out var validation)) {
             return Nothing.Value;
         }
@@ -26,7 +26,7 @@ public abstract class ValidationFilterBase {
         return errors.ToArray();
     }
 
-    protected static bool TryResolveValidation(IServiceProvider provider, [NotNullWhen(returnValue: true)] out IValidator? output) {
+    protected bool TryResolveValidation(IServiceProvider provider, [NotNullWhen(returnValue: true)] out IValidator? output) {
         output = provider.GetService<IValidator>();
 
         var isServiceUnavailable = output is not null;
@@ -37,7 +37,7 @@ public abstract class ValidationFilterBase {
         CommonLog.Warning(
             logger,
             message: $"Service '{nameof(IValidator)}' is unavailable.",
-            tag: "VALIDATION_FILTER"
+            tag: GetType().Tag
         );
 
         return isServiceUnavailable;

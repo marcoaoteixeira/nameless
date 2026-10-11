@@ -21,22 +21,29 @@ public class MediatorRegistration : AssemblyScanAware<MediatorRegistration> {
     ///     Gets the registered event handlers.
     /// </summary>
     /// <remarks>
-    ///     When using assembly scan, the scanned types are combined with the
-    ///     ones registered manually. Each access executes the scan again.
+    ///     When using assembly scan, only the scanned types are returned and
+    ///     the ones registered manually are ignored; otherwise, only the ones
+    ///     registered manually are returned. Each access executes the scan
+    ///     again.
     /// </remarks>
     public IReadOnlyCollection<Type> EventHandlers => UseAssemblyScan
-        ? Combine(ExecuteAssemblyScan(typeof(IEventHandler<>), includeGenericTypeDefinition: true), _eventHandlers)
+        ? ExecuteAssemblyScan(typeof(IEventHandler<>), includeGenericTypeDefinition: true)
         : _eventHandlers;
 
     /// <summary>
     ///     Gets the registered request handlers.
     /// </summary>
     /// <remarks>
-    ///     When using assembly scan, the scanned types are combined with the
-    ///     ones registered manually. Each access executes the scan again.
+    ///     When using assembly scan, only the scanned types are returned and
+    ///     the ones registered manually are ignored; otherwise, only the ones
+    ///     registered manually are returned. Each access executes the scan
+    ///     again.
     /// </remarks>
     public IReadOnlyCollection<Type> RequestHandlers => UseAssemblyScan
-        ? Combine([.. ExecuteAssemblyScan(typeof(IRequestHandler<,>), includeGenericTypeDefinition: true), .. ExecuteAssemblyScan(typeof(IRequestHandler<>), includeGenericTypeDefinition: true)], _requestHandlers)
+        ? [
+            .. ExecuteAssemblyScan(typeof(IRequestHandler<,>), includeGenericTypeDefinition: true),
+            .. ExecuteAssemblyScan(typeof(IRequestHandler<>), includeGenericTypeDefinition: true)
+        ]
         : _requestHandlers;
 
     /// <summary>
@@ -50,20 +57,16 @@ public class MediatorRegistration : AssemblyScanAware<MediatorRegistration> {
     public IReadOnlyCollection<Type> RequestPipelineBehaviors => _requestPipelineBehaviors;
 
     /// <summary>
-    ///     Whether it should use the validate request pipeline behavior.
-    ///     This will be the first pipeline to be executed during request.
-    /// </summary>
-    public bool UseValidateRequestPipelineBehavior { get; private set; }
-
-    /// <summary>
     ///     Gets the registered stream handlers.
     /// </summary>
     /// <remarks>
-    ///     When using assembly scan, the scanned types are combined with the
-    ///     ones registered manually. Each access executes the scan again.
+    ///     When using assembly scan, only the scanned types are returned and
+    ///     the ones registered manually are ignored; otherwise, only the ones
+    ///     registered manually are returned. Each access executes the scan
+    ///     again.
     /// </remarks>
     public IReadOnlyCollection<Type> StreamHandlers => UseAssemblyScan
-        ? Combine(ExecuteAssemblyScan(typeof(IStreamHandler<,>), includeGenericTypeDefinition: true), _streamHandlers)
+        ? ExecuteAssemblyScan(typeof(IStreamHandler<,>), includeGenericTypeDefinition: true)
         : _streamHandlers;
 
     /// <summary>
@@ -75,12 +78,6 @@ public class MediatorRegistration : AssemblyScanAware<MediatorRegistration> {
     ///     registered matters.
     /// </remarks>
     public IReadOnlyList<Type> StreamPipelineBehaviors => _streamPipelineBehaviors;
-
-    /// <summary>
-    ///     Whether it should use the validate stream pipeline behavior.
-    ///     This will be the first pipeline to be executed during streaming.
-    /// </summary>
-    public bool UseValidateStreamPipelineBehavior { get; private set; }
 
     /// <summary>
     ///     Registers an event handler by generic type parameters.
@@ -117,6 +114,11 @@ public class MediatorRegistration : AssemblyScanAware<MediatorRegistration> {
     ///     parameters don't map one-to-one onto
     ///     <see cref="IEventHandler{TEvent}"/>.
     /// </exception>
+    /// <remarks>
+    ///     Manually registered handlers are ignored when
+    ///     <see cref="AssemblyScanAware{TSelf}.UseAssemblyScan"/> is
+    ///     <see langword="true"/>.
+    /// </remarks>
     public MediatorRegistration WithEventHandler(Type type) {
         Throws.When.IsNonConcreteType(type);
         Throws.When.IsNotAssignableFromGeneric(type, typeof(IEventHandler<>));
@@ -182,6 +184,11 @@ public class MediatorRegistration : AssemblyScanAware<MediatorRegistration> {
     ///     the request declares (including a request that declares a
     ///     response handled by <see cref="IRequestHandler{TRequest}"/>).
     /// </exception>
+    /// <remarks>
+    ///     Manually registered handlers are ignored when
+    ///     <see cref="AssemblyScanAware{TSelf}.UseAssemblyScan"/> is
+    ///     <see langword="true"/>.
+    /// </remarks>
     public MediatorRegistration WithRequestHandler(Type type) {
         Throws.When.IsNonConcreteType(type);
 
@@ -259,6 +266,7 @@ public class MediatorRegistration : AssemblyScanAware<MediatorRegistration> {
     /// </remarks>
     public MediatorRegistration WithRequestPipelineBehavior(Type type) {
         Throws.When.IsNonConcreteType(type);
+
         if (!typeof(IRequestPipelineBehavior<,>).IsAssignableFromGeneric(type) && !typeof(IRequestPipelineBehavior<>).IsAssignableFromGeneric(type)) {
             throw new ArgumentException($"Type '{type.GetPrettyName()}' must implement '{nameof(IRequestPipelineBehavior<,>)}' or '{nameof(IRequestPipelineBehavior<>)}'.", nameof(type));
         }
@@ -271,23 +279,7 @@ public class MediatorRegistration : AssemblyScanAware<MediatorRegistration> {
 
         return this;
     }
-
-    /// <summary>
-    ///     Sets whether it should use the validate request pipeline behavior.
-    /// </summary>
-    /// <param name="value">
-    ///     The value.
-    /// </param>
-    /// <returns>
-    ///     The current <see cref="MediatorRegistration"/> instance so other
-    ///     actions can be chained.
-    /// </returns>
-    public MediatorRegistration WithValidateRequestPipelineBehavior(bool value) {
-        UseValidateRequestPipelineBehavior = value;
-
-        return this;
-    }
-
+    
     /// <summary>
     ///     Registers a stream handler by generic type parameters.
     /// </summary>
@@ -325,9 +317,15 @@ public class MediatorRegistration : AssemblyScanAware<MediatorRegistration> {
     ///     <see cref="IStreamHandler{TStream,TResponse}"/>, or if it handles
     ///     a response type the stream does not declare.
     /// </exception>
+    /// <remarks>
+    ///     Manually registered handlers are ignored when
+    ///     <see cref="AssemblyScanAware{TSelf}.UseAssemblyScan"/> is
+    ///     <see langword="true"/>.
+    /// </remarks>
     public MediatorRegistration WithStreamHandler(Type type) {
         Throws.When.IsNonConcreteType(type);
         Throws.When.IsNotAssignableFromGeneric(type, typeof(IStreamHandler<,>));
+
         EnsureInvocable(type, typeof(IStreamHandler<,>));
 
         _streamHandlers.Add(type);
@@ -383,6 +381,7 @@ public class MediatorRegistration : AssemblyScanAware<MediatorRegistration> {
     public MediatorRegistration WithStreamPipelineBehavior(Type type) {
         Throws.When.IsNonConcreteType(type);
         Throws.When.IsNotAssignableFromGeneric(type, typeof(IStreamPipelineBehavior<,>));
+
         EnsureInvocable(type, typeof(IStreamPipelineBehavior<,>));
 
         if (!_streamPipelineBehaviors.Contains(type)) {
@@ -390,28 +389,6 @@ public class MediatorRegistration : AssemblyScanAware<MediatorRegistration> {
         }
 
         return this;
-    }
-
-    /// <summary>
-    ///     Sets whether it should use the validate stream pipeline behavior.
-    /// </summary>
-    /// <param name="value">
-    ///     The value.
-    /// </param>
-    /// <returns>
-    ///     The current <see cref="MediatorRegistration"/> instance so other
-    ///     actions can be chained.
-    /// </returns>
-    public MediatorRegistration WithValidateStreamPipelineBehavior(bool value) {
-        UseValidateStreamPipelineBehavior = value;
-
-        return this;
-    }
-
-    // Scanned value types are discarded: handlers must be classes, the same
-    // rule applied to manual registration.
-    private static Type[] Combine(IEnumerable<Type> scanned, IEnumerable<Type> registered) {
-        return [.. scanned.Where(type => type.IsConcrete).Concat(registered).Distinct()];
     }
 
     private static void EnsureInvocable(Type type, params Type[] services) {

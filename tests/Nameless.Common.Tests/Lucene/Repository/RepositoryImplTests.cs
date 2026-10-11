@@ -2,8 +2,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Moq;
 using Nameless.IO;
-using Nameless.Lucene.Repository.Mappings;
-using Nameless.Lucene.Repository.Requests;
 using Nameless.Testing.Tools.Mockers.Logging;
 
 namespace Nameless.Lucene.Repository;

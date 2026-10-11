@@ -7,7 +7,7 @@ public static class ErrorExtensions {
     extension(IEnumerable<Error> self) {
         public ModelStateDictionary ToModelStateDictionary() {
             var result = new ModelStateDictionary();
-
+            
             foreach (var error in self) {
                 result.AddModelError(
                     error.Code ?? string.Empty,

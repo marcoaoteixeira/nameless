@@ -1,4 +1,3 @@
-using Nameless.Auth.OAuth;
 using Nameless.EntityFrameworkCore;
 using Nameless.Microservices.Api.AutoGenCode;
 using Nameless.Microservices.Api.Data;

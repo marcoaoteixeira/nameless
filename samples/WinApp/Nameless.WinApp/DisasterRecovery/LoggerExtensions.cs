@@ -11,7 +11,7 @@ internal static class LoggerExtensions {
             formatString: "An error occurred while executing SQLite disaster recovery routine."
         );
 
-    extension(ILogger<SqliteDisasterRecoveryRoutine> self) {
+    extension(ILogger<SqliteBackupRecoveryRoutine> self) {
         internal void Failure(string actionName, Exception exception) {
             Log.Failure(
                 logger: self,

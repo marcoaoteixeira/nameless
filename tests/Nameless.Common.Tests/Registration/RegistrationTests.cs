@@ -2,18 +2,18 @@ namespace Nameless.Registration;
 
 [UnitTest]
 public class RegistrationTests {
-    // --- IgnoreAssemblyScanAttribute.IsNotPresent ---
+    // --- IgnoreAssemblyScanAttribute.IsPresent ---
 
     [Fact]
-    public void IsNotPresent_WhenAttributeAbsent_ReturnsTrue() {
+    public void IsPresent_WhenAttributeAbsent_ReturnsFalse() {
         // act & assert
-        Assert.True(IgnoreAssemblyScanAttribute.IsNotPresent(typeof(IncludedScanType)));
+        Assert.False(IgnoreAssemblyScanAttribute.IsPresent(typeof(IncludedScanType)));
     }
 
     [Fact]
-    public void IsNotPresent_WhenAttributePresent_ReturnsFalse() {
+    public void IsPresent_WhenAttributePresent_ReturnsTrue() {
         // act & assert
-        Assert.False(IgnoreAssemblyScanAttribute.IsNotPresent(typeof(IgnoredScanType)));
+        Assert.True(IgnoreAssemblyScanAttribute.IsPresent(typeof(IgnoredScanType)));
     }
 
     // --- AssemblyScanAware ---

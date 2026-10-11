@@ -168,21 +168,6 @@ public class MediatorRegistrationTests {
         Assert.Throws<ArgumentException>(() => CreateSut().WithStreamPipelineBehavior(typeof(string)));
     }
 
-    [Fact]
-    public void WithValidatePipelineBehaviors_SetFlags() {
-        // arrange
-        var sut = CreateSut();
-
-        // act
-        sut.WithValidateRequestPipelineBehavior(true).WithValidateStreamPipelineBehavior(true);
-
-        // assert
-        Assert.Multiple(
-            () => Assert.True(sut.UseValidateRequestPipelineBehavior),
-            () => Assert.True(sut.UseValidateStreamPipelineBehavior)
-        );
-    }
-
     // ── fail fast on types the mediator can never invoke ──────────────────────
 
     [Fact]
@@ -242,10 +227,10 @@ public class MediatorRegistrationTests {
         Assert.Contains(typeof(InspMultiHandler), sut.RequestHandlers);
     }
 
-    // ── assembly scan + manual registration ───────────────────────────────────
+    // ── assembly scan XOR manual registration ─────────────────────────────────
 
     [Fact]
-    public void Handlers_WithAssemblyScan_IncludeManualRegistrations() {
+    public void Handlers_WithAssemblyScan_IgnoreManualRegistrations() {
         // arrange
         var sut = new MediatorRegistration().WithAssemblyFrom<MediatorRegistrationTests>()
                                             .WithRequestHandler(typeof(InspMultiHandler))
@@ -254,28 +239,28 @@ public class MediatorRegistrationTests {
 
         // act & assert
         Assert.Multiple(
-            () => Assert.Contains(typeof(InspMultiHandler), sut.RequestHandlers),
+            () => Assert.DoesNotContain(typeof(InspMultiHandler), sut.RequestHandlers),
             () => Assert.Contains(typeof(MediatorTestRequestHandler), sut.RequestHandlers),
-            () => Assert.Contains(typeof(InspEventHandler), sut.EventHandlers),
+            () => Assert.DoesNotContain(typeof(InspEventHandler), sut.EventHandlers),
             () => Assert.Contains(typeof(MediatorTestEventHandler), sut.EventHandlers),
-            () => Assert.Contains(typeof(InspMultiStreamHandler), sut.StreamHandlers),
+            () => Assert.DoesNotContain(typeof(InspMultiStreamHandler), sut.StreamHandlers),
             () => Assert.Contains(typeof(MediatorTestStreamHandler), sut.StreamHandlers)
         );
     }
 
     [Fact]
-    public void Handlers_WithAssemblyScan_AndSameTypeRegisteredManually_ListTypeOnce() {
+    public void Handlers_WithoutAssemblyScan_ReturnOnlyManualRegistrations() {
         // arrange
-        var sut = new MediatorRegistration().WithAssemblyFrom<MediatorRegistrationTests>()
-                                            .WithRequestHandler(typeof(MediatorTestRequestHandler))
-                                            .WithEventHandler(typeof(MediatorTestEventHandler))
-                                            .WithStreamHandler(typeof(MediatorTestStreamHandler));
+        var sut = CreateSut().WithAssemblyFrom<MediatorRegistrationTests>()
+                             .WithRequestHandler(typeof(InspMultiHandler))
+                             .WithEventHandler(typeof(InspEventHandler))
+                             .WithStreamHandler(typeof(InspMultiStreamHandler));
 
         // act & assert
         Assert.Multiple(
-            () => Assert.Single(sut.RequestHandlers, type => type == typeof(MediatorTestRequestHandler)),
-            () => Assert.Single(sut.EventHandlers, type => type == typeof(MediatorTestEventHandler)),
-            () => Assert.Single(sut.StreamHandlers, type => type == typeof(MediatorTestStreamHandler))
+            () => Assert.Equal([typeof(InspMultiHandler)], sut.RequestHandlers),
+            () => Assert.Equal([typeof(InspEventHandler)], sut.EventHandlers),
+            () => Assert.Equal([typeof(InspMultiStreamHandler)], sut.StreamHandlers)
         );
     }
 

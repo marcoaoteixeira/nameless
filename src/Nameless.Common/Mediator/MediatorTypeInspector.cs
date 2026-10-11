@@ -68,12 +68,12 @@ internal static class MediatorTypeInspector {
             var definitionParameters = string.Join(",", definition.GetGenericArguments().Select(parameter => parameter.Name));
             var expected = $"{implementation.Name.Split('`')[0]}<{definitionParameters}> : {definition.GetPrettyName()}";
 
-            throw new InvalidOperationException($"""
-                                                Open generic type '{implementation.GetPrettyName()}' implements
-                                                '{@interface.GetPrettyName()}', whose type arguments are not its own type
-                                                parameters in the same order. Declare it as '{expected}', or register closed
-                                                types instead.
-                                                """
+            throw new InvalidOperationException(
+                $"Open generic type '{implementation.GetPrettyName()}' " +
+                $"implements '{@interface.GetPrettyName()}', whose type " +
+                $"arguments are not its own type parameters in the same " +
+                $"order. Declare it as '{expected}', or register closed " +
+                "types instead."
             );
         }
     }
@@ -101,15 +101,20 @@ internal static class MediatorTypeInspector {
 
     // A request that declares a response is always dispatched through the
     // service that carries the response type, so the void one never runs.
-    private static void EnsureRequestWithoutResponse(Type implementation, Type service, Type request, Type responseService) {
+    private static void EnsureRequestWithoutResponse(Type implementation, Type service, Type request, Type origin) {
         var responses = GetDeclaredResponses(request, typeof(IRequest<>));
 
         if (responses.Length == 0) { return; }
 
+        var implementationName = implementation.GetPrettyName();
+        var serviceName = service.GetPrettyName();
+        var requestName = request.GetPrettyName();
+        var originName = origin.MakeGenericType(request, responses[0]).GetPrettyName();
+
         throw new InvalidOperationException(
-            $"Type '{implementation.GetPrettyName()}' implements '{service.GetPrettyName()}', which is never invoked: " +
-            $"'{request.GetPrettyName()}' declares a response, so it is always dispatched with it. " +
-            $"Implement '{responseService.MakeGenericType(request, responses[0]).GetPrettyName()}' instead."
+            $"Type '{implementationName}' implements '{serviceName}', which " +
+            $"is never invoked: '{requestName}' declares a response, so it " +
+            $"is always dispatched with it. Implement '{originName}' instead."
         );
     }
 
@@ -130,9 +135,15 @@ internal static class MediatorTypeInspector {
             ? "none"
             : string.Join(", ", responses.Select(item => $"'{contract.MakeGenericType(item).GetPrettyName()}'"));
 
+        var implementationName = implementation.GetPrettyName();
+        var serviceName = service.GetPrettyName();
+        var requestName = request.GetPrettyName();
+
         throw new InvalidOperationException(
-            $"Type '{implementation.GetPrettyName()}' implements '{service.GetPrettyName()}', which is never invoked: " +
-            $"'{request.GetPrettyName()}' must declare {(exactlyOne ? "exactly " : string.Empty)}'{expected}', but declares {actual}."
+            $"Type '{implementationName}' implements '{serviceName}', which " +
+            $"is never invoked: '{requestName}' must declare " +
+            $"{(exactlyOne ? "exactly " : string.Empty)}'{expected}', but " +
+            $"declares {actual}."
         );
     }
 

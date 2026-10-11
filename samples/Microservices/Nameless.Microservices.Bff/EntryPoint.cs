@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Nameless.Auth.OAuth;
 using Nameless.Microservices.Bff.AutoGenCode;
 using Nameless.Microservices.Bff.Domains.Chores.External;
 using Nameless.Web;

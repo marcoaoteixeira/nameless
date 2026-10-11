@@ -80,20 +80,15 @@ public static class AssemblyExtensions {
         ///     A collection of types that implements <paramref name="service" />.
         /// </returns>
         /// <remarks>
-        ///     We look for all exported types in the assembly that are not pointer
+        ///     We look for all types in the assembly that are not pointer
         ///     types, not by-ref types, not abstract, and are visible outside
         ///     the assembly (public, or public and nested in public types).
         ///     Then we check if the type is assignable to the service type or
         ///     if it is a generic type that is assignable to the service type.
-        ///     Dynamic assemblies yield no types.
         /// </remarks>
         public IEnumerable<Type> GetImplementations(Type service) {
-            // dynamic assemblies don't support GetExportedTypes.
-            if (self.IsDynamic) { return []; }
-
-            // retrieve all exported types from the assembly
-            // that are relevant to us
-            return self.GetExportedTypes()
+            // retrieve all types from the assembly that are relevant to us
+            return self.GetTypes()
                        .Where(type => type is {
                            // Exclude pointer types
                            IsPointer: false,
@@ -101,12 +96,18 @@ public static class AssemblyExtensions {
                            // Exclude by-ref types
                            IsByRef: false,
 
+                           // Only types visible outside the assembly,
+                           // including public types nested in public types
+                           IsVisible: true,
+
+                           // Concrete types that can be instantiated
+                           IsClass: true,
+
                            // Exclude abstract types (can't be instantiated)
                            IsAbstract: false,
 
-                           // Only types visible outside the assembly,
-                           // including public types nested in public types
-                           IsVisible: true
+                           // Exclude interface types (can't be instantiated)
+                           IsInterface: false
                        })
                        // inside the types, we will look for all types that
                        // are assignable to the service type

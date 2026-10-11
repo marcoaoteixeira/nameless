@@ -1,8 +1,6 @@
 ﻿using System.Net.Http.Json;
 using Microsoft.Extensions.Logging;
 using Nameless.GitHub.ObjectModel;
-using Nameless.GitHub.Requests;
-using Nameless.GitHub.Responses;
 using Nameless.ObjectModel;
 
 namespace Nameless.GitHub;
@@ -30,11 +28,14 @@ public class GitHubHttpClient : IGitHubHttpClient {
     }
 
     /// <inheritdoc />
-    public async Task<GetLastestReleaseResponse> GetLastestReleaseAsync(GetLastestReleaseRequest request, CancellationToken cancellationToken) {
+    public async Task<GetLastestReleaseResult> GetLastestReleaseAsync(string owner, string repository, CancellationToken cancellationToken) {
+        Throws.When.NullOrWhiteSpace(owner);
+        Throws.When.NullOrWhiteSpace(repository);
+
         var statusCode = 200;
 
         try {
-            var url = $"/repos/{request.Owner}/{request.Repository}/releases/latest";
+            var url = $"/repos/{owner}/{repository}/releases/latest";
             var response = await _httpClient.GetAsync(url, cancellationToken)
                                             .SkipContextSync();
 
@@ -61,11 +62,15 @@ public class GitHubHttpClient : IGitHubHttpClient {
     }
 
     /// <inheritdoc />
-    public async Task<GetReleaseAssetsResponse> GetReleaseAssetsAsync(GetReleaseAssetsRequest request, CancellationToken cancellationToken) {
+    public async Task<GetReleaseAssetsResult> GetReleaseAssetsAsync(string owner, string repository, int releaseID, CancellationToken cancellationToken) {
+        Throws.When.NullOrWhiteSpace(owner);
+        Throws.When.NullOrWhiteSpace(repository);
+        Throws.When.LowerThan(releaseID, compare: 0);
+
         var statusCode = 200;
 
         try {
-            var url = $"/repos/{request.Owner}/{request.Repository}/releases/{request.ReleaseID}/assets";
+            var url = $"/repos/{owner}/{repository}/releases/{releaseID}/assets";
             var response = await _httpClient.GetAsync(url, cancellationToken)
                                             .SkipContextSync();
 

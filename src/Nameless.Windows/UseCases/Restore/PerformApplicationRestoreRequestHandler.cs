@@ -3,19 +3,19 @@ using Nameless.Application;
 using Nameless.Compression;
 using Nameless.Mediator.Requests;
 using Nameless.ObjectModel;
-using Nameless.Windows.DisasterRecovery;
+using Nameless.Windows.BackupRecovery;
 
 namespace Nameless.Windows.UseCases.Restore;
 
 public class PerformApplicationRestoreRequestHandler : IRequestHandler<PerformApplicationRestoreRequest, PerformApplicationRestoreResponse> {
     private readonly IApplicationContext _applicationContext;
-    private readonly IDisasterRecoveryRoutine[] _disasterRecoveryRoutines;
+    private readonly IBackupRecoveryRoutine[] _disasterRecoveryRoutines;
     private readonly ICompressor _compressor;
 
     public PerformApplicationRestoreRequestHandler(
         IApplicationContext applicationContext,
         ICompressor compressor,
-        IEnumerable<IDisasterRecoveryRoutine> disasterRecoveryRoutines) {
+        IEnumerable<IBackupRecoveryRoutine> disasterRecoveryRoutines) {
         _applicationContext = applicationContext;
         _compressor = compressor;
         _disasterRecoveryRoutines = [.. disasterRecoveryRoutines];

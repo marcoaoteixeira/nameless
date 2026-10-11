@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using Nameless.Mediator.Pipelines;
 using Nameless.Mediator.Requests;
 
 namespace Nameless.Mediator;
@@ -149,20 +148,5 @@ public class VoidRequestRegistrationTests {
 
         // assert
         Assert.Contains(services, d => d.ServiceType == typeof(IRequestPipelineBehavior<>) && d.ImplementationType == typeof(VoidBehaviorA<>));
-    }
-
-    [Fact]
-    public void RegisterMediator_WithValidateRequestBehavior_RegistersTypedAndVoidValidateBehaviors() {
-        // arrange
-        var services = new ServiceCollection();
-
-        // act
-        services.RegisterMediator(r => r.WithUseAssemblyScan(false).WithValidateRequestPipelineBehavior(true));
-
-        // assert
-        Assert.Multiple(
-            () => Assert.Contains(services, d => d.ServiceType == typeof(IRequestPipelineBehavior<,>) && d.ImplementationType == typeof(ValidateRequestPipelineBehavior<,>)),
-            () => Assert.Contains(services, d => d.ServiceType == typeof(IRequestPipelineBehavior<>) && d.ImplementationType == typeof(ValidateRequestPipelineBehavior<>))
-        );
     }
 }

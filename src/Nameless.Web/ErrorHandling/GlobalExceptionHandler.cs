@@ -32,7 +32,7 @@ public class GlobalExceptionHandler : IExceptionHandler {
 
     /// <inheritdoc />
     public ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken) {
-        CommonLog.Error(_logger, exception, tag: "GLOBAL_EXCEPTION_HANDLER");
+        CommonLog.Error(_logger, exception.Message, exception, tag: GetType().Tag);
 
         httpContext.Response.StatusCode = exception switch {
             ValidationException => StatusCodes.Status400BadRequest,

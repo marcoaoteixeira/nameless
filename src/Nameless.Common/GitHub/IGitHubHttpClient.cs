@@ -1,7 +1,4 @@
-﻿using Nameless.GitHub.Requests;
-using Nameless.GitHub.Responses;
-
-namespace Nameless.GitHub;
+﻿namespace Nameless.GitHub;
 
 /// <summary>
 ///     Defines a GitHub HTTP Client.
@@ -10,8 +7,11 @@ public interface IGitHubHttpClient {
     /// <summary>
     ///     Retrieves the latest release information for the repository.
     /// </summary>
-    /// <param name="request">
-    ///     The request.
+    /// <param name="owner">
+    ///     The repository owner.
+    /// </param>
+    /// <param name="repository">
+    ///     The repository name.
     /// </param>
     /// <param name="cancellationToken">
     ///     The cancellation token.
@@ -28,13 +28,19 @@ public interface IGitHubHttpClient {
     ///     for the release, and not the date when the release was drafted
     ///     or published.
     /// </remarks>
-    Task<GetLastestReleaseResponse> GetLastestReleaseAsync(GetLastestReleaseRequest request, CancellationToken cancellationToken);
+    Task<GetLastestReleaseResult> GetLastestReleaseAsync(string owner, string repository, CancellationToken cancellationToken);
 
     /// <summary>
     ///     Retrieves a list of all assets related to the specified release.
     /// </summary>
-    /// <param name="request">
-    ///     The request.
+    /// <param name="owner">
+    ///     The repository owner.
+    /// </param>
+    /// <param name="repository">
+    ///     The repository name.
+    /// </param>
+    /// <param name="releaseID">
+    ///     The release ID number.
     /// </param>
     /// <param name="cancellationToken">
     ///     The cancellation token.
@@ -44,5 +50,5 @@ public interface IGitHubHttpClient {
     ///     execution, where the <c>Result</c> of the task is the release
     ///     assets information.
     /// </returns>
-    Task<GetReleaseAssetsResponse> GetReleaseAssetsAsync(GetReleaseAssetsRequest request, CancellationToken cancellationToken);
+    Task<GetReleaseAssetsResult> GetReleaseAssetsAsync(string owner, string repository, int releaseID, CancellationToken cancellationToken);
 }

@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Logging;
 using Nameless.Lucene;
-using Nameless.Lucene.Repository.Responses;
 using Nameless.Logging;
 using Nameless.ObjectModel;
 using Moq;

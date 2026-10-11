@@ -1,17 +1,31 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Nameless.Registration;
 using Scalar.AspNetCore;
 
 namespace Nameless.Web.Scalar;
 
-public class ScalarRegistration : AssemblyScanAware<ScalarRegistration> {
+/// <summary>
+///     Registration settings for Scalar.
+/// </summary>
+public class ScalarRegistration {
     /// <summary>
-    ///     Gets the delegate to configure Scalar.
+    ///     Gets or sets the action used to configure scalar options
+    ///     for HTTP context processing.
     /// </summary>
-    public Action<ScalarOptions, HttpContext>? ConfigureScalar { get; set; }
+    public Action<ScalarOptions, HttpContext>? ConfigureScalarOptions { get; private set; }
 
     /// <summary>
-    ///     Whether it should use the default JWT authentication/authorization.
+    ///     Sets the Scalar configuration action.
     /// </summary>
-    public bool UseDefaultHttpAuthentication { get; set; }
+    /// <param name="configure">
+    ///     The configuration delegate.
+    /// </param>
+    /// <returns>
+    ///     The current instance of <see cref="ScalarRegistration"/> so other
+    ///     actions can be chained.
+    /// </returns>
+    public ScalarRegistration WithScalarOptionsConfiguration(Action<ScalarOptions, HttpContext> configure) {
+        ConfigureScalarOptions = configure;
+
+        return this;
+    }
 }

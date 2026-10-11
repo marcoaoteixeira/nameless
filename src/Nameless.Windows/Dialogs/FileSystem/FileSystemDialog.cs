@@ -13,6 +13,7 @@ public class FileSystemDialog : IFileSystemDialog {
 
     public FileSystemDialog(IApplicationContext applicationContext, ILocalizer localizer) {
         _applicationContext = applicationContext;
+
         T = localizer;
     }
 

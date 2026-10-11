@@ -26,7 +26,7 @@ public sealed partial class Throws {
     /// <returns>
     ///     The current type if pass validation.
     /// </returns>
-    public TEnum Unknown<TEnum>(TEnum paramValue, [CallerArgumentExpression(nameof(paramValue))] string? paramName = null, string? message = null, Func<Exception>? exceptionCreator = null)
+    public TEnum UnknownEnum<TEnum>(TEnum paramValue, [CallerArgumentExpression(nameof(paramValue))] string? paramName = null, string? message = null, Func<Exception>? exceptionCreator = null)
         where TEnum : struct, Enum {
         if (Enum.IsDefined(paramValue)) {
             return paramValue;

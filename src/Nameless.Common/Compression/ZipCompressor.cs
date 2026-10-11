@@ -90,9 +90,15 @@ public sealed class ZipCompressor : ICompressor {
         Throws.When.Empty(paths, paramName: nameof(filePaths), message: "At least one file path is required.");
         Throws.When.AnyNullOrWhiteSpace(paths, paramName: nameof(filePaths), message: "File paths cannot be null, empty or white space.");
         Throws.When.NullOrWhiteSpace(destinationFilePath);
-        Throws.When.Unknown(compressionLevel, message: "Unknown compression level.");
+        Throws.When.UnknownEnum(compressionLevel, message: "Unknown compression level.");
 
-        return CompressFilesCoreAsync(paths, destinationFilePath, compressionLevel, overwrite, cancellationToken);
+        return CompressFilesAsyncCore(
+            paths,
+            destinationFilePath,
+            compressionLevel,
+            overwrite,
+            cancellationToken
+        );
     }
 
     /// <inheritdoc />
@@ -121,9 +127,9 @@ public sealed class ZipCompressor : ICompressor {
         }
 
         Throws.When.NullOrWhiteSpace(destinationFilePath);
-        Throws.When.Unknown(compressionLevel, message: "Unknown compression level.");
+        Throws.When.UnknownEnum(compressionLevel, message: "Unknown compression level.");
 
-        return CompressDirectoryCoreAsync(
+        return CompressDirectoryAsyncCore(
             directoryPath,
             globPattern,
             destinationFilePath,
@@ -169,7 +175,7 @@ public sealed class ZipCompressor : ICompressor {
 
         ArchiveChecksum.Validate(checksum);
 
-        return DecompressCoreAsync(
+        return DecompressAsyncCore(
             filePath,
             destinationDirectoryPath,
             checksum,
@@ -178,7 +184,7 @@ public sealed class ZipCompressor : ICompressor {
         );
     }
 
-    private async Task<CompressionResult> CompressFilesCoreAsync(string[] paths, string destinationFilePath, CompressionLevel compressionLevel, bool overwrite, CancellationToken cancellationToken) {
+    private async Task<CompressionResult> CompressFilesAsyncCore(string[] paths, string destinationFilePath, CompressionLevel compressionLevel, bool overwrite, CancellationToken cancellationToken) {
         var seen = new HashSet<string>(StringComparer.FromComparison(PathComparison));
         var files = new List<string>(paths.Length);
 
@@ -208,7 +214,7 @@ public sealed class ZipCompressor : ICompressor {
         ).SkipContextSync();
     }
 
-    private async Task<CompressionResult> CompressDirectoryCoreAsync(string directoryPath, string? globPattern, string destinationFilePath, CompressionLevel compressionLevel, bool overwrite, CancellationToken cancellationToken) {
+    private async Task<CompressionResult> CompressDirectoryAsyncCore(string directoryPath, string? globPattern, string destinationFilePath, CompressionLevel compressionLevel, bool overwrite, CancellationToken cancellationToken) {
         var root = SysPath.TrimEndingDirectorySeparator(
             SysPath.GetFullPath(directoryPath)
         );
@@ -235,7 +241,7 @@ public sealed class ZipCompressor : ICompressor {
         ).SkipContextSync();
     }
 
-    private async Task<string> DecompressCoreAsync(string filePath, string destinationDirectoryPath, string? checksum, bool overwrite, CancellationToken cancellationToken) {
+    private async Task<string> DecompressAsyncCore(string filePath, string destinationDirectoryPath, string? checksum, bool overwrite, CancellationToken cancellationToken) {
         var fullPath = SysPath.GetFullPath(filePath);
 
         if (!SysFile.Exists(fullPath)) {
