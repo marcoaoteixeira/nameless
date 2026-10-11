@@ -53,7 +53,7 @@ internal sealed class RequestHandlerInvoker : IRequestHandlerInvoker {
     // request type maps to exactly one wrapper, whichever overload creates
     // it first.
     private static RequestHandlerWrapper CreateRequestHandlerWrapper(Type requestType) {
-        var responseTypes = requestType.GetInterfacesThatCloses(typeof(IRequest<>))
+        var responseTypes = requestType.GetTypesThatCloses(typeof(IRequest<>))
                                        .Select(type => type.GetGenericArguments()[0])
                                        .ToArray();
 

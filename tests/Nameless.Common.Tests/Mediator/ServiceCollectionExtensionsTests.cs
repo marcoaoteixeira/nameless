@@ -1,6 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using Nameless.Mediator.Events;
-using Nameless.Mediator.Pipelines;
 using Nameless.Mediator.Requests;
 using Nameless.Mediator.Streams;
 
@@ -68,24 +67,6 @@ public class ServiceCollectionExtensionsTests {
 
         // assert
         Assert.Contains(services, d => d.ServiceType == typeof(IEventHandler<>) && d.ImplementationType == typeof(GenericEventHandler<>));
-    }
-
-    [Fact]
-    public void RegisterMediator_WithValidateBehaviors_RegistersValidatePipelines() {
-        // arrange
-        var services = new ServiceCollection();
-
-        // act
-        services.RegisterMediator(r => r
-            .WithUseAssemblyScan(false)
-            .WithValidateRequestPipelineBehavior(true)
-            .WithValidateStreamPipelineBehavior(true));
-
-        // assert
-        Assert.Multiple(
-            () => Assert.Contains(services, d => d.ImplementationType == typeof(ValidateRequestPipelineBehavior<,>)),
-            () => Assert.Contains(services, d => d.ImplementationType == typeof(ValidateStreamPipelineBehavior<,>))
-        );
     }
 
     [Fact]

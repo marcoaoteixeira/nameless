@@ -67,43 +67,56 @@ public static class ErrorExtensions {
         }
 
         /// <summary>
-        ///     Retrieves a string representation of the error collection.
+        ///     Retrieves a flattened version of the error collection.
         /// </summary>
+        /// <param name="type">
+        ///     If provided, filter errors by its type.
+        /// </param>
+        /// <param name="separator">
+        ///     The separator to use. Default is semicolon.
+        /// </param>
         /// <returns>
-        ///     A string representing all errors separated by semicolon.
+        ///     A string value representing a semicolon separated value
+        ///     of flatten errors.
         /// </returns>
-        public string Flatten(char separator = '|') {
-            var items = self.GroupBy(error => error.Type).Select(Flat);
+        public string Flatten(ErrorType? type = null, char separator = ';') {
+            var flattenByType = self.Where(error => type is null || error.Type == type)
+                                    .GroupBy(error => error.Type)
+                                    .Select(group => $"[{group.Key}] {GetMessage(group)}");
 
-            return string.Join($" {separator} ", items);
+            return string.Join(separator, flattenByType);
 
-            static string Flat(IGrouping<ErrorType, Error> group) {
-                var messages = group.Select(item => !string.IsNullOrWhiteSpace(item.Code)
-                    ? $"({item.Code}) {item.Message}"
-                    : item.Message
+            static string GetMessage(IGrouping<ErrorType, Error> group) {
+                var messages = group.Select(
+                    item => !string.IsNullOrWhiteSpace(item.Code)
+                        ? $"({item.Code}) {item.Message}"
+                        : item.Message
                 );
 
-                return $"[{group.Key}] {string.Join("; ", messages)}";
+                return string.Join("; ", messages);
             }
         }
 
         /// <summary>
-        ///     Creates a <see cref="Dictionary{TKey,TValue}"/> from the
-        ///     errors where the key is the <see cref="Error.Code"/> property
-        ///     and the values are the <see cref="Error.Message"/>, grouped
-        ///     by the <see cref="Error.Code"/>.
+        ///     Retrieves a dictionary version of the collection of errors.
         /// </summary>
+        /// <param name="type">
+        ///     If provided, filter errors by its type.
+        /// </param>
+        /// <param name="useMessageOnly">
+        ///     Whether it should use only the message part as values or
+        ///     flatten.
+        /// </param>
         /// <returns>
-        ///     An instance of <see cref="Dictionary{TKey,TValue}"/> where the
-        ///     key is the <see cref="Error.Code"/> property and the values
-        ///     are the <see cref="Error.Message"/>, grouped by the
-        ///     <see cref="Error.Code"/>.
+        ///     An instance of <see cref="Dictionary{TKey,TValue}"/> class.
         /// </returns>
-        public IDictionary<string, string[]> ToDictionary() {
-            return self.GroupBy(error => error.Code).ToDictionary(
-                keySelector: group => group.Key ?? string.Empty,
-                elementSelector: group => group.Select(item => item.Message).ToArray()
-            );
+        public Dictionary<string, string[]> ToDictionary(ErrorType? type = null, bool useMessageOnly = true) {
+            return self.Where(error => type is null || error.Type == type)
+                       .GroupBy(self => self.Code ?? string.Empty)
+                       .ToDictionary(
+                           keySelector: item => item.Key,
+                           elementSelector: item => item.Select(error => useMessageOnly ? error.Message : error.Flatten).ToArray()
+                       );
         }
     }
 }

@@ -42,7 +42,7 @@ internal sealed class StreamHandlerInvoker : IStreamHandlerInvoker {
     private static object CreateStreamHandlerWrapper((Type Request, Type Response) key) {
         // IStream<out TResponse> is covariant: a stream declaring string can
         // be passed as IStream<object>, but no handler is closed over object.
-        var declared = key.Request.GetInterfacesThatCloses(typeof(IStream<>))
+        var declared = key.Request.GetTypesThatCloses(typeof(IStream<>))
                                   .Select(type => type.GetGenericArguments()[0])
                                   .ToArray();
 

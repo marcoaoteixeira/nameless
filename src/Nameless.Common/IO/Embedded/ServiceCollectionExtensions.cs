@@ -6,7 +6,7 @@ namespace Nameless.IO.Embedded;
 /// <summary>
 ///     <see cref="IServiceCollection"/> extension methods for File Explorer Provider.
 /// </summary>
-public static class ServiceCollectionExtensions {
+public static class EmbeddedServiceCollectionExtensions {
     /// <param name="self">
     ///     The current <see cref="IServiceCollection"/> instance.
     /// </param>

@@ -1,7 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Nameless.Collections.Generic;
 using Nameless.Compression;
-using Nameless.Lucene.Repository.Mappings;
 using Nameless.ProducerConsumer.RabbitMQ.Options;
 
 namespace Nameless.Configuration;

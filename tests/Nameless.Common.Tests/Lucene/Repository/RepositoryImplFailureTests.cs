@@ -1,7 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using Nameless.Lucene.Repository.Mappings;
-using Nameless.Lucene.Repository.Requests;
 using Nameless.ObjectModel;
 
 namespace Nameless.Lucene.Repository;

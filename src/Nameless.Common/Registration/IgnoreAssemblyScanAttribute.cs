@@ -18,7 +18,7 @@ public sealed class IgnoreAssemblyScanAttribute : Attribute {
     ///     <see langword="true"/> if the attribute is present;
     ///     otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool IsNotPresent(Type type) {
-        return type.GetCustomAttribute<IgnoreAssemblyScanAttribute>(inherit: false) is null;
+    public static bool IsPresent(Type type) {
+        return type.GetCustomAttribute<IgnoreAssemblyScanAttribute>(inherit: false) is not null;
     }
 }

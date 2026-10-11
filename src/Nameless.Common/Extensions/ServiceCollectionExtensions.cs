@@ -38,8 +38,7 @@ public static class ServiceCollectionExtensions {
         ///     The current instance of <see cref="IServiceCollection"/> so
         ///     other actions can be chained.
         /// </returns>
-        public IServiceCollection ConfigureOptions<TOptions>(IConfiguration? configuration = null)
-            where TOptions : class {
+        public IServiceCollection ConfigureOptions<TOptions>(IConfiguration? configuration = null) where TOptions : class {
             // solve it fast, if null them apply the empty delegate
             if (configuration is null) {
                 return self.Configure<TOptions>(_ => { });

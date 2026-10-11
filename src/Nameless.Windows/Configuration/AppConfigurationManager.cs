@@ -11,7 +11,6 @@ namespace Nameless.Windows.Configuration;
 ///     Default implementation of <see cref="IAppConfigurationManager"/>.
 /// </summary>
 public class AppConfigurationManager : IAppConfigurationManager {
-    private const string LOG_TAG = "APP_CONFIGURATION_MANAGER";
     private const string APP_CONFIGURATION_FILE = "app.config";
 
     private readonly IApplicationContext _applicationContext;
@@ -48,7 +47,7 @@ public class AppConfigurationManager : IAppConfigurationManager {
 
             return output is not null;
         }
-        catch (Exception ex) { CommonLog.Error(_logger, ex, tag: LOG_TAG); }
+        catch (Exception ex) { CommonLog.Error(_logger, ex.Message, ex, tag: GetType().Tag); }
 
         return false;
     }
@@ -67,7 +66,7 @@ public class AppConfigurationManager : IAppConfigurationManager {
             await using var stream = file.Open(FileMode.Create);
             await stream.WriteAsync(json, cancellationToken);
         }
-        catch (Exception ex) { CommonLog.Error(_logger, ex, tag: LOG_TAG); }
+        catch (Exception ex) { CommonLog.Error(_logger, ex.Message, ex, tag: GetType().Tag); }
     }
 
     private Dictionary<string, JsonElement> GetAppConfiguration() {
@@ -78,7 +77,7 @@ public class AppConfigurationManager : IAppConfigurationManager {
         using var stream = file.Open();
 
         try { return JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(stream) ?? []; }
-        catch (Exception ex) { CommonLog.Error(_logger, ex, tag: LOG_TAG); }
+        catch (Exception ex) { CommonLog.Error(_logger, ex.Message, ex, tag: GetType().Tag); }
 
         return [];
     }

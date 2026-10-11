@@ -37,10 +37,10 @@ public static class LoggingConfig {
     }
 
     private static void DefaultSerilogConfiguration(SerilogRegistration registration) {
-        registration.ConfigureEnrichment = (provider, enrich) => {
+        registration.WithEnrichmentConfiguration((provider, enrich) => {
             // Enrich with request CorrelationId
             enrich.WithCorrelationId(provider);
-        };
+        });
     }
 
     /// <param name="self">

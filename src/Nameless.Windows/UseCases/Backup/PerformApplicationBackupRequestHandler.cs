@@ -4,7 +4,7 @@ using Nameless.Application;
 using Nameless.Compression;
 using Nameless.IO;
 using Nameless.ObjectModel;
-using Nameless.Windows.DisasterRecovery;
+using Nameless.Windows.BackupRecovery;
 using Nameless.Windows.Localization;
 using Nameless.Windows.Messaging;
 
@@ -15,7 +15,7 @@ public class PerformApplicationBackupRequestHandler : RequestHandlerBase<Perform
     
     private readonly IApplicationContext _applicationContext;
     private readonly ICompressor _compressor;
-    private readonly IDisasterRecoveryRoutine[] _routines;
+    private readonly IBackupRecoveryRoutine[] _routines;
     private readonly TimeProvider _timeProvider;
 
     private ILocalizer T { get; }
@@ -23,7 +23,7 @@ public class PerformApplicationBackupRequestHandler : RequestHandlerBase<Perform
     public PerformApplicationBackupRequestHandler(
         IApplicationContext applicationContext,
         ICompressor compressor,
-        IEnumerable<IDisasterRecoveryRoutine> disasterRecoveryRoutines,
+        IEnumerable<IBackupRecoveryRoutine> disasterRecoveryRoutines,
         ILocalizer localizer,
         IMessenger messenger,
         TimeProvider timeProvider

@@ -57,10 +57,16 @@ public static class TypeExtensions {
         public string Tag => self.Name.ToSnakeCase().ToUpperInvariant();
 
         /// <summary>
-        ///     Checks if the current open generic type is assignable from the <paramref name="type" />.
+        ///     Checks if the current open generic type is assignable from
+        ///     the <paramref name="type" />.
         /// </summary>
-        /// <param name="type">The assignable from type.</param>
-        /// <returns><see langword="true"/> if assignable; otherwise <see langword="false"/>.</returns>
+        /// <param name="type">
+        ///     The assignable from type.
+        /// </param>
+        /// <returns>
+        ///     <see langword="true"/> if assignable; otherwise
+        ///     <see langword="false"/>.
+        /// </returns>
         public bool IsAssignableFromGeneric(Type? type) {
             if (!self.IsGenericType) { return false; }
 
@@ -218,9 +224,9 @@ public static class TypeExtensions {
         ///     A collection of <see cref="Type"/> that closes
         ///     the current <see cref="Type"/>.
         /// </returns>
-        public IEnumerable<Type> GetInterfacesThatCloses(Type genericDefinition) {
+        public IEnumerable<Type> GetTypesThatCloses(Type genericDefinition) {
             return genericDefinition.IsGenericTypeDefinition
-                ? GetInterfacesThatClosesCore(self, genericDefinition).Distinct()
+                ? GetTypesThatClosesCore(self, genericDefinition).Distinct()
                 : [];
         }
 
@@ -261,7 +267,7 @@ public static class TypeExtensions {
         }
     }
 
-    private static IEnumerable<Type> GetInterfacesThatClosesCore(Type? current, Type genericDefinition) {
+    private static IEnumerable<Type> GetTypesThatClosesCore(Type? current, Type genericDefinition) {
         if (current is null || current.IsAbstract || current.IsInterface) { yield break; }
 
         if (genericDefinition.IsInterface) {
@@ -281,7 +287,7 @@ public static class TypeExtensions {
             yield break;
         }
 
-        foreach (var @interface in GetInterfacesThatClosesCore(current.BaseType, genericDefinition)) {
+        foreach (var @interface in GetTypesThatClosesCore(current.BaseType, genericDefinition)) {
             yield return @interface.FixTypeReference();
         }
     }

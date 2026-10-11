@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using Nameless.Lucene.Repository.Mappings;
 
 namespace Nameless.Lucene.Repository;
 

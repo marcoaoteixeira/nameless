@@ -1,11 +1,9 @@
 ﻿using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.RateLimiting;
-using Nameless.Registration;
 
 namespace Nameless.Web.RateLimiter;
 
-[IgnoreAssemblyScan]
 [RateLimiterPolicy(Policies.RateLimiter.SlidingWindow)]
 public class DefaultSlidingWindowRateLimiterPolicy : IRateLimiterPolicy<string> {
     private readonly SlidingWindowRateLimiterOptions _options;

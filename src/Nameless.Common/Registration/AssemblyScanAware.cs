@@ -87,7 +87,7 @@ public abstract class AssemblyScanAware<TSelf> where TSelf : AssemblyScanAware<T
             : Assemblies;
 
         var result = assemblies.GetImplementations([service])
-                               .Where(IgnoreAssemblyScanAttribute.IsNotPresent)
+                               .Where(type => !IgnoreAssemblyScanAttribute.IsPresent(type))
                                .Where(item => includeGenericTypeDefinition ? includeGenericTypeDefinition : !item.IsGenericTypeDefinition);
 
         return [.. result];

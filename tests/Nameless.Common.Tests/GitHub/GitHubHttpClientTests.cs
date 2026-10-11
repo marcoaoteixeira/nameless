@@ -3,8 +3,6 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nameless.Configuration;
-using Nameless.GitHub.Requests;
-using Nameless.GitHub.Responses;
 using Nameless.ObjectModel;
 using Nameless.Testing.Tools.Mockers.Logging;
 
@@ -61,7 +59,7 @@ public class GitHubHttpClientTests {
         var (sut, handler) = CreateSut(_ => Json(ReleaseJson));
 
         // act
-        var response = await sut.GetLastestReleaseAsync(new GetLastestReleaseRequest("owner", "repo"), TestContext.Current.CancellationToken);
+        var response = await sut.GetLastestReleaseAsync("owner", "repo", TestContext.Current.CancellationToken);
 
         // assert
         Assert.Multiple(
@@ -77,7 +75,7 @@ public class GitHubHttpClientTests {
         var (sut, _) = CreateSut(_ => new HttpResponseMessage(HttpStatusCode.NotFound));
 
         // act
-        var response = await sut.GetLastestReleaseAsync(new GetLastestReleaseRequest("o", "r"), TestContext.Current.CancellationToken);
+        var response = await sut.GetLastestReleaseAsync("o", "r", TestContext.Current.CancellationToken);
 
         // assert
         Assert.Multiple(
@@ -93,7 +91,7 @@ public class GitHubHttpClientTests {
         var (sut, _) = CreateSut(_ => Json("null"));
 
         // act
-        var response = await sut.GetLastestReleaseAsync(new GetLastestReleaseRequest("o", "r"), TestContext.Current.CancellationToken);
+        var response = await sut.GetLastestReleaseAsync("o", "r", TestContext.Current.CancellationToken);
 
         // assert
         Assert.Equal(ErrorType.Conflict, response.Errors[0].Type);
@@ -105,7 +103,7 @@ public class GitHubHttpClientTests {
         var (sut, _) = CreateSut(_ => throw new HttpRequestException("network"));
 
         // act
-        var response = await sut.GetLastestReleaseAsync(new GetLastestReleaseRequest("o", "r"), TestContext.Current.CancellationToken);
+        var response = await sut.GetLastestReleaseAsync("o", "r", TestContext.Current.CancellationToken);
 
         // assert
         Assert.Multiple(
@@ -122,7 +120,7 @@ public class GitHubHttpClientTests {
         var (sut, handler) = CreateSut(_ => Json(AssetsJson));
 
         // act
-        var response = await sut.GetReleaseAssetsAsync(new GetReleaseAssetsRequest("owner", "repo", 7), TestContext.Current.CancellationToken);
+        var response = await sut.GetReleaseAssetsAsync("owner", "repo", 7, TestContext.Current.CancellationToken);
 
         // assert
         Assert.Multiple(
@@ -138,7 +136,7 @@ public class GitHubHttpClientTests {
         var (sut, _) = CreateSut(_ => new HttpResponseMessage(HttpStatusCode.InternalServerError));
 
         // act
-        var response = await sut.GetReleaseAssetsAsync(new GetReleaseAssetsRequest("o", "r", 1), TestContext.Current.CancellationToken);
+        var response = await sut.GetReleaseAssetsAsync("o", "r", 1, TestContext.Current.CancellationToken);
 
         // assert
         Assert.Contains("500", response.Errors[0].Message);
@@ -150,7 +148,7 @@ public class GitHubHttpClientTests {
         var (sut, _) = CreateSut(_ => Json("null"));
 
         // act
-        var response = await sut.GetReleaseAssetsAsync(new GetReleaseAssetsRequest("o", "r", 1), TestContext.Current.CancellationToken);
+        var response = await sut.GetReleaseAssetsAsync("o", "r", 1, TestContext.Current.CancellationToken);
 
         // assert
         Assert.Equal(ErrorType.Conflict, response.Errors[0].Type);
@@ -161,9 +159,9 @@ public class GitHubHttpClientTests {
     [Fact]
     public void Responses_ImplicitOperators_BuildSuccessAndFailure() {
         // act
-        GetLastestReleaseResponse failedRelease = Error.Failure("x");
-        GetReleaseAssetsResponse failedAssets = Error.Failure("y");
-        GetReleaseAssetsResponse okAssets = Array.Empty<ObjectModel.ReleaseAsset>();
+        GetLastestReleaseResult failedRelease = Error.Failure("x");
+        GetReleaseAssetsResult failedAssets = Error.Failure("y");
+        GetReleaseAssetsResult okAssets = Array.Empty<ObjectModel.ReleaseAsset>();
 
         // assert
         Assert.Multiple(
