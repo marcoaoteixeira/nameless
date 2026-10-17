@@ -93,8 +93,7 @@ public class EntityFrameworkCoreRegistration : AssemblyScanAware<EntityFramework
     ///     The current <see cref="EntityFrameworkCoreRegistration"/> so other
     ///     actions can be chained.
     /// </returns>
-    public EntityFrameworkCoreRegistration WithInterceptor<TInterceptor>()
-        where TInterceptor : IInterceptor {
+    public EntityFrameworkCoreRegistration WithInterceptor<TInterceptor>() where TInterceptor : IInterceptor {
         return WithInterceptor(typeof(TInterceptor));
     }
 
@@ -137,8 +136,7 @@ public class EntityFrameworkCoreRegistration : AssemblyScanAware<EntityFramework
     ///     The current <see cref="EntityFrameworkCoreRegistration"/> so other
     ///     actions can be chained.
     /// </returns>
-    public EntityFrameworkCoreRegistration WithDatabaseSeeder<TDatabaseSeeder>()
-        where TDatabaseSeeder : IDatabaseSeeder {
+    public EntityFrameworkCoreRegistration WithDatabaseSeeder<TDatabaseSeeder>() where TDatabaseSeeder : IDatabaseSeeder {
         return WithDatabaseSeeder(typeof(TDatabaseSeeder));
     }
 

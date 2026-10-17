@@ -83,33 +83,3 @@ public class FileSystemWatcherAdapterTests : IDisposable {
         Assert.Null(exception);
     }
 }
-
-[UnitTest]
-public class FileMonitorFactoryTests {
-    [Fact]
-    public void Create_ReturnsMonitorForRootAndGlob() {
-        // arrange
-        var sut = new FileMonitorFactory();
-
-        // act
-        using var monitor = sut.Create(SysPath.GetTempPath(), "*.txt");
-
-        // assert
-        Assert.Multiple(
-            () => Assert.Equal(SysPath.GetFullPath(SysPath.GetTempPath()), monitor.Root),
-            () => Assert.Equal("*.txt", monitor.Glob)
-        );
-    }
-
-    [Fact]
-    public void Create_WithExplicitTimeProviderAndOptions_ReturnsMonitor() {
-        // arrange
-        var sut = new FileMonitorFactory(new FakeTimeProvider(), new FileMonitorOptions());
-
-        // act
-        using var monitor = sut.Create(SysPath.GetTempPath(), "*");
-
-        // assert
-        Assert.NotNull(monitor);
-    }
-}

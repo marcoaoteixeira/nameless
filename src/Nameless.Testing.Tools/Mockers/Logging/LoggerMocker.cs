@@ -97,7 +97,7 @@ public class LoggerMocker<T> : Mocker<ILogger<T>> {
         MockInstance.Verify(mock => mock.Log(
             It.Is<LogLevel>(currentLogLevel => currentLogLevel == level),
             It.IsAny<EventId>(),
-            It.Is<It.IsAnyType>((value, type) => stateMessageMatch(value, type)),
+            It.Is<It.IsAnyType>((value, type) => stateMessageMatch(value!, type)),
             It.IsAny<Exception?>(),
             It.IsAny<Func<It.IsAnyType, Exception?, string>>()
         ), exactly ? Times.Exactly(times) : Times.AtLeast(times));
@@ -123,13 +123,13 @@ public class LoggerMocker<T> : Mocker<ILogger<T>> {
     }
     
     private static Entry CaptureEntryFromInvocation(IInvocation invocation) {
-        var level = (LogLevel)invocation.Arguments[index: 0];
+        var level = (LogLevel)invocation.Arguments[index: 0]!;
         var state = invocation.Arguments[index: 2];
         var exception = invocation.Arguments[index: 3] as Exception;
         var formatter = invocation.Arguments[index: 4];
-        var invoker = formatter.GetType().GetMethod(name: "Invoke");
+        var invoker = formatter!.GetType().GetMethod(name: "Invoke");
         var message = invoker?.Invoke(formatter, [state, exception])?.ToString()
-               ?? state.ToString()
+               ?? state!.ToString()
                ?? string.Empty;
 
         return new Entry(level, message);

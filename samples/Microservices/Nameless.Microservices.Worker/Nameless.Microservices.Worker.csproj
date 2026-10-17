@@ -7,6 +7,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="System.Security.Cryptography.Pkcs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\..\..\src\Nameless.Web\Nameless.Web.csproj" />
 	</ItemGroup>
 

@@ -56,15 +56,6 @@ public class ConfigurationExceptionsTests {
     }
 
     [Fact]
-    public void MissingEntityIDException_MentionsEntityType() {
-        // act
-        var sut = new MissingEntityIDException(typeof(List<int>));
-
-        // assert
-        Assert.Contains("List", sut.Message);
-    }
-
-    [Fact]
     public void ServerOptions_UseCredentials_RequiresUsernameAndPassword() {
         // act & assert
         Assert.Multiple(

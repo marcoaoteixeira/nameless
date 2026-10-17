@@ -97,7 +97,7 @@ public class SqliteBackupRecoveryRoutine : BackupRecoveryRoutineBase<SqliteBacku
         return destinationFilePathResult.Value;
     }
     
-    private async Task<Result<Nothing>> CloseAppDbContextConnectionAsync() {
+    private async Task<EmptyResult> CloseAppDbContextConnectionAsync() {
         const string ActionName = nameof(CloseAppDbContextConnectionAsync);
 
         await NotifyInformationAsync(
@@ -177,7 +177,7 @@ public class SqliteBackupRecoveryRoutine : BackupRecoveryRoutineBase<SqliteBacku
         return Error.Conflict(message);
     }
     
-    private async Task<Result<Nothing>> ExecuteDatabaseBackupAsync(string sourceFilePath, string destinationFilePath, CancellationToken cancellationToken) {
+    private async Task<EmptyResult> ExecuteDatabaseBackupAsync(string sourceFilePath, string destinationFilePath, CancellationToken cancellationToken) {
         // creates the backup, copying the source file to the destination file.
         const string ActionName = nameof(ExecuteDatabaseBackupAsync);
 

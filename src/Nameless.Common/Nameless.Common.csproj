@@ -42,6 +42,7 @@
 		<PackageReference Include="Serilog.Sinks.File" />
 		<PackageReference Include="Serilog.Sinks.OpenTelemetry" />
 		<PackageReference Include="System.Reactive" />
+		<PackageReference Include="System.Security.Cryptography.Pkcs" />
 		<PackageReference Update="Microsoft.SourceLink.GitHub">
 			<TreatAsUsed>true</TreatAsUsed>
 		</PackageReference>

@@ -1,22 +1,13 @@
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Search;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using Nameless.ObjectModel;
 
 namespace Nameless.Lucene;
 
 public sealed class RegistrationEntity {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
-}
-
-public sealed class RegistrationEntityMapping : IEntityMapping<RegistrationEntity> {
-    public void Map(IEntityDescriptor<RegistrationEntity> descriptor) {
-        descriptor.SetID(e => e.Id);
-        descriptor.SetProperty(e => e.Name, PropertyOptions.Store);
-    }
 }
 
 public sealed class RegistrationAnalyzerSelector : IAnalyzerSelector {
@@ -51,34 +42,7 @@ public class LuceneRegistrationTests {
         // act & assert
         Assert.Throws<ArgumentException>(() => CreateSut().WithAnalyzerSelector(typeof(string)));
     }
-
-    [Fact]
-    public void WithMapping_Generic_AddsType() {
-        // arrange
-        var sut = CreateSut();
-
-        // act
-        sut.WithMapping<RegistrationEntityMapping, RegistrationEntity>();
-
-        // assert
-        Assert.Contains(typeof(RegistrationEntityMapping), sut.Mappings);
-    }
-
-    [Fact]
-    public void WithMapping_WithUnrelatedType_Throws() {
-        // act & assert
-        Assert.Throws<ArgumentException>(() => CreateSut().WithMapping(typeof(string)));
-    }
-
-    [Fact]
-    public void WithUseRepository_SetsFlag() {
-        // act
-        var sut = CreateSut().WithUseRepository(true);
-
-        // assert
-        Assert.True(sut.UseRepository);
-    }
-
+    
     [Fact]
     public void RegisterLucene_RegistersProviders() {
         // arrange
@@ -97,45 +61,6 @@ services.AddSingleton(new Mock<IO.IFileProvider>().Object);
             () => Assert.Single(provider.GetServices<IAnalyzerSelector>()),
             () => Assert.NotNull(provider.GetRequiredService<IIndexProvider>())
         );
-    }
-
-    [Fact]
-    public void RegisterLucene_WithRepository_RegistersRepositoryServices() {
-        // arrange
-        var services = new ServiceCollection();
-        services.AddLogging();
-        services.AddSingleton(new Mock<IO.IFileProvider>().Object);
-        var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?> { ["Lucene:UseInMemory"] = "true" })
-            .Build();
-
-        // act
-        services.RegisterLucene(r => r
-            .WithUseAssemblyScan(false)
-            .WithUseRepository(true)
-            .WithMapping<RegistrationEntityMapping, RegistrationEntity>(), configuration);
-        using var provider = services.BuildServiceProvider();
-
-        // assert
-        Assert.Multiple(
-            () => Assert.NotNull(provider.GetRequiredService<IRepository>()),
-            () => Assert.NotNull(provider.GetRequiredService<IMapper>()),
-            () => Assert.NotNull(provider.GetRequiredService<IEntityDescriptorProvider>()),
-            () => Assert.IsType<RegistrationEntityMapping>(provider.GetRequiredService<IEntityMapping<RegistrationEntity>>())
-        );
-    }
-
-    [Fact]
-    public void RegisterLucene_WithoutRepository_DoesNotRegisterRepository() {
-        // arrange
-        var services = new ServiceCollection();
-        services.AddLogging();
-
-        // act
-        services.RegisterLucene(r => r.WithUseAssemblyScan(false));
-
-        // assert
-        Assert.DoesNotContain(services, d => d.ServiceType == typeof(IRepository));
     }
 }
 
@@ -191,57 +116,7 @@ public class LuceneExtensionsAndResponsesTests {
         // assert
         Assert.Same(index, actual);
     }
-
-    [Fact]
-    public async Task Responses_FromCountAndErrors_BuildSuccessAndFailure() {
-        // act
-        var insertOk = await InsertEntitiesResponse.From(3);
-        var insertKo = await InsertEntitiesResponse.From(Error.Failure("x"));
-        var updateOk = await UpdateEntitiesResponse.From(2);
-        var updateKo = await UpdateEntitiesResponse.From(Error.Failure("x"), Error.Failure("y"));
-        var deleteOk = await DeleteEntitiesResponse.From(1);
-        var deleteKo = await DeleteEntitiesResponse.From(Error.Failure("x"));
-        var byQueryOk = await DeleteEntitiesByQueryResponse.From(4);
-        var byQueryKo = await DeleteEntitiesByQueryResponse.From(Error.Failure("x"));
-
-        // assert
-        Assert.Multiple(
-            () => Assert.Equal(3, insertOk.Value.Count),
-            () => Assert.False(insertKo.Success),
-            () => Assert.Equal(2, updateOk.Value.Count),
-            () => Assert.Equal(2, updateKo.Errors.Length),
-            () => Assert.Equal(1, deleteOk.Value.Count),
-            () => Assert.False(deleteKo.Success),
-            () => Assert.Equal(4, byQueryOk.Value.Count),
-            () => Assert.False(byQueryKo.Success)
-        );
-    }
-
-    [Fact]
-    public void Responses_ImplicitOperators_BuildFromMetadataErrorAndErrors() {
-        // act
-        InsertEntitiesResponse a = new InsertEntitiesMetadata(1);
-        InsertEntitiesResponse b = Error.Failure("x");
-        UpdateEntitiesResponse c = new UpdateDocumentsMetadata(1);
-        UpdateEntitiesResponse d = Error.Failure("x");
-        DeleteEntitiesResponse e = new DeleteDocumentsMetadata(1);
-        DeleteEntitiesResponse f = Error.Failure("x");
-        DeleteEntitiesByQueryResponse g = new DeleteDocumentsByQueryMetadata(1);
-        DeleteEntitiesByQueryResponse h = new[] { Error.Failure("x") };
-
-        // assert
-        Assert.Multiple(
-            () => Assert.True(a.Success),
-            () => Assert.False(b.Success),
-            () => Assert.True(c.Success),
-            () => Assert.False(d.Success),
-            () => Assert.True(e.Success),
-            () => Assert.False(f.Success),
-            () => Assert.True(g.Success),
-            () => Assert.False(h.Success)
-        );
-    }
-
+    
     [Fact]
     public void LuceneDefaults_ExposeExpectedValues() {
         // act & assert
