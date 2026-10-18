@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.FileSystemGlobbing;
+using Nameless.IO.Monitoring;
 
 namespace Nameless.IO.Embedded;
 
@@ -68,6 +69,11 @@ public class Directory : IDirectory {
     /// </exception>
     public void Delete(bool recursive) {
         throw new InvalidOperationException("Embedded directories cannot be deleted.");
+    }
+
+    /// <inhertidoc />
+    public IFileMonitor Monitor(string? glob = null, Action<FileMonitorOptions>? configure = null) {
+        throw new InvalidOperationException("Embedded directories cannot be monitored.");
     }
 
     // Returns the paths of all files underneath the directory,
