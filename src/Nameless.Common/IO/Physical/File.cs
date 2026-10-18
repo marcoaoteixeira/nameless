@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Nameless.Helpers;
 using Nameless.IO.Monitoring;
 
 namespace Nameless.IO.Physical;
@@ -58,8 +59,17 @@ public class File : IFile {
     ///     The caller must register handlers, call
     ///     <see cref="IFileMonitor.Start" /> and dispose it.
     /// </remarks>
-    public IFileMonitor Monitor() {
-        throw new NotImplementedException();
+    public IFileMonitor Monitor(Action<FileMonitorOptions>? configure = null) {
+        var options = ActionHelper.FromDelegate(configure);
+
+        return new FileMonitor(
+            _provider.Root,
+            Name,
+            new FileSystemWatcherAdapter(),
+            FileProbe.Instance,
+            TimeProvider.System,
+            options
+        );
     }
 
     /// <inheritdoc />

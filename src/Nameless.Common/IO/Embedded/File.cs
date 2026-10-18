@@ -69,7 +69,7 @@ public class File : IFile {
     /// <exception cref="InvalidOperationException">
     ///     always, embedded files cannot be monitored.
     /// </exception>
-    public IFileMonitor Monitor() {
+    public IFileMonitor Monitor(Action<FileMonitorOptions>? configure = null) {
         throw new InvalidOperationException("Embedded files cannot be monitored.");
     }
 }

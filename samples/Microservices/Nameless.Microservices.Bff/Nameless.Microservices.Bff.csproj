@@ -13,6 +13,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Refit.HttpClientFactory" />
+		<PackageReference Include="System.Security.Cryptography.Pkcs" />
 	</ItemGroup>
 
 	<ItemGroup>

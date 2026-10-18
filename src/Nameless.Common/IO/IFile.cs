@@ -72,8 +72,11 @@ public interface IFile {
     /// <summary>
     ///     Creates a file monitor for this file.
     /// </summary>
+    /// <param name="configure">
+    ///     The delegate to configure the file monitor.
+    /// </param>
     /// <returns>
     ///     The file monitor.
     /// </returns>
-    IFileMonitor Monitor();
+    IFileMonitor Monitor(Action<FileMonitorOptions>? configure = null);
 }

@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 using Microsoft.Extensions.FileSystemGlobbing;
+using Nameless.Helpers;
+using Nameless.IO.Monitoring;
 
 namespace Nameless.IO.Physical;
 
@@ -68,5 +70,19 @@ public class Directory : IDirectory {
     /// <inheritdoc />
     public void Delete(bool recursive) {
         _directory.Delete(recursive);
+    }
+
+    /// <inheritdoc />
+    public IFileMonitor Monitor(string? glob = null, Action<FileMonitorOptions>? configure = null) {
+        var options = ActionHelper.FromDelegate(configure);
+
+        return new FileMonitor(
+            _provider.Root,
+            glob ?? "**/*",
+            new FileSystemWatcherAdapter(),
+            FileProbe.Instance,
+            TimeProvider.System,
+            options
+        );
     }
 }

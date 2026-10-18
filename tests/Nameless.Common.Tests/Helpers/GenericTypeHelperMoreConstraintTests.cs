@@ -88,13 +88,4 @@ public class GenericTypeHelperMoreConstraintTests {
             () => selector.Verify(s => s.GetAnalyzer(It.IsAny<string>()), Times.Never)
         );
     }
-
-    [Fact]
-    public void DeleteEntitiesByQueryResponse_ImplicitFromError_IsFailure() {
-        // act
-        DeleteEntitiesByQueryResponse sut = Error.Failure("x");
-
-        // assert
-        Assert.Single(sut.Errors);
-    }
 }

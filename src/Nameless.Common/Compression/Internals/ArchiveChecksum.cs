@@ -64,16 +64,34 @@ internal sealed class ArchiveChecksum {
     /// <param name="checksum">
     ///     The checksum value.
     /// </param>
+    /// <exception cref="ArgumentException">
+    ///     <paramref name="checksum"/> is not <see langword="null"/> and not
+    ///     <see cref="IsValid">valid</see>.
+    /// </exception>
     public static void Validate(string? checksum) {
-        if (checksum is null) { return; }
-
-        if (checksum.Length != HEX_LENGTH || !checksum.All(char.IsAsciiHexDigit)) {
+        if (!IsValid(checksum)) {
             throw new ArgumentException(
-                message: $"The checksum must be {HEX_LENGTH} hexadecimal characters (SHA-256 or HMAC-SHA256).",
+                message: InvalidChecksumMessage,
                 paramName: nameof(checksum)
             );
         }
     }
+
+    /// <summary>
+    ///     Whether <see cref="Validate"/> accepts the value.
+    /// </summary>
+    /// <param name="checksum">
+    ///     The checksum value.
+    /// </param>
+    public static bool IsValid(string? checksum) {
+        return checksum is null ||
+               (checksum.Length == HEX_LENGTH && checksum.All(char.IsAsciiHexDigit));
+    }
+
+    /// <summary>
+    ///     Describes the expected checksum format.
+    /// </summary>
+    public static string InvalidChecksumMessage => $"The checksum must be {HEX_LENGTH} hexadecimal characters (SHA-256 or HMAC-SHA256).";
 
     /// <summary>
     ///     Converts the byte array to a hex-string value.

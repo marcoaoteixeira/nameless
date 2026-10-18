@@ -6,7 +6,7 @@ using Nameless.Validation;
 namespace Nameless.Web.Filters.Validation;
 
 public abstract class ValidationFilterBase {
-    protected async Task<Result<Nothing>> ValidateRequestObjectsAsync(IServiceProvider provider, IEnumerable<object?> arguments, CancellationToken cancellationToken) {
+    protected async Task<EmptyResult> ValidateRequestObjectsAsync(IServiceProvider provider, IEnumerable<object?> arguments, CancellationToken cancellationToken) {
         if (!TryResolveValidation(provider, out var validation)) {
             return Nothing.Value;
         }

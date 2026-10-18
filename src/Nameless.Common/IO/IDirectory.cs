@@ -1,4 +1,6 @@
-﻿namespace Nameless.IO;
+﻿using Nameless.IO.Monitoring;
+
+namespace Nameless.IO;
 
 /// <summary>
 ///     Defines a directory in the file system.
@@ -43,4 +45,19 @@ public interface IDirectory {
     ///     Whether to delete subdirectories and files
     /// </param>
     void Delete(bool recursive);
+
+    /// <summary>
+    ///     Creates a file monitor that watches over the defined
+    ///     glob pattern.
+    /// </summary>
+    /// <param name="glob">
+    ///     The GLOB pattern.
+    /// </param>
+    /// <param name="configure">
+    ///     The configuration delegate for the file monitor.
+    /// </param>
+    /// <returns>
+    ///     An instance of <see cref="IFileMonitor"/>.
+    /// </returns>
+    IFileMonitor Monitor(string? glob = null, Action<FileMonitorOptions>? configure = null);
 }
