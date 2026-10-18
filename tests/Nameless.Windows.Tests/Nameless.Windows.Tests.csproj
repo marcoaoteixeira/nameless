@@ -27,6 +27,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\src\Nameless.Testing.Tools\Nameless.Testing.Tools.csproj" />
 		<ProjectReference Include="..\..\src\Nameless.Windows\Nameless.Windows.csproj" />
 	</ItemGroup>
 

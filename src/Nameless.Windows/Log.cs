@@ -53,4 +53,14 @@ internal static partial class Log {
     internal static partial void WindowFactoryCreateFailure(ILogger<WindowFactory> logger, Type window, Exception exception);
 
     #endregion
+
+    #region Hosting
+
+    [LoggerMessage(level: LogLevel.Information, message: "Registering feature: {Feature}")]
+    internal static partial void RegisteringFeature(ILogger logger, string feature);
+
+    [LoggerMessage(level: LogLevel.Critical, message: "{Message}")]
+    internal static partial void HostBuildFailure(ILogger logger, string message, Exception exception);
+
+    #endregion
 }

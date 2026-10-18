@@ -11,6 +11,7 @@ using Nameless.WinApp.DisasterRecovery;
 using Nameless.WinApp.Views.Windows;
 using Nameless.Windows;
 using Nameless.Windows.Hosting;
+using Nameless.Windows.Hosting.Features;
 using Nameless.Windows.Hosting.Wrappers;
 using Nameless.Windows.Localization;
 using Wpf.Ui;
@@ -24,17 +25,15 @@ public partial class App {
         $"--applicationName={Constants.Application.Name}"
     ];
 
-    private static readonly WinHost CurrentHost = WinHostFactory.Create(configure => {
-        configure.Args = Args;
-        configure.Assemblies = [
+    private static readonly WinHost CurrentHost = WinHostFactory.CreateWinApp(
+        Args,
+        [
             typeof(App).Assembly,
-                typeof(AssemblyMarker).Assembly,
-                typeof(AssemblyMarkerWindows).Assembly
-        ];
-
-        configure.ConfigureAdditionalServices = ConfigureAdditionalServices;
-        configure.ConfigureLocalization = ConfigureLocalization;
-    });
+            typeof(AssemblyMarker).Assembly,
+            typeof(AssemblyMarkerWindows).Assembly
+        ],
+        configureFeatures: ConfigureFeatures
+    );
 
     public App() {
         ExceptionWarden.Initialize(Constants.Application.Name);
@@ -74,7 +73,22 @@ public partial class App {
         return Task.CompletedTask;
     }
 
-    private static void ConfigureAdditionalServices(IServiceCollection services, IConfiguration configuration, IHostEnvironment environment) {
+    private static void ConfigureFeatures(WinHostFeatureCollection features) {
+        features.Get<LocalizationFeature>().Configure(ConfigureLocalization);
+
+        // Added last, so its registrations override the built-in ones.
+        features.Add(new ApplicationFeature());
+    }
+
+    private sealed class ApplicationFeature : WinHostFeature {
+        public override void Register(WinHostBuilder builder, WinHostFeatureContext context) {
+            builder.ConfigureServices(
+                (ctx, services) => ConfigureAdditionalServices(services, ctx.Configuration)
+            );
+        }
+    }
+
+    private static void ConfigureAdditionalServices(IServiceCollection services, IConfiguration configuration) {
         services.RegisterEntityFrameworkCore<AppDbContext>(registration => {
             registration.WithDbContextConfiguration((provider, ctx) => {
                 var applicationContext = provider.GetRequiredService<IApplicationContext>();
