@@ -38,11 +38,8 @@ public static class ServiceCollectionExtensions {
 
     private static IEnumerable<ServiceDescriptor> CreateWindowServiceDescriptors(WindowFactoryRegistration settings) {
         var service = typeof(IWindow);
-        var implementations = settings.UseAssemblyScan
-            ? settings.ExecuteAssemblyScan(service)
-            : settings.Windows;
-
-        foreach (var implementation in implementations) {
+        
+        foreach (var implementation in settings.Windows) {
             var interfaces = implementation.GetInterfaces()
                                            .Where(service.IsAssignableFrom);
 

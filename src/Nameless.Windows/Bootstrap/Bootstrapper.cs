@@ -124,11 +124,6 @@ public class Bootstrapper : IBootstrapper, IDisposable {
 
             var retryPipeline = CreateRetryPipeline(node.Step);
 
-            using var meter = DiagnosticsHelper.CreateStopwatchHistogram(
-                name: Metrics.StepDuration,
-                description: node.Step.DisplayName
-            );
-
             await retryPipeline.ExecuteAsync(
                 async token => await node.Step
                                          .ExecuteAsync(_progress, token)
@@ -184,11 +179,5 @@ public class Bootstrapper : IBootstrapper, IDisposable {
 
     private void HandleStepProgress(StepProgress progress) {
         _statusReporter.ReportStepProgress(progress);
-    }
-
-    internal static class Metrics {
-        private const string ROOT = "nameless.bootstrapper";
-
-        internal const string StepDuration = $"{ROOT}.step.duration";
     }
 }

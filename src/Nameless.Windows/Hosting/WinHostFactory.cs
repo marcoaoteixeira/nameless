@@ -38,7 +38,7 @@ public sealed class WinHostFactory {
                    .ConfigureAppConfigurationManagerFeature(Settings)
                    .ConfigureBootstrapFeature(Settings)
                    .ConfigureCommonFeature()
-                   .ConfigureCompressorFeature(Settings)
+                   .ConfigureZipCompressorFeature(Settings)
                    .ConfigureContentDialogFeature(Settings)
                    .ConfigureDocumentFeature(Settings)
                    .ConfigureFileExplorerFeature(Settings)

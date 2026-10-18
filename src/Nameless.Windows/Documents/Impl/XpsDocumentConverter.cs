@@ -48,7 +48,7 @@ public class XpsDocumentConverter : IDocumentConverter {
             document.SaveAs(xpsFile.Path, DocumentType.XPS);
         }
         catch (Exception ex) {
-            CommonLog.Error(_logger, ex, tag: "XPS_DOCUMENT_CONVERTER");
+            CommonLog.Error(_logger, ex.Message, ex, tag: GetType().Tag);
 
             return Task.FromResult(string.Empty);
         }

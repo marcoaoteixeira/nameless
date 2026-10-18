@@ -71,25 +71,20 @@ public class SystemUpdateRequestHandler : RequestHandlerBase<SystemUpdateRequest
     private async Task<Result<ReleaseInfo>> GetLatestReleaseAsync(CancellationToken cancellationToken) {
         await NotifyInformationAsync("Checking from system update information...").SkipContextSync();
 
-        var request = new GetLastestReleaseRequest(
-            Owner: _githubOpts.Owner,
-            Repository: _githubOpts.Repository
-        );
+        var result = await _githubHttpClient.GetLastestReleaseAsync(_githubOpts.Owner, _githubOpts.Repository, cancellationToken)
+                                            .SkipContextSync();
 
-        var response = await _githubHttpClient.GetLastestReleaseAsync(request, cancellationToken)
-                                              .SkipContextSync();
+        if (result.Failure) {
+            await NotifyFailureAsync(result.Errors.Flatten()).SkipContextSync();
 
-        if (response.Failure) {
-            await NotifyFailureAsync(response.Errors.Flatten()).SkipContextSync();
-
-            return response.Errors;
+            return result.Errors;
         }
 
         if (!SemVersion.TryParse(_applicationContext.Version, out var currentVersion)) {
             currentVersion = SemVersion.Empty;
         }
 
-        if (!SemVersion.TryParse(response.Value.TagName, out var latestVersion)) {
+        if (!SemVersion.TryParse(result.Value.TagName, out var latestVersion)) {
             latestVersion = SemVersion.Empty;
         }
 
@@ -104,28 +99,22 @@ public class SystemUpdateRequestHandler : RequestHandlerBase<SystemUpdateRequest
         return new ReleaseInfo(
             IsAvailable: true,
             Version: latestVersion.ToString(),
-            ReleaseID: response.Value.Id
+            ReleaseID: result.Value.Id
         );
     }
 
     private async Task<Result<ReleaseAssetInfo>> GetLatestReleaseAssetAsync(ReleaseInfo info, CancellationToken cancellationToken) {
-        var request = new GetReleaseAssetsRequest(
-            Owner: _githubOpts.Owner,
-            Repository: _githubOpts.Repository,
-            ReleaseID: info.ReleaseID
-        );
+        var result = await _githubHttpClient.GetReleaseAssetsAsync(_githubOpts.Owner, _githubOpts.Repository, info.ReleaseID, cancellationToken)
+                                            .SkipContextSync();
 
-        var response = await _githubHttpClient.GetReleaseAssetsAsync(request, cancellationToken)
-                                              .SkipContextSync();
+        if (result.Failure) {
+            await NotifyFailureAsync(result.Errors.Flatten()).SkipContextSync();
 
-        if (response.Failure) {
-            await NotifyFailureAsync(response.Errors.Flatten()).SkipContextSync();
-
-            return response.Errors;
+            return result.Errors;
         }
 
         var assetName = $"{_applicationContext.ApplicationName}.v{info.Version}.zip";
-        var asset = response.Value.SingleOrDefault(item => item.Name == assetName);
+        var asset = result.Value.SingleOrDefault(item => item.Name == assetName);
 
         if (asset is null) {
             await NotifyInformationAsync($"Release asset '{assetName}' not found").SkipContextSync();
