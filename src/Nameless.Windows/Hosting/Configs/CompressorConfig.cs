@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
+using Nameless.Compression;
 using Nameless.Windows.Hosting.Wrappers;
 
 namespace Nameless.Windows.Hosting.Configs;
@@ -21,7 +22,7 @@ public static class CompressorConfig {
         ///     The current <see cref="WinHostFactory"/> instance so other
         ///     actions can be chained.
         /// </returns>
-        public WinHostBuilder ConfigureCompressorFeature(WinHostSettings settings) {
+        public WinHostBuilder ConfigureZipCompressorFeature(WinHostSettings settings) {
             if (settings.DisableCompressor) { return self; }
 
             self.ConfigureServices(

@@ -30,18 +30,18 @@ public static class ServiceCollectionExtensions {
         }
 
         private void RegisterNavigationWindow(NavigationRegistration registration) {
-            var service = typeof(INavigationWindow);
-            var implementation = registration.UseAssemblyScan
-                ? registration.ExecuteAssemblyScan(service).SingleOrDefault()
-                : registration.NavigationWindow;
-
-            if (implementation is null) {
+            if (registration.NavigationWindow is null) {
                 throw new InvalidOperationException(
-                    $"Unable to locate implementation for type '{service.Name}'."
+                    $"Unable to locate implementation for type '{nameof(INavigationWindow)}'."
                 );
             }
 
-            self.TryAdd(ServiceDescriptor.Transient(service, implementation));
+            self.TryAdd(
+                ServiceDescriptor.Transient(
+                    typeof(INavigationWindow),
+                    registration.NavigationWindow
+                )
+            );
         }
 
         private void RegisterNavigationViewItemProvider(NavigationRegistration registration) {
@@ -52,11 +52,8 @@ public static class ServiceCollectionExtensions {
 
         private void RegisterNavigableViews(NavigationRegistration registration) {
             var service = typeof(INavigableView<>);
-            var implementations = registration.UseAssemblyScan
-                ? registration.ExecuteAssemblyScan(service)
-                : registration.NavigationViews;
 
-            foreach (var implementation in implementations) {
+            foreach (var implementation in registration.NavigationViews) {
                 var interfaces = implementation.GetInterfaces()
                                                .Where(@interface => @interface.GenericTypeArguments.Length > 0 &&
                                                                     service.IsAssignableFromGeneric(@interface));

@@ -12,10 +12,7 @@ public class RetryPipeline : IRetryPipeline {
     /// <summary>
     ///     Gets a no-op <see cref="RetryPipeline"/> that executes operations without any retry.
     /// </summary>
-    public static RetryPipeline Empty => new(
-        tag: $"{Guid.CreateVersion7():N}",
-        ResiliencePipeline.Empty
-    );
+    public static RetryPipeline Empty => new(tag: $"{Guid.CreateVersion7():N}", ResiliencePipeline.Empty);
 
     /// <summary>
     ///     Gets the optional tag used to identify this pipeline in logs and telemetry.

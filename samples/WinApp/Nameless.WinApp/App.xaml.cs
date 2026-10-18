@@ -76,7 +76,7 @@ public partial class App {
 
     private static void ConfigureAdditionalServices(IServiceCollection services, IConfiguration configuration, IHostEnvironment environment) {
         services.RegisterEntityFrameworkCore<AppDbContext>(registration => {
-            registration.DbContextConfiguration = (provider, ctx) => {
+            registration.WithDbContextConfiguration((provider, ctx) => {
                 var applicationContext = provider.GetRequiredService<IApplicationContext>();
                 var databaseFile = applicationContext.ApplicationDataFileProvider.GetFile(
                     relativePath: Path.Combine(
@@ -87,11 +87,11 @@ public partial class App {
                 var connStr = string.Format(SqliteConstants.ConnStrPattern, databaseFile.Path);
 
                 ctx.UseSqlite(connStr);
-            };
+            });
         }, configuration);
     }
 
     private static void ConfigureLocalization(LocalizationRegistration localization) {
-        localization.SetLocalizer(typeof(ResourceLocalizer));
+        localization.RegisterLocalizer(typeof(ResourceLocalizer));
     }
 }

@@ -17,29 +17,21 @@ public static class ServiceCollectionExtensions {
         }
 
         private void RegisterDocumentConverters(DocumentServicesRegistration registration) {
-            var service = typeof(IDocumentConverter);
-            var implementations = registration.UseAssemblyScan
-                ? registration.ExecuteAssemblyScan(service)
-                : registration.DocumentConverters;
-
-            var descriptors = implementations.Select(
-                implementation => ServiceDescriptor.Singleton(service, implementation)
-            );
-
-            self.TryAddEnumerable(descriptors);
+            self.TryAddEnumerable(registration.DocumentConverters.Select(
+                implementation => ServiceDescriptor.Singleton(
+                    typeof(IDocumentConverter),
+                    implementation
+                )
+            ));
         }
 
         private void RegisterDocumentReaders(DocumentServicesRegistration registration) {
-            var service = typeof(IDocumentReader);
-            var implementations = registration.UseAssemblyScan
-                ? registration.ExecuteAssemblyScan(service)
-                : registration.DocumentReaders;
-
-            var descriptors = implementations.Select(
-                implementation => ServiceDescriptor.Singleton(service, implementation)
-            );
-
-            self.TryAddEnumerable(descriptors);
+            self.TryAddEnumerable(registration.DocumentReaders.Select(
+                implementation => ServiceDescriptor.Singleton(
+                    typeof(IDocumentReader),
+                    implementation
+                )
+            ));
         }
     }
 }

@@ -28,7 +28,7 @@ public class PdfDocumentReader : IDocumentReader {
                 sb.Append(content);
             }
         }
-        catch (Exception ex) { CommonLog.Error(_logger, ex, tag: "PDF_DOCUMENT_READER"); }
+        catch (Exception ex) { CommonLog.Error(_logger, ex.Message, ex, tag: GetType().Tag); }
 
         return Task.FromResult(sb.ToString());
     }

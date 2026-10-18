@@ -17,10 +17,10 @@ public static class RetryPipelineFactoryExtensions {
         /// <returns>
         ///     A new instance of <see cref="IRetryPipeline"/>.
         /// </returns>
-        public IRetryPipeline CreateDefault(Action<Exception?, TimeSpan, int, int> onRetry) {
-            var configuration = RetryPolicyConfiguration.CreateDefault(onRetry);
-
-            return self.Create(configuration);
+        public IRetryPipeline CreateDefault(Action<Exception?, TimeSpan, int, int>? onRetry = null) {
+            return self.Create(
+                configuration: RetryPolicyConfiguration.CreateDefault(onRetry)
+            );
         }
     }
 }

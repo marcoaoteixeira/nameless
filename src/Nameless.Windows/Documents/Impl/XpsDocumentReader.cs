@@ -58,7 +58,7 @@ public class XpsDocumentReader : IDocumentReader {
                 }
             }
         }
-        catch (Exception ex) { CommonLog.Error(_logger, ex, tag: "XPS_DOCUMENT_READER"); }
+        catch (Exception ex) { CommonLog.Error(_logger, ex.Message, ex, tag: GetType().Tag); }
 
         return sb.ToString();
     }

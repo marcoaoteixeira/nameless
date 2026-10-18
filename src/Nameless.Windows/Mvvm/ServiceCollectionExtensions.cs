@@ -25,16 +25,12 @@ public static class ServiceCollectionExtensions {
         public IServiceCollection RegisterViewModels(Action<ViewModelRegistration> configure) {
             var registration = ActionHelper.FromDelegate(configure);
 
-            var service = typeof(ViewModel);
-            var implementations = registration.UseAssemblyScan
-                ? registration.ExecuteAssemblyScan(service)
-                : registration.ViewModels;
-
-            var descriptors = implementations.Select(
-                implementation => ServiceDescriptor.Transient(implementation, implementation)
-            );
-
-            self.TryAdd(descriptors);
+            self.TryAdd(registration.ViewModels.Select(
+                implementation => ServiceDescriptor.Transient(
+                    implementation,
+                    implementation
+                )
+            ));
 
             return self;
         }

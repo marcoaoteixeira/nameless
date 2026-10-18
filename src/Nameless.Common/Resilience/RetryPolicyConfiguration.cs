@@ -44,7 +44,7 @@ public record RetryPolicyConfiguration {
     ///     Gets a callback that will get called before all retries
     ///     attempts.
     /// </summary>
-    public required Action<Exception?, TimeSpan, int, int> OnRetry { get; init; }
+    public Action<Exception?, TimeSpan, int, int>? OnRetry { get; init; }
 
     /// <summary>
     ///     Gets a predefined retry policy configuration.
@@ -90,7 +90,7 @@ public record RetryPolicyConfiguration {
     ///         </item>
     ///     </list>
     /// </remarks>
-    public static RetryPolicyConfiguration CreateDefault(Action<Exception?, TimeSpan, int, int> onRetry) {
+    public static RetryPolicyConfiguration CreateDefault(Action<Exception?, TimeSpan, int, int>? onRetry = null) {
         return new RetryPolicyConfiguration {
             Tag = $"{Guid.CreateVersion7():N}",
             RetryCount = 3,

@@ -31,14 +31,14 @@ public static class ServiceCollectionExtensions {
         /// </returns>
         public IServiceCollection RegisterLocalization(Action<LocalizationRegistration>? configure = null, IConfiguration? configuration = null) {
             var registration = ActionHelper.FromDelegate(configure);
-            var implementation = registration.UseAssemblyScan
-                ? registration.GetImplementations<ILocalizer>().SingleOrDefault()
-                : registration.Localizer;
 
             self.ConfigureOptions<ResourceLocalizerOptions>(configuration);
 
-            if (implementation is not null) { self.TryAddSingleton(typeof(ILocalizer), implementation); }
-            else { self.TryAddSingleton(NullLocalizer.Instance); }
+            var descriptor = registration.Localizer is not null
+                ? ServiceDescriptor.Singleton(typeof(ILocalizer), registration.Localizer)
+                : ServiceDescriptor.Singleton(NullLocalizer.Instance);
+
+            self.TryAddSingleton(descriptor);
 
             return self;
         }
