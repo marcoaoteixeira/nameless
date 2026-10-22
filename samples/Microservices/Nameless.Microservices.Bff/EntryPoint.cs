@@ -1,9 +1,10 @@
-using Microsoft.Extensions.DependencyInjection.Extensions;
+﻿using Microsoft.Extensions.DependencyInjection.Extensions;
 using Nameless.Microservices.Bff.AutoGenCode;
 using Nameless.Microservices.Bff.Domains.Chores.External;
 using Nameless.Web;
 using Nameless.Web.Auth;
 using Nameless.Web.Hosting;
+using Nameless.Web.Hosting.Features;
 using Nameless.Web.Scalar;
 
 namespace Nameless.Microservices.Bff;
@@ -21,47 +22,50 @@ public class EntryPoint
     /// </param>
     public static void Main(string[] args)
     {
-        WebHostFactory.Create(settings =>
-        {
-            settings.Args = args;
-            settings.Assemblies = [
+        WebHostFactory.Create(
+            args,
+            [
                 typeof(EntryPoint).Assembly,
                 typeof(AssemblyMarker).Assembly
-            ];
-
-            settings.ConfigureAdditionalServices = ConfigureAdditionalServices;
-            settings.ExecuteBeforeStartup = ExecuteBeforeStartup;
-            settings.ConfigureScalar = ConfigureScalar;
-
-            DisableServices(settings);
-        }).Run();
+            ],
+            ConfigureFeatures
+        ).Run();
     }
 
-    private static void ConfigureAdditionalServices(IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
+    private static void ConfigureFeatures(WebHostFeatureCollection features)
     {
-        services.RegisterChoresHttpClient();
-        services.RegisterOAuthAuthenticationTokenProvider(configuration);
-        services.RegisterAutoEndpoints();
-        services.TryAddTransient<AuthorizationForwardingHandler>();
+        features
+            .Remove<AntiforgeryFeature>()
+            .Remove<DataProtectionFeature>()
+            .Remove<MediatorFeature>()
+            .Remove<OutputCacheFeature>()
+            .Remove<RequestTimeoutFeature>()
+            .Remove<PeriodicWorkersFeature>();
+
+        features.Get<ScalarFeature>().Configure(ConfigureScalar);
+
+        // Added last, so its registrations override the built-in ones.
+        features.Add(new ApplicationFeature());
     }
 
-    private static void ExecuteBeforeStartup(IApplicationBuilder app)
+    private sealed class ApplicationFeature : WebHostFeature
     {
-        app.EndpointRouteBuilder.MapAutoEndpoints();
+        public override void Register(WebApplicationBuilder builder, WebHostFeatureContext context)
+        {
+            builder.Services.RegisterChoresHttpClient();
+            builder.Services.RegisterOAuthAuthenticationTokenProvider(builder.Configuration);
+            builder.Services.RegisterAutoEndpoints();
+            builder.Services.TryAddTransient<AuthorizationForwardingHandler>();
+        }
+
+        public override void Use(WebApplication app, WebHostFeatureContext context)
+        {
+            app.EndpointRouteBuilder.MapAutoEndpoints();
+        }
     }
 
     private static void ConfigureScalar(ScalarRegistration scalar)
     {
         scalar.UseDefaultHttpAuthentication = true;
-    }
-
-    private static void DisableServices(WebHostSettings settings)
-    {
-        settings.DisableAntiforgery = true;
-        settings.DisableDataProtection = true;
-        settings.DisableMediator = true;
-        settings.DisableOutputCache = true;
-        settings.DisableRequestTimeouts = true;
-        settings.DisablePeriodicWorkers = true;
     }
 }
